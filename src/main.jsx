@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { Contact } from "./page/Contact.jsx";
+import { Contact } from "./page/Contact/Contact.jsx";
 import "./index.css";
 import "../firebase.js"
 
