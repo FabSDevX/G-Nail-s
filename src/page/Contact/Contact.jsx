@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import { ContactForm } from "./components/ContactForm";
 import { ContactInformation } from "./components/ContactInformation";
 
 export function Contact() {
@@ -45,7 +44,6 @@ export function Contact() {
 
       <Box className="contact-container">
         <ContactInformation />
-        <ContactForm />
       </Box>
     </Box>
   );
