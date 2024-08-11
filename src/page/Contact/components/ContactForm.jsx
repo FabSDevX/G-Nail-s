@@ -29,6 +29,7 @@ export function ContactForm() {
       <Typography
         sx={{
           fontWeight: "700",
+          fontFamily: "cursive",
           lineHeight: "120%",
           letterSpacing: "-0.02em",
           textAlign: "center",
@@ -122,6 +123,9 @@ export function ContactForm() {
               width: {
                 xs: "130px",
                 sm: "200px",
+              },
+              "&:hover": {
+                background: "var(--secondary-color)",
               },
             }}
           >
