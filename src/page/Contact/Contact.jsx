@@ -1,7 +1,21 @@
 import { Box, Typography } from "@mui/material";
 import { ContactInformation } from "./components/ContactInformation";
+import { getDocumentById } from "../../utils/firebaseDB";
+import { ContactForm } from "./components/ContactForm";
+
+const contactInfo = await getDocumentById("Contact info", "Information");
 
 export function Contact() {
+  const {
+    location,
+    iFrame,
+    mail,
+    phone,
+    schedule,
+    lessonSchedule,
+    locationLink,
+    socialMedia,
+  } = contactInfo;
   return (
     <Box id="contact">
       <Box
@@ -43,7 +57,19 @@ export function Contact() {
       </Box>
 
       <Box className="contact-container">
-        <ContactInformation />
+        <ContactInformation
+          location={location}
+          iFrame={iFrame}
+          mail={mail}
+          phone={phone}
+          schedule={schedule}
+          lessonSchedule={lessonSchedule}
+          locationLink={locationLink}
+          socialMedia={socialMedia}
+        />
+      </Box>
+      <Box>
+        <ContactForm email={mail} />
       </Box>
     </Box>
   );
