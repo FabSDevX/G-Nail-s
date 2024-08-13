@@ -21,13 +21,14 @@ export function MapContainer({ locationLink, iFrame }) {
         variant="outlined"
         target="_blank"
         sx={{
-          background: "var(--primary-color)",
+          background: "var(--secondary-color)",
           color: "black",
           height: "81px",
           fontSize: "25px",
           '&:hover':{
-                background: "var(--secondary-color)",
-                color: "white"
+            background: "var(--primary-color)",
+            border:"3px solid var(--secondary-color)",
+            color:"white"
             }
         }}
       >

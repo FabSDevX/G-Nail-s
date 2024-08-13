@@ -13,8 +13,15 @@
   -moz-osx-font-smoothing: grayscale;
 
 
-  --primary-color: #FFB6C1;
-  --secondary-color: #E99795;
+  --primary-color: #E08D8D;
+  --secondary-color: #FFB6C1;
+
+  --admin-title-color: #d12b28;
+  --save-changes-color: #337AB7;
+  --cancel-changes-color: #AFBBC2;
+  --preview-changes-color: #5CB85C;
+  --delete-color: #D12B28;
+  --agreed-color: #48B02C;
   
 }
 

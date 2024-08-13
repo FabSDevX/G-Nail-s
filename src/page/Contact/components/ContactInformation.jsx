@@ -28,7 +28,6 @@ const subSectionStyles = {
 };
 
 export function ContactInformation(data) {
-  console.log(data);
   const {
     location,
     iFrame,
@@ -250,12 +249,12 @@ export function ContactInformation(data) {
                 flexDirection: "column",
               }}
             >
-              {Object.entries(schedule).map(([day, value]) => (
+              {Object.entries(schedule).map(([schedule, value]) => (
                 <Box
                   sx={{
                     margin: "0",
                   }}
-                  key={day}
+                  key={schedule}
                 >
                   <Typography
                     sx={{
@@ -279,7 +278,7 @@ export function ContactInformation(data) {
                       },
                     }}
                   >
-                    {day}{" "}
+                    {value.day}{" "}
                     <span
                       style={{
                         textWrap: "wrap",
@@ -287,7 +286,7 @@ export function ContactInformation(data) {
                         fontSize: "14px",
                       }}
                     >
-                      {value}
+                      {value.time}
                     </span>
                   </Typography>
                 </Box>
@@ -317,7 +316,7 @@ export function ContactInformation(data) {
                 marginTop: "16px",
                 gap: "10px",
                 alignItems: "center",
-                color: "var(--secondary-color)",
+                color: "var(--primary-color)",
               }}
             >
               <Typography

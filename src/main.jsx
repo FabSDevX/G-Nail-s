@@ -8,6 +8,7 @@ import {
 import { Contact } from "./page/Contact/Contact.jsx";
 import "./index.css";
 import "../firebase.js"
+import { ContactAdmin } from "./page/admin/contacto-admin/ContactAdmin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "contacto",
     element: <Contact />,
+  },
+  {
+    path: "contactoAdmin",
+    element: <ContactAdmin />,
   },
 ]);
 
