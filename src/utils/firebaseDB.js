@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, getDoc, updateDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 /**
@@ -38,7 +38,68 @@ export async function setDocumentByCollection(collectionName, jsonData) {
  * @param {string} documentID
  * @param {JSON} jsonData
  */
+
+
 export async function updateDocumentById(collectionName, documentID, jsonData) {
-  const docRef = doc(db, collectionName, documentID);
-  await updateDoc(docRef, jsonData);
+  try {
+    const docRef = doc(db, collectionName, documentID);
+    await updateDoc(docRef, jsonData);
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+}
+
+
+
+//---- Admin Management ----
+/**
+ * Get all documents from a specific collection
+ * @param {string} collectionName
+ * @returns {Array} Array of document data
+ */
+export async function getAllDocuments(collectionName) {
+  try {
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents: ", error);
+    return [];
+  }
+}
+
+
+/**
+ * Delete a document by its ID
+ * @param {string} collectionName
+ * @param {string} documentID
+ */
+export async function deleteDocumentById(collectionName, documentID) {
+  try {
+    const docRef = doc(db, collectionName, documentID);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+  }
+}
+
+
+
+/**
+ * Add or update a document in a collection
+ * @param {string} collectionName
+ * @param {string} documentID (optional)
+ * @param {JSON} jsonData
+ */
+export async function upsertDocument(collectionName, documentID = null, jsonData) {
+  try {
+    if (documentID) {
+      const docRef = doc(db, collectionName, documentID);
+      await updateDoc(docRef, jsonData);
+    } else {
+      await addDoc(collection(db, collectionName), jsonData);
+    }
+  } catch (error) {
+    console.error("Error upserting document: ", error);
+  }
 }
