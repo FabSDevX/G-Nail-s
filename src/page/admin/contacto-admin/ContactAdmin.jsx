@@ -1,16 +1,13 @@
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { updateDocumentById } from "../../../utils/firebaseDB";
 import { useState } from "react";
 import { ContactInformation } from "../../Contact/components/ContactInformation";
-// import { getDocumentById } from "../../../utils/firebaseDB";
-import Modal from "@mui/material/Modal";
-import { ModalChanges } from "../../../component/ConfirmationModal";
-// const contactInfo = await getDocumentById("Contact info", "Information");
+import { getDocumentById } from "../../../utils/firebaseDB";
+import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
+import { Toaster } from "sonner";
+import { promiseToast } from "../../../utils/toast";
+import ModalContainer from "../../../component/ModalContainer";
+import { AdminFormBtn } from "../../../component/AdminFormBtn";
 
 const contactAdminTitles = {
   fontSize: "x-large",
@@ -34,39 +31,6 @@ const contactInput = {
   width: "90%",
 };
 
-const formButtons = {
-  height: "50px",
-  fontSize: "14px",
-  borderRadius: "10px",
-  border: "none",
-  width: {
-    xs: "130px",
-    sm: "170px",
-  },
-  "&:hover": {
-    border: "none",
-    background: "var(--secondary-color)",
-    color: "black",
-  },
-  "&:focus": {
-    outline: "none",
-  },
-};
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "78vw",
-  height: "68vh",
-  overflow: "scroll",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
 const inputSeparation = {
   display: "flex",
   flexDirection: {
@@ -83,87 +47,35 @@ const inputSeparation = {
   },
 };
 
+const contactInfo = await getDocumentById("Contact info", "Information");
 export function ContactAdmin() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [handleDialog, setHandleDialog] = useState(false);
   const [modifiedData, setModifiedData] = useState({});
-  const [lessonSchedule, setLessonSchedule] = useState([
-    "9:00 am - 12:00 mdZZZ",
-    "1:00 pm -  4:00 pmZZZ",
-    "6:30 pm - 9:30 pmZZZ",
-  ]);
-  const [scheduleData, setScheduleData] = useState({
-    schedule2: {
-      day: "Sábado",
-      time: "8:00 am - 4:00 pm",
-    },
-    schedule1: {
-      day: "Lunes a viernes",
-      time: "8:00 am - 11:00 am",
-    },
-    schedule3: {
-      day: "Domingo",
-      time: "8:00 am - 11:00 am",
-    },
-  });
-  const [location, setLocation] = useState(
-    "Ciudad Quesada, San Carlos 21001 Quesada, Alajuela Province, Costa RicaXXX"
+  const [lessonSchedule, setLessonSchedule] = useState(
+    contactInfo.lessonSchedule
   );
-  const [iFrame, setIFrame] = useState(
-    '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.1804701166134!2d-84.43418486067681!3d10.32743794933481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa065efd174d025%3A0xf6f936b3b4125b50!2sGNails!5e0!3m2!1ses!2scr!4v1723333807197!5m2!1ses!2scr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>XXX'
-  );
-  const [mail, setMail] = useState("faporras05@hotmail.comXXX");
-  const [phone, setPhone] = useState("+50684527729xxx");
-  const [locationLink, setLocationLink] = useState(
-    "https://maps.app.goo.gl/yR86LiyPSqLxETfr9XXX"
-  );
-  const [socialMedia, setSocialMedia] = useState({
-    facebook: "https://www.facebook.com",
-    instagram: "https://www.instagram.comsaaaXXX",
-  });
-
-  // const [lessonSchedule, setLessonSchedule] = useState(contactInfo.lessonSchedule);
-  // const { location, iFrame, mail, phone, schedule, locationLink, socialMedia } = contactInfo;
-  // function updateFields(key, value) {
-  //   switch (key) {
-  //     case "location":
-  //       setLocation(value);
-  //       break;
-  //     case "iFrame":
-  //       setIFrame(value);
-  //       break;
-  //     case "mail":
-  //       setIFrame(value);
-  //       break;
-  //     case "phone":
-  //       setIFrame(value);
-  //       break;
-  //     case "locationLink":
-  //       setIFrame(value);
-  //       break;
-  //     case "socialMedia":
-  //       setIFrame(value);
-  //       break;
-  //     case "setLessonSchedule":
-  //       setIFrame(value);
-  //       break;
-  //       case "setLessonSchedule":
-  //         setIFrame(value);
-  //         break;
-  //     // Add other cases for mail, phone, socialMedia, etc.
-  //   }
-  // }
+  const [scheduleData, setScheduleData] = useState(contactInfo.schedule);
+  const [location, setLocation] = useState(contactInfo.location);
+  const [iFrame, setIFrame] = useState(contactInfo.iFrame);
+  const [mail, setMail] = useState(contactInfo.mail);
+  const [phone, setPhone] = useState(contactInfo.phone);
+  const [locationLink, setLocationLink] = useState(contactInfo.locationLink);
+  const [socialMedia, setSocialMedia] = useState(contactInfo.socialMedia);
 
   function onChangeFields(key, value) {
-    // updateFields(key, value);
     const newModifiedData = { ...modifiedData, [key]: value };
     setModifiedData(newModifiedData);
   }
 
   function handleSavedChanges() {
-    updateDocumentById("Contact info", "Information", modifiedData);
+    promiseToast(
+      updateDocumentById("Contact info", "Information", modifiedData),
+      "Cambios guardado",
+      "Error"
+    );
   }
   return (
     <Box
@@ -189,26 +101,20 @@ export function ContactAdmin() {
         Contacto
       </Typography>
       <Box>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={modalStyle}>
-            <ContactInformation
-              location={location}
-              iFrame={iFrame}
-              mail={mail}
-              phone={phone}
-              schedule={scheduleData}
-              lessonSchedule={lessonSchedule}
-              locationLink={locationLink}
-              socialMedia={socialMedia}
-            />
-          </Box>
-        </Modal>
-        <ModalChanges
+        <ModalContainer open={open} handleClose={handleClose}>
+          <ContactInformation
+            location={location}
+            iFrame={iFrame}
+            mail={mail}
+            phone={phone}
+            schedule={scheduleData}
+            lessonSchedule={lessonSchedule}
+            locationLink={locationLink}
+            socialMedia={socialMedia}
+          />
+        </ModalContainer>
+
+        <ConfirmationDialog
           agreedFuntion={handleSavedChanges}
           state={[handleDialog, setHandleDialog]}
           modalTitle={"Seguro de guardar los cambios?"}
@@ -280,6 +186,7 @@ export function ContactAdmin() {
                     multiline
                     defaultValue={location}
                     rows={5}
+                    inputProps={{ maxLength: 100 }}
                     name="location"
                     onChange={(e) => {
                       setLocation(e.target.value);
@@ -490,56 +397,11 @@ export function ContactAdmin() {
               </Box>
             </Box>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              gap: "15px",
-              width: "100%",
-              justifyContent: "end",
-              marginTop: "15px",
-              flexDirection: {
-                xs: "column",
-                sm: "row",
-              },
-              alignItems: {
-                xs: "end",
-              },
-            }}
-          >
-            <Button
-              onClick={handleOpen}
-              variant="outlined"
-              sx={{
-                ...formButtons,
-                background: "var(--preview-changes-color)",
-                color: "white",
-              }}
-            >
-              Prevista
-            </Button>
-            <Button
-              onClick={() => window.location.reload()}
-              variant="outlined"
-              sx={{
-                ...formButtons,
-                background: "var(--cancel-changes-color)",
-                color: "#444444",
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={() => setHandleDialog(true)}
-              variant="outlined"
-              sx={{
-                ...formButtons,
-                background: "var(--save-changes-color)",
-                color: "white",
-              }}
-            >
-              Guardar cambios
-            </Button>
-          </Box>
+          <Toaster richColors />
+          <AdminFormBtn
+            handleOpenPreview={handleOpen}
+            handleSaveChanges={setHandleDialog}
+          />
         </Box>
       </Box>
     </Box>

@@ -24,7 +24,7 @@ const buttonStyle = {
  * @param {string} modalTitle Modal title
  * @returns Modal display on screen
  */
-export function ModalChanges(data) {
+export function ConfirmationDialog(data) {
   const [open, setOpen] = useState(data.state[0]);
   const handleClose = () => data.state[1](false); //It changed on father component
 
