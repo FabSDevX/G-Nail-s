@@ -174,19 +174,22 @@ export function ContactForm(emailData) {
             variant="outlined"
             type="submit"
             sx={{
-              background: "var(--primary-color)",
+              background: "var(--secondary-color)",
               display: "flex",
               color: "black",
               height: "70px",
               fontSize: "25px",
               borderRadius: "10px",
+              border:"3px solid var(--primary-color)",
 
               width: {
                 xs: "130px",
                 sm: "200px",
               },
               "&:hover": {
-                background: "var(--secondary-color)",
+                background: "var(--primary-color)",
+                border:"3px solid var(--secondary-color)",
+                color:"white"
               },
             }}
           >
