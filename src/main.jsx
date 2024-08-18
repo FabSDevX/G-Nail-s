@@ -8,7 +8,10 @@ import {
 import { Contact } from "./page/Contact/Contact.jsx";
 import "./index.css";
 import "../firebase.js"
-import { ContactAdmin } from "./page/admin/contacto-admin/ContactAdmin.jsx";
+import { ContactAdmin, } from "./page/admin/contacto-admin/ContactAdmin.jsx";
+import { AdminManagement } from "./page/admin/managementUser/adminManagement.jsx";
+
+import { AdminNavBar } from "./component/AdminNavBar.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +26,15 @@ const router = createBrowserRouter([
     path: "contactoAdmin",
     element: <ContactAdmin />,
   },
+  {
+    path: "adminManagement",
+    element: <AdminManagement />,
+  },
+  {
+    path: "adminNavBar",
+    element: <AdminNavBar />,
+  }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
