@@ -11,6 +11,8 @@ import "../firebase.js"
 import { ContactAdmin, } from "./page/admin/contacto-admin/ContactAdmin.jsx";
 import { AdminManagement } from "./page/admin/managementUser/adminManagement.jsx";
 
+import { AdminNavBar } from "./component/AdminNavBar.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,7 +29,12 @@ const router = createBrowserRouter([
   {
     path: "adminManagement",
     element: <AdminManagement />,
+  },
+  {
+    path: "adminNavBar",
+    element: <AdminNavBar />,
   }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

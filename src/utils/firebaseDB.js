@@ -24,13 +24,23 @@ export async function getDocumentById(collectionName, documentID) {
  */
 export async function setDocumentByCollection(collectionName, jsonData) {
   try {
-    await addDoc(collection(db, collectionName), {
-      jsonData,
-    });
+      const docRef = await addDoc(collection(db, collectionName), jsonData);
+      return docRef; // Retorna el docRef para obtener el ID generado
   } catch (error) {
-    console.error(error);
+      console.error(error);
+      throw error;
   }
 }
+
+// export async function setDocumentByCollection(collectionName, jsonData) {
+//   try {
+//     await addDoc(collection(db, collectionName), {
+//       jsonData,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
 /**
  * Update custom fields for a specific document in a collection
@@ -39,15 +49,15 @@ export async function setDocumentByCollection(collectionName, jsonData) {
  * @param {JSON} jsonData
  */
 
-
 export async function updateDocumentById(collectionName, documentID, jsonData) {
   try {
-    const docRef = doc(db, collectionName, documentID);
+    const docRef = doc(db, collectionName, documentID); // Utiliza el id de Firebase aquí
     await updateDoc(docRef, jsonData);
   } catch (error) {
-    console.error("Error updating document: ", error);
+    console.error("Error updating document: ");
   }
 }
+
 
 
 
@@ -63,7 +73,7 @@ export async function getAllDocuments(collectionName) {
     const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return documents;
   } catch (error) {
-    console.error("Error fetching documents: ", error);
+    console.error("Error fetching documents: ");
     return [];
   }
 }
@@ -79,7 +89,7 @@ export async function deleteDocumentById(collectionName, documentID) {
     const docRef = doc(db, collectionName, documentID);
     await deleteDoc(docRef);
   } catch (error) {
-    console.error("Error deleting document: ", error);
+    console.error("Error deleting document: ");
   }
 }
 
