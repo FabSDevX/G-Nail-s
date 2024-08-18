@@ -23,7 +23,6 @@ export const AdminNavBar = () => {
 
 
   //De momento se agregan las rutas de las páginas que se quieren mostrar en el menú
-  //para poder navegar entre ellas
   //Posteriormente se configurara cuando se prepare el Provider de rutas
   const menuItems = [
     { text: 'Información de contacto', path: '/contacto' },
