@@ -24,10 +24,6 @@ const router = createBrowserRouter([
     element: <ContactAdmin />,
   },
   {
-    path: "card",
-    element: <CourseCard />,
-  },
-  {
     path: "adminManagement",
     element: <AdminManagement />,
   },
