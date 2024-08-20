@@ -7,7 +7,6 @@ import "./index.css";
 import "../firebase.js";
 import { ContactAdmin } from "./page/admin/contacto-admin/ContactAdmin.jsx";
 import { AdminManagement } from "./page/admin/managementUser/adminManagement.jsx";
-import { CourseCard } from "./component/CourseCard/CourseCard.jsx";
 import { AdminNavBar } from "./component/AdminNavBar.jsx";
 
 const router = createBrowserRouter([
