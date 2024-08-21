@@ -1,5 +1,7 @@
 import { addDoc, collection, getDoc, updateDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, storageDB } from "../../firebase";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 /**
  * Get a specific document in a collection
@@ -111,5 +113,30 @@ export async function upsertDocument(collectionName, documentID = null, jsonData
     }
   } catch (error) {
     console.error("Error upserting document: ", error);
+  }
+}
+
+export async function uploadImageByUrl(url, directoryPath){
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }  
+
+  const blob = await response.blob();
+  const imgRef = ref(storageDB, `${directoryPath}/${v4()}`)  
+  await uploadBytes(imgRef, blob);
+  const downloadURL = await getDownloadURL(imgRef);
+  return downloadURL;
+}
+
+export async function getImageByUrl(directoryPath, url) {
+  try {
+    const imgRef = ref(storageDB, `${directoryPath}/${url}`);
+    const downloadURL = await getDownloadURL(imgRef);  
+    return downloadURL;
+  } catch (error) {
+    throw new Error('Failed to fetch image URL: ' + error.message);
   }
 }

@@ -8,6 +8,8 @@ import "../firebase.js";
 import { ContactAdmin } from "./page/admin/contacto-admin/ContactAdmin.jsx";
 import { AdminManagement } from "./page/admin/managementUser/adminManagement.jsx";
 import { AdminNavBar } from "./component/AdminNavBar.jsx";
+import { CourseAdmin } from "./page/admin/courseAdmin/CourseAdmin.jsx";
+import { CourseAddEdit } from "./component/courseAdmin/CourseAddEdit.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
   {
     path: "adminNavBar",
     element: <AdminNavBar />,
+  },
+  {
+    path: "courseAdmin",
+    element: <CourseAdmin />,
+  },
+  {
+    path: "editando",
+    element: <CourseAddEdit uid={"cGu9dEDXnJ19w7IArQJc"} isEditing={false} />,
   },
 ]);
 
