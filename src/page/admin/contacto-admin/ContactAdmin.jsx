@@ -48,7 +48,7 @@ const inputSeparation = {
 };
 
 const contactInfo = await getDocumentById("Contact info", "Information");
-export function ContactAdmin() {
+function ContactAdmin() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -407,3 +407,5 @@ export function ContactAdmin() {
     </Box>
   );
 }
+
+export default ContactAdmin;
