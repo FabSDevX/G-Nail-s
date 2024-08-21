@@ -1,5 +1,8 @@
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, storageDB } from "../../firebase";
+import { ref, uploadBytes } from 'firebase/storage';
+import { v4 } from 'uuid';
+
 
 /**
  * Get a specific document in a collection
@@ -41,4 +44,18 @@ export async function setDocumentByCollection(collectionName, jsonData) {
 export async function updateDocumentById(collectionName, documentID, jsonData) {
   const docRef = doc(db, collectionName, documentID);
   await updateDoc(docRef, jsonData);
+}
+
+export async function uploadImageByUrl(url, directoryPath){
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }  
+
+  const blob = await response.blob();
+  const imgRef = ref(storageDB, `${directoryPath}/${v4()}`)  
+  await uploadBytes(imgRef, blob);
+
 }
