@@ -2,12 +2,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./hooks/authAdmin/useAuth";
 import ProtectedRoute from "./hooks/authAdmin/ProtectedRoute";
 import ClientHome from "./page/client/ClientHome";
-import {Contact} from "./page/Contact/Contact";
+import { Contact } from "./page/Contact/Contact";
 import Login from "./component/adminLogin/Login";
 import AdminManagement from "./page/admin/managementUser/adminManagement";
-import {AdminNavBar} from "./component/AdminNavBar";
-
 import NotFound from "./page/notFound/NotFound";
+import AdminLayout from "./utils/layout/AdminLayout";
+
 function App() {
   return (
     <AuthProvider>
@@ -21,9 +21,10 @@ function App() {
 
           {/* Rutas protegidas para la parte de administración */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/admin/management" element={<AdminManagement />} />
-            <Route path="/admin/navbar" element={<AdminNavBar />} />
-            <Route path="/contacto" element={<Contact />} />
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/management" element={<AdminManagement />} />
+              <Route path="/contacto" element={<Contact />} />
+            </Route>
           </Route>
 
           {/* Ruta para manejar páginas no encontradas */}

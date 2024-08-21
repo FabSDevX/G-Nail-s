@@ -6,7 +6,6 @@ import {
 import { db } from "../../firebase";
 
 
-
 /**
  * Get a specific document in a collection
  * @param {string} collectionName
