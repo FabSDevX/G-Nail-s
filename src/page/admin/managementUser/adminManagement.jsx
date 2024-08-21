@@ -9,7 +9,7 @@ import { StatusSnackbar } from '../../../component/managementAdmin/StatusSnackba
 import { SearchField } from '../../../component/managementAdmin/SearchField';
 import { GridRowModes } from '@mui/x-data-grid';
 
-export const AdminManagement = () => {
+const AdminManagement = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [searchText, setSearchText] = useState('');
@@ -124,3 +124,5 @@ export const AdminManagement = () => {
         </Box>
     );
 };
+
+export default AdminManagement;
