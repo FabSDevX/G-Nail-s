@@ -1,5 +1,11 @@
-import { addDoc, collection, getDoc, updateDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  addDoc, collection, getDoc,
+  updateDoc, getDocs, deleteDoc,
+  doc, where, query
+} from "firebase/firestore";
 import { db } from "../../firebase";
+
+
 
 /**
  * Get a specific document in a collection
@@ -24,11 +30,11 @@ export async function getDocumentById(collectionName, documentID) {
  */
 export async function setDocumentByCollection(collectionName, jsonData) {
   try {
-      const docRef = await addDoc(collection(db, collectionName), jsonData);
-      return docRef; // Retorna el docRef para obtener el ID generado
+    const docRef = await addDoc(collection(db, collectionName), jsonData);
+    return docRef; // Retorna el docRef para obtener el ID generado
   } catch (error) {
-      console.error(error);
-      throw error;
+    console.error(error);
+    throw error;
   }
 }
 
@@ -113,3 +119,24 @@ export async function upsertDocument(collectionName, documentID = null, jsonData
     console.error("Error upserting document: ", error);
   }
 }
+
+
+/**
+ * Verifica si un usuario está permitido basado en su correo electrónico.
+ * @param {string} email - El correo electrónico del usuario.
+ * @returns {boolean} - True si el usuario está permitido, false en caso contrario.
+ */
+export async function isUserAllowed(email) {
+  try {
+    const sanitizedEmail = email.trim().toLowerCase();
+    const allowedUsersRef = collection(db, "allowedUsers");
+    const q = query(allowedUsersRef, where("gmail", "==", sanitizedEmail));
+    const querySnapshot = await getDocs(q);
+
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error("Error verificando el usuario permitido:", error);
+    return false;
+  }
+}
+
