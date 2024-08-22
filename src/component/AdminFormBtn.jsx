@@ -51,7 +51,7 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
         Prevista
       </Button>
       <Button
-        onClick={window.location.reload()}
+        onClick={() => window.location.reload()}
         variant="outlined"
         sx={{
           ...formButtons,
