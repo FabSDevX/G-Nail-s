@@ -63,7 +63,8 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges }) {
         Cancelar
       </Button>
       <Button
-        onClick={() => handleSaveChanges(true)}
+        type="submit"
+        onClick={handleSaveChanges ? () => handleSaveChanges(true) : () => {}}
         variant="outlined"
         sx={{
           ...formButtons,
@@ -80,5 +81,5 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges }) {
 
 AdminFormBtn.propTypes = {
   handleOpenPreview: PropTypes.func.isRequired,
-  handleSaveChanges: PropTypes.func.isRequired,
+  handleSaveChanges: PropTypes.func
 };

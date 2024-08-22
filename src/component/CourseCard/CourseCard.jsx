@@ -4,14 +4,14 @@ import { FrontCard } from "./FrontCard";
 import { BackCard } from "./BackCard";
 import { WishListButton } from "./WishListButton";
 import upRightArrow from "../../assets/upRightArrow.svg";
+import propTypes from "prop-types";
 const subsectionCardStyle = {
   padding: "10px 10px 0 10px",
   textAlign: "center",
   maxWidth: "13ch",
-  paddingBottom: "100%",
 };
 
-export function CourseCard() {
+export function CourseCard({title, shortDescription, lessonHours, img, largeDescription}) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
@@ -25,7 +25,6 @@ export function CourseCard() {
         borderRadius: "10px",
         perspective: "1000px",
         boxShadow: "none",
-        margin: "20px auto",
       }}
     >
       <CardActionArea
@@ -54,20 +53,16 @@ export function CourseCard() {
 
         {!isFlipped ? (
           <FrontCard
-            title={"Uñas acrilicas"}
-            shortDescription={
-              "Lorem ipsum odor amet, consectetuer adipiscing elit. Arcu vivamus lectus risus habitasse vel tincidunt proin nulla. Proin habitantinceptos aptent accumsan suspendisse pretium"
-            }
-            lessonHours={4}
-            img={"public/contact-background.webp"}
+            title={title}
+            shortDescription={shortDescription}
+            lessonHours={lessonHours}
+            img={img}
             subsectionCardStyle={subsectionCardStyle}
           />
         ) : (
           <BackCard
-            largeDescription={
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            }
-            img={"public/contact-background.webp"}
+            largeDescription={largeDescription}
+            img={img}
           />
         )}
       </CardActionArea>
@@ -83,4 +78,12 @@ export function CourseCard() {
       </CardActions>
     </Card>
   );
+}
+
+CourseCard.propTypes = {
+  title: propTypes.string.isRequired,
+  shortDescription: propTypes.string.isRequired,
+  largeDescription: propTypes.string.isRequired,
+  img: propTypes.string.isRequired,
+  lessonHours: propTypes.number.isRequired,
 }

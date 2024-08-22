@@ -13,6 +13,9 @@ export function FrontCard({
       sx={{
         padding: "0",
         backfaceVisibility: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       <CardMedia
@@ -24,6 +27,11 @@ export function FrontCard({
       <CardContent
         sx={{
           padding: "15px 0 0 0 ",
+          flex: "1",
+          display: "flex",
+          flexDirection: "column",
+          ":last-child":{paddingBottom:"0",
+          }
         }}
       >
         <Typography
@@ -33,6 +41,8 @@ export function FrontCard({
           sx={{
             fontWeight: "bold",
             textAlign: "center",
+            padding: "0 20px",
+            wordBreak: "break-word",
           }}
         >
           {title}
@@ -45,12 +55,14 @@ export function FrontCard({
             color: "black",
             fontWeight: "normal",
             opacity: "90%",
-            height: "135px",
+            maxHeight: "135px",
             maxWidth: "260px",
             textAlign: "center",
             padding: "0 5px",
             margin: "0 auto",
             overflow: "hidden",
+            flex: "1",
+            wordBreak: "break-word",
           }}
         >
           {shortDescription}
@@ -61,7 +73,7 @@ export function FrontCard({
             gap: "20px",
             alignContent: "center",
             justifyContent: "center",
-            marginTop: "20px",
+            marginTop: "auto",
             borderTop: "1px solid #999",
           }}
         >

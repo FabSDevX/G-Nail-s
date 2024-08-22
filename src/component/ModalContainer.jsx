@@ -15,7 +15,7 @@ const modalStyle = {
   p: 4,
 };
 
-export function ModalContainer({ open, handleClose, children }) {
+export function ModalContainer({ open, handleClose, children, additionalStyles }) {
   return (
     <Modal
       open={open}
@@ -23,7 +23,7 @@ export function ModalContainer({ open, handleClose, children }) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalStyle}>{children}</Box>
+      <Box sx={{...modalStyle, ...additionalStyles}}>{children}</Box>
     </Modal>
   );
 }
@@ -32,6 +32,7 @@ ModalContainer.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
+  additionalStyles: PropTypes.object
 };
 
 export default ModalContainer;

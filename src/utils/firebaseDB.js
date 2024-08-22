@@ -1,7 +1,7 @@
 
 import { db, storageDB } from "../../firebase";
 import { v4 } from "uuid";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   addDoc, collection, getDoc,
   updateDoc, getDocs, deleteDoc,
@@ -114,15 +114,26 @@ export async function upsertDocument(collectionName, documentID = null, jsonData
     if (documentID) {
       const docRef = doc(db, collectionName, documentID);
       await updateDoc(docRef, jsonData);
+      return documentID;
     } else {
-      await addDoc(collection(db, collectionName), jsonData);
+      const docRef = await addDoc(collection(db, collectionName), jsonData);
+      return docRef.id;
     }
   } catch (error) {
     console.error("Error upserting document: ", error);
   }
 }
 
-export async function uploadImageByUrl(url, directoryPath){
+export async function uploadImageByUrl(url, directoryPath, previousImagePath=null){
+
+  if (previousImagePath) {
+    const previousImageRef = ref(storageDB, previousImagePath);
+    try {
+      await deleteObject(previousImageRef);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const response = await fetch(url);
 
@@ -133,13 +144,12 @@ export async function uploadImageByUrl(url, directoryPath){
   const blob = await response.blob();
   const imgRef = ref(storageDB, `${directoryPath}/${v4()}`)  
   await uploadBytes(imgRef, blob);
-  const downloadURL = await getDownloadURL(imgRef);
-  return downloadURL;
+  return imgRef.fullPath
 }
 
-export async function getImageByUrl(directoryPath, url) {
+export async function getImageByUrl(path) {
   try {
-    const imgRef = ref(storageDB, `${directoryPath}/${url}`);
+    const imgRef = ref(storageDB, path);
     const downloadURL = await getDownloadURL(imgRef);  
     return downloadURL;
   } catch (error) {

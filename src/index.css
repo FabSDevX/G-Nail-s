@@ -39,8 +39,6 @@
   */
   button:hover {
     border: none;
-    background: var(--primary-color);
-    color: white;
   }
   button:focus{
     outline: none;
