@@ -294,6 +294,12 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                     xs: "130px",
                     sm: "170px",
                   },
+                  "&:hover": {
+                    border: "none",
+                    background: "var(--secondary-color)",
+                    color: "black",
+                  },
+
                 }}
               >
                 Editar
