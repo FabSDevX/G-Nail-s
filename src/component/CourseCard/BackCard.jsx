@@ -50,6 +50,7 @@ export function BackCard({ largeDescription, img }) {
             margin: "0 auto",
             height: "30ch",
             overflow: "hidden",
+            wordBreak: "break-word",
           }}
         >
           {largeDescription}

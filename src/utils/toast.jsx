@@ -10,10 +10,18 @@ export function promiseToast(promiseParam, successFullMsg, failureMsg) {
   toast.promise(promiseParam, {
     loading: "Cargando...",
     success: () => {
-      return toast.success(successFullMsg);
+      toast.success(successFullMsg);
     },
     error: () => {
-      return toast.warning(failureMsg);
+      toast.warning(failureMsg);
     },
   });
+}
+
+/**
+ * Function to invoke a warming toast
+ * @param {string} messageParam Message to show
+ */
+export function warningToast(messageParam){
+  toast.warning(messageParam)
 }
