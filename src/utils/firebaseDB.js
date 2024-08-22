@@ -124,6 +124,14 @@ export async function upsertDocument(collectionName, documentID = null, jsonData
   }
 }
 
+
+/**
+ * function to upload an image to firestore
+ * @param {string} url image url
+ * @param {string} directoryPath firebase folder name
+ * @param {string} previousImagePath optional previous image path to delete
+ * @returns 
+ */
 export async function uploadImageByUrl(url, directoryPath, previousImagePath=null){
 
   if (previousImagePath) {
@@ -147,6 +155,11 @@ export async function uploadImageByUrl(url, directoryPath, previousImagePath=nul
   return imgRef.fullPath
 }
 
+/**
+ * Function to get an image from firebase path
+ * @param {string} path 
+ * @returns downloadUrl image
+ */
 export async function getImageByUrl(path) {
   try {
     const imgRef = ref(storageDB, path);

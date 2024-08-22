@@ -7,7 +7,6 @@ import Login from "./component/adminLogin/Login";
 import AdminManagement from "./page/admin/managementUser/adminManagement";
 import NotFound from "./page/notFound/NotFound";
 import AdminLayout from "./utils/layout/AdminLayout";
-import { CourseAddEdit } from "./component/courseAdmin/CourseAddEdit";
 import {CourseAdmin} from "./page/admin/courseAdmin/CourseAdmin";
 
 function App() {
@@ -17,8 +16,8 @@ function App() {
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
           <Route path="/" element={<ClientHome />} />
-          <Route path="courseAdmin" element={<CourseAdmin />} />
-          <Route path="editando" element={<CourseAddEdit uidParam={null} isEditingParam={false}/>} />
+          <Route path="courseAdmin" element={<CourseAdmin />} /> {/* ACTUALMENTE TRABAJANDO */}
+          <Route path="/contacto" element={<Contact />} />
 
           {/* Ruta de autenticación */}
           <Route path="/login" element={<Login />} />
@@ -27,7 +26,6 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin/management" element={<AdminManagement />} />
-              <Route path="/contacto" element={<Contact />} />
             </Route>
           </Route>
 
