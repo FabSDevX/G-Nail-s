@@ -15,7 +15,6 @@ import ModalContainer from "../ModalContainer";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { promiseToast, warningToast } from "../../utils/toast";
 import { getActualDate } from "../../utils/date";
-import { Toaster } from "sonner";
 import { courseModel } from "../../model/model";
 import { CourseCard } from "../CourseCard/CourseCard";
 
@@ -35,7 +34,11 @@ const contactInput = {
   width: "100%",
 };
 
-export function CourseAddEdit({ uidParam = null, isEditingParam = false, handleStateAction }) {
+export function CourseAddEdit({
+  uidParam = null,
+  isEditingParam = false,
+  handleStateAction,
+}) {
   const [isEditing, setIsEditing] = useState(isEditingParam);
   const [uid, setUid] = useState(uidParam);
   const [isImageEdited, setIsImageEdited] = useState(false);
@@ -114,16 +117,16 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false, handleS
   return (
     <AdminAddEditFormLayout>
       <Typography
-      sx={{
-        fontWeight:"600",
-        color:"var(--admin-title-color);",
-        fontSize: {
-          xs: "x-large",
-          sm: "xx-large"
-        }
-      }}
+        sx={{
+          fontWeight: "600",
+          color: "var(--admin-title-color);",
+          fontSize: {
+            xs: "x-large",
+            sm: "xx-large",
+          },
+        }}
       >
-        {isEditing ? "Editando curso": "Creando curso"}
+        {isEditing ? "Editando curso" : "Creando curso"}
       </Typography>
 
       <Typography
@@ -300,7 +303,6 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false, handleS
                     background: "var(--secondary-color)",
                     color: "black",
                   },
-
                 }}
               >
                 Editar
@@ -411,5 +413,5 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false, handleS
 CourseAddEdit.propTypes = {
   uidParam: propTypes.string,
   isEditingParam: propTypes.bool.isRequired,
-  handleStateAction: propTypes.func.isRequired
+  handleStateAction: propTypes.func.isRequired,
 };

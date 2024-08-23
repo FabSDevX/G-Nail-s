@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { deleteDocumentById, getAllDocuments} from "../../../utils/firebaseDB";
+import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
@@ -20,16 +20,20 @@ export function CourseAdmin() {
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [handleDialog, setHandleDialog] = useState(false);
-  const refreshCourses = async () => { const courseValues = await getAllDocuments('Course');
-  setCourses(courseValues);
-  }
+  const refreshCourses = async () => {
+    const courseValues = await getAllDocuments("Course");
+    setCourses(courseValues);
+  };
+
   useEffect(() => {
     refreshCourses();
   }, []);
-  
+
   useEffect(() => {
-    refreshCourses();
-    setIsCourseUpdated(false);
+    if (isCourseUpdated) {
+      refreshCourses();
+      setIsCourseUpdated(false);
+    }
   }, [isCourseUpdated]);
 
   useEffect(() => {
@@ -137,17 +141,22 @@ export function CourseAdmin() {
 
   // const VISIBLE_FIELDS = Object.keys(courses[0]);
 
-  function handleDelete() {
-    promiseToast(
-      async () => {
-        await deleteDocumentById("Course", actualUid, true);
-        setActualUid(null);
-      },
-      "Curso borrado correctamente",
-      "Error"
-    );
-    setIsCourseUpdated(true);
+  async function handleDelete() {
+    try {
+      promiseToast(
+        async () => {
+          await deleteDocumentById("Course", actualUid, true);
+          setActualUid(null);
+        },
+        "Curso borrado correctamente",
+        "Error"
+      );
+      setIsCourseUpdated(true);
+    } catch (error) {
+      console.error("Deleting course problem:", error);
+    }
   }
+  
   return (
     <AdminSectionLayout id={"courses-admin"} title={"Cursos"}>
       <AddBtn
@@ -190,7 +199,11 @@ export function CourseAdmin() {
           overflow: "auto",
         }}
       >
-        <CourseAddEdit isEditingParam={isEditing} uidParam={actualUid} handleStateAction={setIsCourseUpdated} />
+        <CourseAddEdit
+          isEditingParam={isEditing}
+          uidParam={actualUid}
+          handleStateAction={setIsCourseUpdated}
+        />
       </ModalContainer>
       <ConfirmationDialog
         agreedFuntion={() => handleDelete()}
