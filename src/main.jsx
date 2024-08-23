@@ -1,22 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
 import { Contact } from "./page/Contact.jsx";
+import { Calendario } from "./page/Calendario/Calendario.jsx";
+import { Homepage } from "./page/Homepage.jsx";
+
+
 import "./index.css";
 import "../firebase.js"
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Homepage />,
   },
   {
     path: "contacto",
     element: <Contact />,
+  },
+  {
+    path: "calendario",
+    element: <Calendario />,
   },
 ]);
 
