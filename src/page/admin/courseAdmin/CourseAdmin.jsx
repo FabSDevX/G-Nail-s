@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { getAllDocuments } from "../../../utils/firebaseDB";
+import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
@@ -7,14 +7,18 @@ import ModalContainer from "../../../component/ModalContainer";
 import { useState } from "react";
 import { CourseAddEdit } from "../../../component/courseAdmin/CourseAddEdit";
 import { useEffect } from "react";
-import editPencil from "../../../assets/editPencil.svg"
+import editPencil from "../../../assets/editPencil.svg";
+import deleteTrashCan from "../../../assets/deleteTrashcan.svg";
+import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
+import { Toaster } from "sonner";
+import { promiseToast } from "../../../utils/toast";
 const courses = await getAllDocuments("Course");
 
 export function CourseAdmin() {
   const [actualUid, setActualUid] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-
+  const [handleDialog, setHandleDialog] = useState(false);
   useEffect(() => {
     if (!openModal) {
       setActualUid(null);
@@ -60,13 +64,13 @@ export function CourseAdmin() {
           sx={{
             backgroundColor: "var(--edit-changes-color);",
             width: "48px",
-            minWidth:"48px",
-            "&:hover":{
-              background:"var(--primary-color);"
+            minWidth: "48px",
+            "&:hover": {
+              background: "var(--primary-color);",
             },
-            "&:focus":{
-              border:"none"
-            }
+            "&:focus": {
+              border: "none",
+            },
           }}
           onClick={() => {
             setActualUid(params.row.id);
@@ -74,14 +78,61 @@ export function CourseAdmin() {
             setOpenModal(true);
           }}
         >
-          <Box component="img" sx={{width:"32px",}} src={editPencil} alt="Pencil image" />
+          <Box
+            component="img"
+            sx={{ width: "32px" }}
+            src={editPencil}
+            alt="Pencil image"
+          />
+        </Button>
+      ),
+    },
+    {
+      field: "delete",
+      headerName: "Borrar",
+      width: 58,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "var(--delete-color);",
+            width: "48px",
+            minWidth: "48px",
+            "&:hover": {
+              background: "var(--primary-color);",
+            },
+            "&:focus": {
+              border: "none",
+            },
+          }}
+          onClick={() => {
+            setActualUid(params.row.id);
+            setHandleDialog(true);
+          }}
+        >
+          <Box
+            component="img"
+            sx={{ width: "32px" }}
+            src={deleteTrashCan}
+            alt="Delete image"
+          />
         </Button>
       ),
     },
   ];
 
-  const VISIBLE_FIELDS = Object.keys(courses[0]);
-  console.log(courses);
+  // const VISIBLE_FIELDS = Object.keys(courses[0]);
+
+  function handleDelete() {
+    promiseToast(
+      async () => {
+        await deleteDocumentById("Course", actualUid, true);
+        setActualUid(null);
+      },
+      "Curso borrado correctamente",
+      "Error"
+    );
+  }
   return (
     <AdminSectionLayout id={"courses-admin"} title={"Cursos"}>
       <AddBtn
@@ -116,16 +167,22 @@ export function CourseAdmin() {
         open={openModal}
         handleClose={() => setOpenModal(false)}
         additionalStyles={{
-          width: "auto",
-          height: "auto",
+          width: "70vw",
+          height: "76vh",
           padding: "0",
           border: "none",
           borderRadius: "20px",
-          overflow: "hidden",
+          overflow: "auto",
         }}
       >
         <CourseAddEdit isEditingParam={isEditing} uidParam={actualUid} />
       </ModalContainer>
+      <ConfirmationDialog
+        agreedFuntion={() => handleDelete()}
+        state={[handleDialog, setHandleDialog]}
+        modalTitle={"Seguro de querer eliminar este curso?"}
+      />
+      <Toaster richColors />
     </AdminSectionLayout>
   );
 }

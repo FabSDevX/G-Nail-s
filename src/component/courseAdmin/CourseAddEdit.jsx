@@ -149,7 +149,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
             display: "flex",
             flexDirection: {
               xs: "column",
-              sm: "row",
+              sm: "column",
               md: "row",
             },
           }}
