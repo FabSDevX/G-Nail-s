@@ -7,7 +7,7 @@ import ModalContainer from "../../../component/ModalContainer";
 import { useState } from "react";
 import { CourseAddEdit } from "../../../component/courseAdmin/CourseAddEdit";
 import { useEffect } from "react";
-
+import editPencil from "../../../assets/editPencil.svg"
 const courses = await getAllDocuments("Course");
 
 export function CourseAdmin() {
@@ -53,13 +53,20 @@ export function CourseAdmin() {
     {
       field: "edit",
       headerName: "Editar",
-      width: 150,
+      width: 58,
       renderCell: (params) => (
         <Button
           variant="contained"
           sx={{
             backgroundColor: "var(--edit-changes-color);",
-            width: "40px",
+            width: "48px",
+            minWidth:"48px",
+            "&:hover":{
+              background:"var(--primary-color);"
+            },
+            "&:focus":{
+              border:"none"
+            }
           }}
           onClick={() => {
             setActualUid(params.row.id);
@@ -67,7 +74,7 @@ export function CourseAdmin() {
             setOpenModal(true);
           }}
         >
-          Editar
+          <Box component="img" sx={{width:"32px",}} src={editPencil} alt="Pencil image" />
         </Button>
       ),
     },
