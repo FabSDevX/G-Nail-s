@@ -4,7 +4,8 @@ import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage
 import {
   addDoc, collection, getDoc,
   updateDoc, getDocs, deleteDoc,
-  doc, where, query
+  doc, where, query,
+  onSnapshot
 } from "firebase/firestore";
 
 /**
@@ -68,6 +69,31 @@ export async function getAllDocuments(collectionName) {
   } catch (error) {
     console.error("Error fetching documents: ");
     return [];
+  }
+}
+
+
+//USAGE EXAMPLE
+// useEffect(() => {
+//   const unsubscribe = listenToCollectionChanges("Course", (documents) => {
+//     setValues(documents);
+//   });
+
+//   return () => unsubscribe && unsubscribe();
+// }, []);
+
+export function listenToCollectionChanges(collectionName, callback) {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+      const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      callback(documents);
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error("Error listening to collection changes: ", error);
+    return null;
   }
 }
 

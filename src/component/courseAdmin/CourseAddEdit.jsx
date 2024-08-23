@@ -35,7 +35,7 @@ const contactInput = {
   width: "100%",
 };
 
-export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
+export function CourseAddEdit({ uidParam = null, isEditingParam = false, handleStateAction }) {
   const [isEditing, setIsEditing] = useState(isEditingParam);
   const [uid, setUid] = useState(uidParam);
   const [isImageEdited, setIsImageEdited] = useState(false);
@@ -108,6 +108,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
     );
     if (!isEditing) setIsEditing(true);
     setIsImageEdited(false);
+    handleStateAction(true);
   }
 
   return (
@@ -124,7 +125,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
       >
         {isEditing ? "Editando curso": "Creando curso"}
       </Typography>
-      <Toaster richColors position="bottom-center" />
+
       <Typography
         sx={{
           fontSize: "x-large",
@@ -410,4 +411,5 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
 CourseAddEdit.propTypes = {
   uidParam: propTypes.string,
   isEditingParam: propTypes.bool.isRequired,
+  handleStateAction: propTypes.func.isRequired
 };

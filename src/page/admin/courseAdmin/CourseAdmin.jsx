@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
+import { deleteDocumentById, getAllDocuments} from "../../../utils/firebaseDB";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
@@ -12,14 +12,28 @@ import deleteTrashCan from "../../../assets/deleteTrashcan.svg";
 import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
 import { Toaster } from "sonner";
 import { promiseToast } from "../../../utils/toast";
-const courses = await getAllDocuments("Course");
 
 export function CourseAdmin() {
+  const [courses, setCourses] = useState([]);
+  const [isCourseUpdated, setIsCourseUpdated] = useState(false);
   const [actualUid, setActualUid] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [handleDialog, setHandleDialog] = useState(false);
+  const refreshCourses = async () => { const courseValues = await getAllDocuments('Course');
+  setCourses(courseValues);
+  }
   useEffect(() => {
+    refreshCourses();
+  }, []);
+  
+  useEffect(() => {
+    refreshCourses();
+    setIsCourseUpdated(false);
+  }, [isCourseUpdated]);
+
+  useEffect(() => {
+    setIsCourseUpdated(false);
     if (!openModal) {
       setActualUid(null);
       setIsEditing(false);
@@ -132,6 +146,7 @@ export function CourseAdmin() {
       "Curso borrado correctamente",
       "Error"
     );
+    setIsCourseUpdated(true);
   }
   return (
     <AdminSectionLayout id={"courses-admin"} title={"Cursos"}>
@@ -175,7 +190,7 @@ export function CourseAdmin() {
           overflow: "auto",
         }}
       >
-        <CourseAddEdit isEditingParam={isEditing} uidParam={actualUid} />
+        <CourseAddEdit isEditingParam={isEditing} uidParam={actualUid} handleStateAction={setIsCourseUpdated} />
       </ModalContainer>
       <ConfirmationDialog
         agreedFuntion={() => handleDelete()}
