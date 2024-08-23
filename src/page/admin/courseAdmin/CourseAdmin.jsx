@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { getAllDocuments } from "../../../utils/firebaseDB";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { AddBtn } from "../../../component/courseAdmin/addBtn";
+import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
 import ModalContainer from "../../../component/ModalContainer";
 import { useState } from "react";
