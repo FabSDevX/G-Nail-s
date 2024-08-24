@@ -329,6 +329,7 @@ export function CourseAddEdit({
                   sx={{ ...contactInput, width: "100px", height: "40px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[0] : ""}
                   onChange={(e) => handleCategoryChange(0, e.target.value)}
                 />
@@ -336,6 +337,7 @@ export function CourseAddEdit({
                   sx={{ ...contactInput, width: "100px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[1] : ""}
                   onChange={(e) => handleCategoryChange(1, e.target.value)}
                 />
@@ -343,6 +345,7 @@ export function CourseAddEdit({
                   sx={{ ...contactInput, width: "100px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[2] : ""}
                   onChange={(e) => handleCategoryChange(2, e.target.value)}
                 />

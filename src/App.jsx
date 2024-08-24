@@ -8,6 +8,7 @@ import AdminManagement from "./page/admin/managementUser/adminManagement";
 import NotFound from "./page/notFound/NotFound";
 import AdminLayout from "./utils/layout/AdminLayout";
 import {CourseAdmin} from "./page/admin/courseAdmin/CourseAdmin";
+import ContactAdmin from "./page/admin/contactAdmin/ContactAdmin";
 
 function App() {
   return (
@@ -16,7 +17,6 @@ function App() {
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
           <Route path="/" element={<ClientHome />} />
-          <Route path="courseAdmin" element={<CourseAdmin />} /> {/* ACTUALMENTE TRABAJANDO */}
           <Route path="/contacto" element={<Contact />} />
 
           {/* Ruta de autenticación */}
@@ -26,6 +26,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin/management" element={<AdminManagement />} />
+              <Route path="/admin/contact" element={<ContactAdmin />} />
+              <Route path="/admin/courses" element={<CourseAdmin />} />
             </Route>
           </Route>
 

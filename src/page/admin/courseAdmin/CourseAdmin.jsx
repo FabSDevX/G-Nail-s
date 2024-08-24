@@ -1,17 +1,18 @@
 import { Box, Button } from "@mui/material";
 import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
-import ModalContainer from "../../../component/ModalContainer";
 import { useState } from "react";
 import { CourseAddEdit } from "../../../component/courseAdmin/CourseAddEdit";
 import { useEffect } from "react";
-import editPencil from "../../../assets/editPencil.svg";
-import deleteTrashCan from "../../../assets/deleteTrashcan.svg";
 import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
 import { Toaster } from "sonner";
 import { promiseToast } from "../../../utils/toast";
+import ModalContainer from "../../../component/ModalContainer";
+import deleteTrashCan from "../../../assets/deleteTrashcan.svg";
+import editPencil from "../../../assets/editPencil.svg";
+import ExpandableCell from "../../../component/courseAdmin/ExpandableCell";
+import ReutilizableDataGrid from "../../../component/courseAdmin/ReutilizableDataGrid";
 
 export function CourseAdmin() {
   const [courses, setCourses] = useState([]);
@@ -45,37 +46,14 @@ export function CourseAdmin() {
   }, [openModal]);
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "name",
-      headerName: "First name",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "smallDescription",
-      headerName: "Last name",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "largeDescription",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: false,
-    },
-    {
-      field: "hours",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-    },
-    {
-      field: "edit",
-      headerName: "Editar",
-      width: 58,
+    { field: "id", headerName: "ID", width: 90, resizable: false, hideable: false, filterable:false },
+    { field: "name", headerName: "Nombre", width: 150, renderCell: (params) => <ExpandableCell {...params} />,},
+    { field: "smallDescription", headerName: "Descripcion corta", width: 200, renderCell: (params) => <ExpandableCell {...params} />,},
+    { field: "largeDescription", headerName: "Descripcion larga", width: 200, renderCell: (params) => <ExpandableCell {...params} />,},
+    { field: "hours", headerName: "Horas", width: 80, type: "number", resizable: false,},
+    { field: "categories", headerName: "Categorías", width: 80, sortable: false,},
+    { field: "img", headerName:"Imagen", width: 80, hideable: false, filterable:false},
+    { field: "edit", headerName: "Editar", width: 70, resizable: false, hideable: false, sortable: false, filterable:false,
       renderCell: (params) => (
         <Button
           variant="contained"
@@ -105,10 +83,7 @@ export function CourseAdmin() {
         </Button>
       ),
     },
-    {
-      field: "delete",
-      headerName: "Borrar",
-      width: 58,
+    { field: "delete", headerName: "Borrar", width: 70, resizable: false, hideable: false, sortable: false, filter:false, filterable:false,
       renderCell: (params) => (
         <Button
           variant="contained"
@@ -139,8 +114,6 @@ export function CourseAdmin() {
     },
   ];
 
-  // const VISIBLE_FIELDS = Object.keys(courses[0]);
-
   async function handleDelete() {
     try {
       promiseToast(
@@ -156,7 +129,7 @@ export function CourseAdmin() {
       console.error("Deleting course problem:", error);
     }
   }
-  
+
   return (
     <AdminSectionLayout id={"courses-admin"} title={"Cursos"}>
       <AddBtn
@@ -167,24 +140,8 @@ export function CourseAdmin() {
         }}
       />
 
-      <Box sx={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={courses}
-          columns={columns}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-        />
+      <Box sx={{ width: "100%" }}>
+       <ReutilizableDataGrid columns={columns} rows={courses}/>
       </Box>
 
       <ModalContainer
@@ -192,7 +149,12 @@ export function CourseAdmin() {
         handleClose={() => setOpenModal(false)}
         additionalStyles={{
           width: "70vw",
-          height: "76vh",
+          maxWidth: "1444px",
+          height: {
+            xs: "76vh",
+            sm: "76vh",
+            md: "auto",
+          },
           padding: "0",
           border: "none",
           borderRadius: "20px",
