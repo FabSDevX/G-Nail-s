@@ -27,12 +27,14 @@ export const useAdminDataHandling = () => {
 
     const handleAddClick = () => {
         const id = Math.random().toString(36).substr(2, 9);
-        setRows((oldRows) => [...oldRows, { id, name: '', gmail: '', isNew: true }]);
+        setRows((oldRows) => [{ id, name: '', gmail: '', isNew: true }, ...oldRows]); // Agregar al inicio
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
         }));
     };
+    
+    
 
     const handleEditClick = (id) => () => {
         const originalRow = rows.find((row) => row.id === id);
@@ -79,15 +81,16 @@ export const useAdminDataHandling = () => {
     };
 
     const handleCancelClick = (id) => () => {
-        // Si la fila es nueva (sin estado original), forzamos la salida del modo de edición y luego la eliminamos
-        if (!originalRows[id]) {
-            // Primero, forzamos la salida del modo de edición
+        // Verifica si la fila es nueva o si ya existía
+        const isNewRow = !originalRows[id];
+    
+        if (isNewRow) {
+            // Para nuevas filas, salir del modo de edición y eliminar la fila
             setRowModesModel((prevModel) => ({
                 ...prevModel,
                 [id]: { mode: GridRowModes.View, ignoreModifications: true },
             }));
-
-            // eliminamos la fila del estado después de un pequeño retraso para asegurar que el DataGrid haya procesado la salida del modo de edición
+    
             setTimeout(() => {
                 setRows((prevRows) => prevRows.filter((row) => row.id !== id));
                 setRowModesModel((prevModel) => {
@@ -96,28 +99,27 @@ export const useAdminDataHandling = () => {
                     return updatedModel;
                 });
             }, 100); // Retraso para permitir que el DataGrid procese la salida del modo de edición
-            return;
+        } else {
+            // Si la fila existi restaurar al estado original
+            setRows((prevRows) =>
+                prevRows.map((row) => (row.id === id ? originalRows[id] : row))
+            );
+    
+            // Elimina la copia del estado original
+            setOriginalRows((prev) => {
+                const updated = { ...prev };
+                delete updated[id];
+                return updated;
+            });
+    
+            // Sale del modo de edición sin guardar cambios
+            setRowModesModel((prevModel) => ({
+                ...prevModel,
+                [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            }));
         }
-
-        // Si existe un estado original, restauramos la fila
-        setRows((prevRows) =>
-            prevRows.map((row) => (row.id === id ? originalRows[id] : row))
-        );
-
-        // Elimina la copia del estado original
-        setOriginalRows((prev) => {
-            const updated = { ...prev };
-            delete updated[id];
-            return updated;
-        });
-
-        // Sale del modo de edición sin guardar cambios
-        setRowModesModel((prevModel) => ({
-            ...prevModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        }));
     };
-
+    
 
 
     const processRowUpdate = async (newRow) => {

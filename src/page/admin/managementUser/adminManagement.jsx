@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { AdminToolbar } from '../../../component/managementAdmin/AdminToolbar';
 import { useAdminColumns } from '../../../component/managementAdmin/useAdminColumns';
@@ -17,6 +17,9 @@ const AdminManagement = () => {
         pageSize: 5,
         page: 0,
     });
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {
         rows,
@@ -41,7 +44,6 @@ const AdminManagement = () => {
         setDeleteId,   
     });
     
-
     const confirmDelete = async () => {
         await handleDeleteClick(deleteId)();
         setOpenDialog(false);
@@ -59,61 +61,74 @@ const AdminManagement = () => {
         )
     );
 
+    const handleAddClickAndGoToFirstPage = () => {
+        handleAddClick();  
+        setPaginationModel((prevModel) => ({
+            ...prevModel,
+            page: 0, 
+        }));
+    };
 
     return (
-        <Box sx={{
-            height: 500,
-            width: '100%',
-            margin: 'auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            mt: 5,
-        }}>
-            <Box sx={{ width: '100%', mb: 2 }}>
-                <SearchField value={searchText} onChange={handleSearchChange} />
-            </Box>
-            <DataGrid
-                rows={filteredRows}
-                columns={columns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
-                processRowUpdate={processRowUpdate}
-                slots={{
-                    toolbar: () => <AdminToolbar onAddClick={handleAddClick} />,
-                }}
-                pageSizeOptions={[5, 10, 25]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
-                disableRowSelectionOnClick
-                onProcessRowUpdateError={(error) => {
-                    console.error('Error al procesar la actualización de la fila:', error);
-                    setSnackbarState({
-                        open: true,
-                        message: 'Error al actualizar el usuario',
-                        severity: 'error'
-                    });
-                }}
-                onRowEditStop={(params, event) => {
-                    // Prevenir que el DataGrid guarde automáticamente los cambios si no se hizo clic en el botón "Guardar"
-                    if (params.reason !== 'enterKeyDown' && params.reason !== 'buttonClick') {
-                        event.defaultMuiPrevented = true; // Esto previene que el DataGrid procese la edición automáticamente
-                        setRowModesModel((prevModel) => ({
-                            ...prevModel,
-                            [params.id]: { mode: GridRowModes.Edit }, // Para mantener la fila en modo de edición
-                        }));
-                    }
-                }}
-            />
+        <Box
+            sx={{
+                height: 'auto',
+                width: '100%',
+                maxWidth: isSmallScreen ? '100%' : '70%',  // Limitar el ancho en pantallas grandes
+                margin: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                mt: 5,
+                px: isSmallScreen ? 2 : 0,  // Padding en pantallas pequeñas
+                alignItems: 'center',
+            }}
+        >
+            <Grid container spacing={2} sx={{ mb: 2, width: '100%' }}>
+                <Grid item xs={12}>
+                    <SearchField value={searchText} onChange={handleSearchChange} />
+                </Grid>
+                <Grid item xs={12}>
+                    <DataGrid
+                        rows={filteredRows}
+                        columns={columns}
+                        editMode="row"
+                        rowModesModel={rowModesModel}
+                        onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+                        processRowUpdate={processRowUpdate}
+                        slots={{
+                            toolbar: () => <AdminToolbar onAddClick={handleAddClickAndGoToFirstPage} />,
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
+                        paginationModel={paginationModel}
+                        onPaginationModelChange={setPaginationModel}
+                        disableRowSelectionOnClick
+                        autoHeight  // Ajuste de altura automática
+                        onProcessRowUpdateError={(error) => {
+                            console.error('Error al procesar la actualización de la fila:', error);
+                            setSnackbarState({
+                                open: true,
+                                message: 'Error al actualizar el usuario',
+                                severity: 'error'
+                            });
+                        }}
+                        onRowEditStop={(params, event) => {
+                            if (params.reason !== 'enterKeyDown' && params.reason !== 'buttonClick') {
+                                event.defaultMuiPrevented = true; 
+                                setRowModesModel((prevModel) => ({
+                                    ...prevModel,
+                                    [params.id]: { mode: GridRowModes.Edit }, 
+                                }));
+                            }
+                        }}
+                    />
+                </Grid>
+            </Grid>
             <StatusSnackbar
                 open={snackbarState.open}
                 message={snackbarState.message}
                 severity={snackbarState.severity}
                 onClose={() => setSnackbarState(prev => ({ ...prev, open: false }))}
             />
-
             <ConfirmDialog
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
