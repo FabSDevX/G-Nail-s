@@ -11,24 +11,24 @@ export const useAdminColumns = ({
     handleSaveClick,
     handleCancelClick,
     handleEditClick,
-    setOpenDialog,     //  prop para abrir el diálogo
-    setDeleteId,       //  prop para establecer el ID del usuario a eliminar
+    setOpenDialog,
+    setDeleteId,
 }) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return [
-        { 
-            field: 'name', 
-            headerName: 'Nombre', 
-            width: isSmallScreen ? 150 : 250,  // ancho en pantallas pequeñas
-            editable: true 
+        {
+            field: 'name',
+            headerName: 'Nombre',
+            width: isSmallScreen ? 150 : 250,  // Ajustar el ancho en pantallas pequeñas
+            editable: true,
         },
-        { 
-            field: 'gmail', 
-            headerName: 'Email', 
-            width: isSmallScreen ? 150 : 250,  //en pantallas pequeñas
-            editable: true 
+        {
+            field: 'gmail',
+            headerName: 'Email',
+            width: isSmallScreen ? 150 : 250,  // Ajustar el ancho en pantallas pequeñas
+            editable: true,
         },
         {
             field: 'actions',
@@ -46,18 +46,20 @@ export const useAdminColumns = ({
                             label="Guardar"
                             onClick={handleSaveClick(id)}
                             sx={{
+                                color: 'var(--save-changes-color)',
                                 fontSize: isSmallScreen ? 'small' : 'default',
                                 padding: isSmallScreen ? '4px' : '8px',
-                            }} 
+                            }}
                         />,
                         <GridActionsCellItem
                             icon={<CancelIcon />}
                             label="Cancelar"
                             onClick={handleCancelClick(id)}
                             sx={{
+                                color: 'var(--cancel-changes-color)',
                                 fontSize: isSmallScreen ? 'small' : 'default',
                                 padding: isSmallScreen ? '4px' : '8px',
-                            }} 
+                            }}
                         />,
                     ];
                 }
@@ -65,27 +67,27 @@ export const useAdminColumns = ({
                 return [
                     <GridActionsCellItem
                         icon={<EditIcon sx={{ 
-                            color: "black", 
-                            backgroundColor: "#FFFF99", 
+                            color: 'black', 
+                            backgroundColor: 'var(--edit-changes-color)', 
                             padding: isSmallScreen ? '4px' : '8px', 
-                            borderRadius: "4px", 
-                            fontSize: isSmallScreen ? 'small' : 'default' }} 
-                        />}
+                            borderRadius: '4px',
+                            fontSize: isSmallScreen ? 'small' : 'default' 
+                        }} />}
                         label="Editar"
                         onClick={handleEditClick(id)}
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon sx={{ 
-                            color: "black", 
-                            backgroundColor: "#f54021", 
+                            color: 'black', 
+                            backgroundColor: 'var(--delete-color)', 
                             padding: isSmallScreen ? '4px' : '8px', 
-                            borderRadius: "4px", 
-                            fontSize: isSmallScreen ? 'small' : 'default' }} 
-                        />}
+                            borderRadius: '4px',
+                            fontSize: isSmallScreen ? 'small' : 'default' 
+                        }} />}
                         label="Eliminar"
                         onClick={() => {
-                            setDeleteId(id); // Establecer el ID del usuario a eliminar
-                            setOpenDialog(true); 
+                            setDeleteId(id);
+                            setOpenDialog(true);
                         }}
                     />,
                 ];
