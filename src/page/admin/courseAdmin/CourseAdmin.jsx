@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
@@ -8,18 +8,22 @@ import { useEffect } from "react";
 import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
 import { Toaster } from "sonner";
 import { promiseToast } from "../../../utils/toast";
+import { courseModel } from "../../../model/model";
+import noImageBackground from "../../../assets/noImageBackground.svg";
 import ModalContainer from "../../../component/ModalContainer";
-import deleteTrashCan from "../../../assets/deleteTrashcan.svg";
-import editPencil from "../../../assets/editPencil.svg";
-import ExpandableCell from "../../../component/courseAdmin/ExpandableCell";
 import ReutilizableDataGrid from "../../../component/courseAdmin/ReutilizableDataGrid";
+import CardModal from "../../../component/courseAdmin/CardModal";
+import getColumns from "../../../component/courseAdmin/handleCourseData";
 
 export function CourseAdmin() {
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(courseModel);
+  const [selectedImg, setSelectedImg] = useState(noImageBackground);
   const [isCourseUpdated, setIsCourseUpdated] = useState(false);
   const [actualUid, setActualUid] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openCardModal, setOpenCardModal] = useState(false);
   const [handleDialog, setHandleDialog] = useState(false);
   const refreshCourses = async () => {
     const courseValues = await getAllDocuments("Course");
@@ -43,76 +47,21 @@ export function CourseAdmin() {
       setActualUid(null);
       setIsEditing(false);
     }
-  }, [openModal]);
+    if (!openCardModal) {
+      setSelectedImg(noImageBackground);
+      setSelectedCourse(courseModel);
+    }
+  }, [openModal, openCardModal]);
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 90, resizable: false, hideable: false, filterable:false },
-    { field: "name", headerName: "Nombre", width: 150, renderCell: (params) => <ExpandableCell {...params} />,},
-    { field: "smallDescription", headerName: "Descripcion corta", width: 200, renderCell: (params) => <ExpandableCell {...params} />,},
-    { field: "largeDescription", headerName: "Descripcion larga", width: 200, renderCell: (params) => <ExpandableCell {...params} />,},
-    { field: "hours", headerName: "Horas", width: 80, type: "number", resizable: false,},
-    { field: "categories", headerName: "Categorías", width: 80, sortable: false,},
-    { field: "img", headerName:"Imagen", width: 80, hideable: false, filterable:false},
-    { field: "edit", headerName: "Editar", width: 70, resizable: false, hideable: false, sortable: false, filterable:false,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "var(--edit-changes-color);",
-            width: "48px",
-            minWidth: "48px",
-            "&:hover": {
-              background: "var(--primary-color);",
-            },
-            "&:focus": {
-              border: "none",
-            },
-          }}
-          onClick={() => {
-            setActualUid(params.row.id);
-            setIsEditing(true);
-            setOpenModal(true);
-          }}
-        >
-          <Box
-            component="img"
-            sx={{ width: "32px" }}
-            src={editPencil}
-            alt="Pencil image"
-          />
-        </Button>
-      ),
-    },
-    { field: "delete", headerName: "Borrar", width: 70, resizable: false, hideable: false, sortable: false, filter:false, filterable:false,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "var(--delete-color);",
-            width: "48px",
-            minWidth: "48px",
-            "&:hover": {
-              background: "var(--primary-color);",
-            },
-            "&:focus": {
-              border: "none",
-            },
-          }}
-          onClick={() => {
-            setActualUid(params.row.id);
-            setHandleDialog(true);
-          }}
-        >
-          <Box
-            component="img"
-            sx={{ width: "32px" }}
-            src={deleteTrashCan}
-            alt="Delete image"
-          />
-        </Button>
-      ),
-    },
-  ];
+  const columns = getColumns(
+    setSelectedImg,
+    setSelectedCourse,
+    setOpenCardModal,
+    setActualUid,
+    setIsEditing,
+    setOpenModal,
+    setHandleDialog
+  );
 
   async function handleDelete() {
     try {
@@ -141,7 +90,11 @@ export function CourseAdmin() {
       />
 
       <Box sx={{ width: "100%" }}>
-       <ReutilizableDataGrid columns={columns} rows={courses}/>
+        <ReutilizableDataGrid
+          columns={columns}
+          rows={courses}
+          hiddenRowsJson={{ id: false, img: false }}
+        />
       </Box>
 
       <ModalContainer
@@ -167,12 +120,21 @@ export function CourseAdmin() {
           handleStateAction={setIsCourseUpdated}
         />
       </ModalContainer>
+
       <ConfirmationDialog
         agreedFuntion={() => handleDelete()}
         state={[handleDialog, setHandleDialog]}
         modalTitle={"Seguro de querer eliminar este curso?"}
       />
       <Toaster richColors />
+      <CardModal
+        name={selectedCourse["name"]}
+        img={selectedImg}
+        lessonHours={Number(selectedCourse["numLessons"])}
+        largeDescription={selectedCourse["largeDescription"]}
+        shortDescription={selectedCourse["smallDescription"]}
+        useStateModal={[openCardModal, setOpenCardModal]}
+      />
     </AdminSectionLayout>
   );
 }

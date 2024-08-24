@@ -11,12 +11,11 @@ import {
   upsertDocument,
 } from "../../utils/firebaseDB";
 import { useEffect } from "react";
-import ModalContainer from "../ModalContainer";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { promiseToast, warningToast } from "../../utils/toast";
 import { getActualDate } from "../../utils/date";
 import { courseModel } from "../../model/model";
-import { CourseCard } from "../CourseCard/CourseCard";
+import CardModal from "./CardModal";
 
 const contactTitleInput = {
   padding: "0",
@@ -382,26 +381,15 @@ export function CourseAddEdit({
           </Box>
         </Box>
 
-        <ModalContainer
-          open={openModal}
-          handleClose={() => setOpenModal(false)}
-          additionalStyles={{
-            width: "auto",
-            height: "auto",
-            padding: "0",
-            border: "none",
-            borderRadius: "20px",
-            overflow: "hidden",
-          }}
-        >
-          <CourseCard
-            title={course["name"]}
-            img={img}
-            lessonHours={Number(course["hours"])}
-            largeDescription={course["largeDescription"]}
-            shortDescription={course["smallDescription"]}
-          />
-        </ModalContainer>
+        <CardModal 
+        name={course["name"]}
+        img={img}
+        lessonHours={Number(course["hours"])}
+        largeDescription={course["largeDescription"]}
+        shortDescription={course["smallDescription"]}
+        useStateModal={[openModal, setOpenModal]}
+        />
+
         <ConfirmationDialog
           agreedFuntion={handleSavedChanges}
           state={[handleDialog, setHandleDialog]}

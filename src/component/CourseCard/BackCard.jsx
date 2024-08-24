@@ -9,7 +9,6 @@ export function BackCard({ largeDescription, img }) {
         padding: "0",
         backfaceVisibility: "hidden",
         transform: "rotateY(180deg)",
-        position: "flex",
         width: "100%",
         height: "100%",
         backgroundColor: "#f9f9f9",
