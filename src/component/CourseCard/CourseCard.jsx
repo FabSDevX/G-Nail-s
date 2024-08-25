@@ -21,7 +21,7 @@ export function CourseCard({title, shortDescription, lessonHours, img, largeDesc
   return (
     <Card
       sx={{
-        maxWidth: "310px",
+        width: "310px",
         borderRadius: "10px",
         perspective: "1000px",
         boxShadow: "none",

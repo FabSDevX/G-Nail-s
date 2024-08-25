@@ -1,13 +1,12 @@
-
 import { db, storageDB } from "../../firebase";
 import { v4 } from "uuid";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   addDoc, collection, getDoc,
   updateDoc, getDocs, deleteDoc,
-  doc, where, query
+  doc, where, query,
+  onSnapshot
 } from "firebase/firestore";
-
 
 /**
  * Get a specific document in a collection
@@ -40,16 +39,6 @@ export async function setDocumentByCollection(collectionName, jsonData) {
   }
 }
 
-// export async function setDocumentByCollection(collectionName, jsonData) {
-//   try {
-//     await addDoc(collection(db, collectionName), {
-//       jsonData,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
 /**
  * Update custom fields for a specific document in a collection
  * @param {string} collectionName
@@ -65,9 +54,6 @@ export async function updateDocumentById(collectionName, documentID, jsonData) {
     console.error("Error updating document: ");
   }
 }
-
-
-
 
 //---- Admin Management ----
 /**
@@ -87,21 +73,52 @@ export async function getAllDocuments(collectionName) {
 }
 
 
+//USAGE EXAMPLE
+// useEffect(() => {
+//   const unsubscribe = listenToCollectionChanges("Course", (documents) => {
+//     setValues(documents);
+//   });
+
+//   return () => unsubscribe && unsubscribe();
+// }, []);
+
+export function listenToCollectionChanges(collectionName, callback) {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+      const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      callback(documents);
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error("Error listening to collection changes: ", error);
+    return null;
+  }
+}
+
 /**
  * Delete a document by its ID
  * @param {string} collectionName
  * @param {string} documentID
  */
-export async function deleteDocumentById(collectionName, documentID) {
+export async function deleteDocumentById(collectionName, documentID, isDeletingImage=false) {
   try {
     const docRef = doc(db, collectionName, documentID);
+    const docData = await getDocumentById(collectionName, documentID);
     await deleteDoc(docRef);
+    if (isDeletingImage) {
+      const ImageRef = ref(storageDB, docData.img);
+      try {
+        await deleteObject(ImageRef);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   } catch (error) {
     console.error("Error deleting document: ");
   }
 }
-
-
 
 /**
  * Add or update a document in a collection
@@ -124,16 +141,14 @@ export async function upsertDocument(collectionName, documentID = null, jsonData
   }
 }
 
-
 /**
  * function to upload an image to firestore
  * @param {string} url image url
  * @param {string} directoryPath firebase folder name
  * @param {string} previousImagePath optional previous image path to delete
- * @returns 
+ * @returns
  */
 export async function uploadImageByUrl(url, directoryPath, previousImagePath=null){
-
   if (previousImagePath) {
     const previousImageRef = ref(storageDB, previousImagePath);
     try {
@@ -146,27 +161,27 @@ export async function uploadImageByUrl(url, directoryPath, previousImagePath=nul
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch image');
-  }  
+    throw new Error("Failed to fetch image");
+  }
 
   const blob = await response.blob();
-  const imgRef = ref(storageDB, `${directoryPath}/${v4()}`)  
+  const imgRef = ref(storageDB, `${directoryPath}/${v4()}`);
   await uploadBytes(imgRef, blob);
-  return imgRef.fullPath
+  return imgRef.fullPath;
 }
 
 /**
  * Function to get an image from firebase path
- * @param {string} path 
+ * @param {string} path
  * @returns downloadUrl image
  */
 export async function getImageByUrl(path) {
   try {
     const imgRef = ref(storageDB, path);
-    const downloadURL = await getDownloadURL(imgRef);  
+    const downloadURL = await getDownloadURL(imgRef);
     return downloadURL;
   } catch (error) {
-    throw new Error('Failed to fetch image URL: ' + error.message);
+    throw new Error("Failed to fetch image URL: " + error.message);
   }
 }
 
@@ -188,4 +203,3 @@ export async function isUserAllowed(email) {
     return false;
   }
 }
-

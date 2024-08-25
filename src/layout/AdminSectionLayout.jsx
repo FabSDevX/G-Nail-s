@@ -1,16 +1,15 @@
 import { Box, Typography } from "@mui/material";
 import propTypes from "prop-types";
-import { AdminNavBar } from "../component/AdminNavBar";
 
 export function AdminSectionLayout({ id, title, children }) {
   return (
     <Box id={id}>
-      <AdminNavBar />
       <Box
         sx={{
-          maxWidth: "90%",
-          margin: "30px auto 0 auto",
-          paddingBottom: "10px",
+          maxWidth: "1444px",
+          margin:"0 auto",
+          padding: "0 30px 10px 30px",
+          minHeight:"100vh"
         }}
       >
         <Typography
