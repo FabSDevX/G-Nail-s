@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 
-export function ImageUploadCard({name, handleImageListChange}) {
+export function ImageUploadCard({name, handleImageListChange, initialImage, handleDelete}) {
 
     const [selectedImage, setSelectedImage] = useState(null);
+
+    useEffect(() => {
+      if (initialImage) {
+        setSelectedImage(initialImage['url']);
+      }
+    }, [initialImage, name, handleImageListChange]);          
+
 
     const handleImageChange = (event) => {
       const file = event.target.files[0];
       if (file) {
         const imageUrl = URL.createObjectURL(file);
+        console.log(name);
         setSelectedImage(imageUrl);
-        handleImageListChange(name, imageUrl)
+        handleImageListChange(name, imageUrl);
       }
 
     }
 
+      // Genera un id único basado en el nombre del componente
+      const inputId = `${name}-image-upload`;
+
     return(
         <Box
-        className = "image-card-1"
         sx={{
-          margin: 'auto',
           position: 'relative',
           width: '100%',
           maxWidth: '300px',
@@ -37,18 +46,50 @@ export function ImageUploadCard({name, handleImageListChange}) {
         }}
         >
         {selectedImage ? (
-          <img
-            src={selectedImage}
-            alt="Selected"
-            style={{
-              width: '200%',
-              height: '200%',
-              objectFit: 'cover', // or 'cover' depending on desired behavior
-            }}
-          />
+
+          <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+          }}
+          >    
+            <img
+              src={selectedImage}
+              alt="Selected"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover', // or 'cover' depending on desired behavior
+              }}
+            />
+            <button
+              onClick={()=>{
+                setSelectedImage(null);
+                handleDelete(name, initialImage['url']);
+              }} 
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                padding: '5px 10px',
+                backgroundColor: 'transparent',
+                color: '#ff0000', // Color rojo para la equis
+                border: 'none',
+                fontSize: '24px', // Tamaño de la equis
+                cursor: 'pointer',                
+              }}
+            >
+              &times;
+            </button>
+          </Box> 
+
+          
+          
+          
           ) : (
             <label
-              htmlFor="image-upload"
+              htmlFor={inputId}
               style={{
                 position: 'absolute',
                 width: '100%',
@@ -60,7 +101,7 @@ export function ImageUploadCard({name, handleImageListChange}) {
               }}
             >
               <input
-                id="image-upload"
+                id={inputId}
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}

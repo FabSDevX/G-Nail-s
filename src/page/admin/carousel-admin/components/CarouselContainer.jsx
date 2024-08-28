@@ -10,11 +10,11 @@ export function CarouselContainer({imageList}) {
 
     return(
         <Box>
-            <Carousel afterChange={onChange} autoplay autoplaySpeed={5000} arrows>
-            {imageList.map((url,index) => (
+            <Carousel afterChange={onChange} autoplay autoplaySpeed={5000} arrows fade>
+            {imageList.map((value,index) => (
                 <Box key = {index}>
                     <img 
-                    src={url} 
+                    src={value['url']} 
                     alt={'Slide ${index+1}'}  
                     style={{width: '100%', height: '400px', objectFit: 'cover'}}
                     />
