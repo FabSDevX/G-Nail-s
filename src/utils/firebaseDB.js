@@ -1,12 +1,12 @@
 import { db, storageDB } from "../../firebase";
-import { v4 } from "uuid";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, listAll, deleteObject, getDownloadURL } from 'firebase/storage';
 import {
   addDoc, collection, getDoc,
   updateDoc, getDocs, deleteDoc,
   doc, where, query,
   onSnapshot
 } from "firebase/firestore";
+import { v4 } from "uuid";
 
 /**
  * Get a specific document in a collection
@@ -203,3 +203,82 @@ export async function isUserAllowed(email) {
     return false;
   }
 }
+
+export async function uploadCarouselImageByUrl(url, directoryPath, name){
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }  
+
+  const blob = await response.blob();
+  const imgRef = ref(storageDB, `${directoryPath}/${name}-${v4()}`)
+  await uploadBytes(imgRef, blob);
+  const itemURL = await getDownloadURL(imgRef);
+  return itemURL
+}
+
+
+export async function deleteDirectoryImages(directoryName, imageList){
+
+  const directoryRef = ref(storageDB, directoryName)
+
+  listAll(directoryRef)
+  .then((result) => {
+    const deletePromises = result.items.map(async (itemRef) => {
+      
+      const itemURL = await getDownloadURL(itemRef);
+      
+        if (!Object.values(imageList).includes(itemURL)) {
+          return deleteObject(itemRef);
+        } else {
+          console.log(`El objeto con URL ${itemURL} no se eliminará porque está en la lista.`);
+          return Promise.resolve(); 
+        }
+      
+
+    });
+
+    Promise.all(deletePromises)
+      .then(() => {
+        console.log('Carpeta "carousel" eliminada');            
+      })
+      .catch((error) => {
+        console.error('Error al eliminar los archivos:', error);
+      });
+  })
+  .catch((error) => {
+    console.error('Error al listar los archivos:', error);
+  });
+
+}
+
+
+export async function deleteImage(urlImage){
+
+  const urlImageReference = ref(storageDB, urlImage);
+    try {
+      await deleteObject(urlImageReference);
+    } catch (error) {
+      console.error(error);
+    }
+  
+}
+
+export async function getCarouselImages(){
+  const carouselRef = ref(storageDB, 'carousel');
+  const result = await listAll(carouselRef);
+
+  const urls = await Promise.all(result.items.map((itemRef) => getDownloadURL(itemRef)));
+
+  const updatedImageList = {};
+  urls.forEach((url, index) => {
+    const key = url.match(/image-card-\d+/)[0];
+    
+    updatedImageList[key] = {'url':url, 'isStored': true};
+  });
+
+  return updatedImageList
+}
+

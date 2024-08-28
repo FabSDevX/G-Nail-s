@@ -17,6 +17,7 @@
     "@mui/material": "^5.16.7",
     "@mui/x-data-grid": "^7.12.1",
     "@mui/x-date-pickers": "^7.12.0",
+    "antd": "^5.20.1",
     "dayjs": "^1.11.12",
     "firebase": "^10.12.5",
     "prop-types": "^15.8.1",
