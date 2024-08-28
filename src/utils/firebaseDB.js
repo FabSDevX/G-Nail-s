@@ -87,12 +87,11 @@ export async function deleteDirectoryImages(directoryName, imageList){
       
       const itemURL = await getDownloadURL(itemRef);
       
-        // Verifica si la URL del item está en la lista de URLs a conservar
         if (!Object.values(imageList).includes(itemURL)) {
           return deleteObject(itemRef);
         } else {
           console.log(`El objeto con URL ${itemURL} no se eliminará porque está en la lista.`);
-          return Promise.resolve(); // Resuelve la promesa sin eliminar
+          return Promise.resolve(); 
         }
       
 
@@ -130,14 +129,13 @@ export async function getCarouselImages(){
 
   const urls = await Promise.all(result.items.map((itemRef) => getDownloadURL(itemRef)));
 
-  // Establece las imágenes en los ImageUploadCard correspondientes
   const updatedImageList = {};
   urls.forEach((url, index) => {
     const key = url.match(/image-card-\d+/)[0];
     
     updatedImageList[key] = {'url':url, 'isStored': true};
   });
-  
+
   return updatedImageList
 }
 
