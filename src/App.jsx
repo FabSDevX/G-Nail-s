@@ -7,6 +7,7 @@ import Login from "./component/adminLogin/Login";
 import AdminManagement from "./page/admin/managementUser/adminManagement";
 import NotFound from "./page/notFound/NotFound";
 import AdminLayout from "./utils/layout/AdminLayout";
+import ClientLayout from "./utils/layout/ClientLayout";
 import {CourseAdmin} from "./page/admin/courseAdmin/CourseAdmin";
 import ContactAdmin from "./page/admin/contactAdmin/ContactAdmin";
 import {Calendario} from "./page/Calendario/Calendario";
@@ -18,11 +19,16 @@ function App() {
       <Router>
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
-          <Route path="/" element={<ClientHome />} />
-          <Route path="/contacto" element={<Contact />} />
+
+          <Route element={<ClientLayout />}>
+            <Route path="/" element={<ClientHome />} />
+            <Route path="/contacto" element={<Contact />} />
+          </Route>    
 
           {/* Ruta de autenticación */}
-          <Route path="/login" element={<Login />} />
+
+          <Route path="/login" element={<Login />} />     
+
 
           {/* Rutas protegidas para la parte de administración */}
           <Route element={<ProtectedRoute />}>
