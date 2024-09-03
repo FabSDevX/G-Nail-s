@@ -272,19 +272,29 @@ export function CourseAddEdit({
                 src={img}
               ></Box>
               <Input
+                id="add-img-btn"
                 type="file"
                 accept="image/*"
                 style={{
                   display: "none",
                 }}
                 onChange={(e) => {
-                  setImg(URL.createObjectURL(e.target.files[0]));
-                  setIsImageEdited(true);
+                  const file = e.target.files[0];
+                  if (file) {
+                    if (file.type.startsWith("image/")) {
+                      setImg(URL.createObjectURL(file));
+                      setIsImageEdited(true);
+                    } else {
+                      alert("Por favor, seleccione un archivo de imagen válido.");
+                    }
+                    e.target.value = null;
+                  }
                 }}
               />
+
               <Button
                 onClick={() => {
-                  document.querySelector('input[type="file"]').click();
+                  document.getElementById('add-img-btn').click();
                 }}
                 sx={{
                   height: "50px",

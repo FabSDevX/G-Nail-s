@@ -46,7 +46,6 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
           background: "var(--preview-changes-color)",
           color: "white",
         }}
-        aria-required="true"
       >
         Prevista
       </Button>
@@ -58,7 +57,6 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
           background: "var(--cancel-changes-color)",
           color: "#444444",
         }}
-        aria-required="true"
       >
         Cancelar
       </Button>
@@ -71,7 +69,6 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
           background: "var(--save-changes-color)",
           color: "white",
         }}
-        aria-required="true"
       >
         Guardar cambios
       </Button>
