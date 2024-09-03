@@ -19,7 +19,6 @@ function App() {
       <Router>
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
-
           <Route element={<ClientLayout />}>
             <Route path="/" element={<ClientHome />} />
             <Route path="/contacto" element={<Contact />} />
