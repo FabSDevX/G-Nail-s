@@ -14,9 +14,9 @@ export const ClientNavBar = () => {
     const [anchorElement, setAnchorElement] = useState(null);
     const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
 
-    const navBarFirstVersionDisplay = useMediaQuery('(min-width:666px)');
+    const navBarFirstVersionDisplay = useMediaQuery('(min-width:672px)');
 
-    const navBarSecondVersionDisplay = useMediaQuery('(max-width:666px)');
+    const navBarSecondVersionDisplay = useMediaQuery('(max-width:672px)');
 
 
     const availableCourses = [
@@ -87,7 +87,7 @@ export const ClientNavBar = () => {
                             onClick={handleMobileMenuClick}
                             color="inherit"
                         >
-                            <MenuIcon sx={{color:'black'}}/>
+                            <MenuIcon  sx={{ color:'black', height: '35px', width: '35px'}}/>
                         </IconButton>
                         <Menu
                             id="mobile-menu"
@@ -125,7 +125,7 @@ export const ClientNavBar = () => {
                             <Button color="inherit" sx={{ color: 'black'}} onClick={() => navigate('/contacto')} >Contáctenos </Button>
                             <Button color="inherit" sx={{ color: 'black' }}> Sobre nosotros </Button>
                             <Button color="inherit" id="resources-button" onClick={handleOpenCoursesMenu} sx={{ color: 'black' }}> 
-                                Cursos disponibles {Boolean(anchorElement) ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                                Nuestros Cursos {Boolean(anchorElement) ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
                             </Button>
                         </Stack>
                     </Box>
