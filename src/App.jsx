@@ -19,14 +19,15 @@ function App() {
       <Router>
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
-
-          <Route element={<ClientLayout/>}>
+          <Route element={<ClientLayout />}>
             <Route path="/" element={<ClientHome />} />
             <Route path="/contacto" element={<Contact />} />
-          </Route>
+          </Route>    
 
           {/* Ruta de autenticación */}
-          <Route path="/login" element={<Login />} />
+
+          <Route path="/login" element={<Login />} />     
+
 
           {/* Rutas protegidas para la parte de administración */}
           <Route element={<ProtectedRoute />}>
