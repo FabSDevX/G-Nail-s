@@ -17,6 +17,7 @@ const ClientFooter = () => {
         display: "flex", 
         flexDirection: footerFlexDisplay ? 'column' : 'row', // Column on small screens, row on larger screens
         justifyContent: {xs: "center", sm: 'space-between'}, 
+        WebkitJustifyContent: "none",
         alignItems: "center",
         textAlign: "center", // Center text in smaller screens
         gap: "15px",
@@ -25,7 +26,7 @@ const ClientFooter = () => {
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <img src="/LOGO_GNAILS.png" alt="Logo" style={{ height: "100px", width:"100px", marginRight: "20px" }} />
         <Typography variant="body1" color="textSecondary">
-          © 2024 Your Company Name
+          © 2024 All rights reserved
         </Typography>
       </Box>
       <Box sx={{ display: "flex", gap: "15px" }}>
