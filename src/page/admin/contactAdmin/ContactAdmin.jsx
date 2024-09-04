@@ -155,6 +155,8 @@ function ContactAdmin() {
                       id="outlined-required"
                       defaultValue={phone}
                       name="phone"
+                      required
+                      inputProps={{ maxLength: 12 }}
                       onChange={(e) => {
                         setPhone(e.target.value);
                         onChangeFields(e.target.name, e.target.value);
@@ -168,6 +170,9 @@ function ContactAdmin() {
                       id="outlined-required"
                       defaultValue={mail}
                       name="mail"
+                      type="email"
+                      required
+                      inputProps={{ maxLength: 30 }}
                       onChange={(e) => {
                         setMail(e.target.value);
                         onChangeFields(e.target.name, e.target.value);
@@ -189,6 +194,7 @@ function ContactAdmin() {
                     rows={5}
                     inputProps={{ maxLength: 100 }}
                     name="location"
+                    required
                     onChange={(e) => {
                       setLocation(e.target.value);
                       onChangeFields(e.target.name, e.target.value);
@@ -210,6 +216,7 @@ function ContactAdmin() {
                     id="outlined-required"
                     defaultValue={socialMedia["facebook"]}
                     name="socialMedia"
+                    required
                     onChange={(e) => {
                       setSocialMedia({
                         ...socialMedia,
@@ -229,6 +236,7 @@ function ContactAdmin() {
                     id="outlined-required"
                     defaultValue={socialMedia["instagram"]}
                     name="socialMedia"
+                    required
                     onChange={(e) => {
                       setSocialMedia({
                         ...socialMedia,
@@ -250,6 +258,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule1"].day = e.target.value;
@@ -261,6 +271,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule1"].time = e.target.value;
@@ -274,6 +286,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule2"].day = e.target.value;
@@ -285,6 +299,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule2"].time = e.target.value;
@@ -298,6 +314,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule3"].day = e.target.value;
@@ -309,6 +327,8 @@ function ContactAdmin() {
                   <TextField
                     id="outlined-required"
                     name="schedule"
+                    required
+                    inputProps={{ maxLength: 20 }}
                     onChange={(e) => {
                       const newScheduleData = scheduleData;
                       newScheduleData["schedule3"].time = e.target.value;
@@ -333,6 +353,7 @@ function ContactAdmin() {
                       defaultValue={iFrame}
                       rows={11}
                       name="iFrame"
+                      required
                       onChange={(e) => {
                         setIFrame(e.target.value);
                         onChangeFields(e.target.name, e.target.value);
@@ -348,6 +369,7 @@ function ContactAdmin() {
                       id="outlined-required"
                       defaultValue={locationLink}
                       name="locationLink"
+                      required
                       onChange={(e) => {
                         setLocationLink(e.target.value);
                         onChangeFields(e.target.name, e.target.value);
@@ -364,6 +386,8 @@ function ContactAdmin() {
                   id="outlined-required"
                   defaultValue={lessonSchedule[0]}
                   name="lessonSchedule"
+                  required
+                  inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
                     const newLessonSchedule = [...lessonSchedule];
                     newLessonSchedule[0] = e.target.value;
@@ -376,6 +400,8 @@ function ContactAdmin() {
                   id="outlined-required"
                   defaultValue={lessonSchedule[1]}
                   name="lessonSchedule"
+                  required
+                  inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
                     const newLessonSchedule = [...lessonSchedule];
                     newLessonSchedule[1] = e.target.value;
@@ -388,6 +414,8 @@ function ContactAdmin() {
                   id="outlined-required"
                   defaultValue={lessonSchedule[2]}
                   name="lessonSchedule"
+                  required
+                  inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
                     const newLessonSchedule = [...lessonSchedule];
                     newLessonSchedule[2] = e.target.value;
