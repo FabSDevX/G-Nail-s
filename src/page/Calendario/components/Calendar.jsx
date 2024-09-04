@@ -183,7 +183,7 @@ export default function Calendar() {
           <Typography>{`Fecha: ${value.format('DD-MM-YYYY')}`}</Typography>
           <Button variant="contained" sx={{ mt: 2 }}>
             Acción
-          </Button>
+          </Button> 
         </Paper>
     
     </Box>
