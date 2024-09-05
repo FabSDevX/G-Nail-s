@@ -37,6 +37,7 @@ export function CourseAddEdit({
   uidParam = null,
   isEditingParam = false,
   handleStateAction,
+  handleClose = null
 }) {
   const [isEditing, setIsEditing] = useState(isEditingParam);
   const [uid, setUid] = useState(uidParam);
@@ -405,7 +406,7 @@ export function CourseAddEdit({
           state={[handleDialog, setHandleDialog]}
           modalTitle={textConfirmationModal}
         />
-        <AdminFormBtn handleOpenPreview={() => setOpenModal(true)} />
+        <AdminFormBtn handleOpenPreview={() => setOpenModal(true)} handleCloseAction={handleClose}/>
       </Box>
     </AdminAddEditFormLayout>
   );
@@ -415,4 +416,5 @@ CourseAddEdit.propTypes = {
   uidParam: propTypes.string,
   isEditingParam: propTypes.bool.isRequired,
   handleStateAction: propTypes.func.isRequired,
+  handleClose: propTypes.func
 };
