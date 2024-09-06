@@ -15,11 +15,11 @@ const modalStyle = {
   p: 4,
 };
 
-export function ModalContainer({ open, handleClose, children, additionalStyles }) {
+export function ModalContainer({ open, handleClose, children, disableBackdropClose = false, additionalStyles }) {
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={disableBackdropClose ? () => {} : handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -30,8 +30,9 @@ export function ModalContainer({ open, handleClose, children, additionalStyles }
 
 ModalContainer.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  handleClose: PropTypes.func,
   children: PropTypes.node.isRequired,
+  disableBackdropClose: PropTypes.bool,
   additionalStyles: PropTypes.object
 };
 
