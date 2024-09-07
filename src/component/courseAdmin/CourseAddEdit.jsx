@@ -11,13 +11,11 @@ import {
   upsertDocument,
 } from "../../utils/firebaseDB";
 import { useEffect } from "react";
-import ModalContainer from "../ModalContainer";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { promiseToast, warningToast } from "../../utils/toast";
 import { getActualDate } from "../../utils/date";
-import { Toaster } from "sonner";
 import { courseModel } from "../../model/model";
-import { CourseCard } from "../CourseCard/CourseCard";
+import CardModal from "./CardModal";
 
 const contactTitleInput = {
   padding: "0",
@@ -35,7 +33,12 @@ const contactInput = {
   width: "100%",
 };
 
-export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
+export function CourseAddEdit({
+  uidParam = null,
+  isEditingParam = false,
+  handleStateAction,
+  handleClose = null
+}) {
   const [isEditing, setIsEditing] = useState(isEditingParam);
   const [uid, setUid] = useState(uidParam);
   const [isImageEdited, setIsImageEdited] = useState(false);
@@ -108,23 +111,24 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
     );
     if (!isEditing) setIsEditing(true);
     setIsImageEdited(false);
+    handleStateAction(true);
   }
 
   return (
     <AdminAddEditFormLayout>
       <Typography
-      sx={{
-        fontWeight:"600",
-        color:"var(--admin-title-color);",
-        fontSize: {
-          xs: "x-large",
-          sm: "xx-large"
-        }
-      }}
+        sx={{
+          fontWeight: "600",
+          color: "var(--admin-title-color);",
+          fontSize: {
+            xs: "x-large",
+            sm: "xx-large",
+          },
+        }}
       >
-        {isEditing ? "Editando curso": "Creando curso"}
+        {isEditing ? "Editando curso" : "Creando curso"}
       </Typography>
-      <Toaster richColors position="bottom-center" />
+
       <Typography
         sx={{
           fontSize: "x-large",
@@ -149,7 +153,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
             display: "flex",
             flexDirection: {
               xs: "column",
-              sm: "row",
+              sm: "column",
               md: "row",
             },
           }}
@@ -269,19 +273,29 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                 src={img}
               ></Box>
               <Input
+                id="add-img-btn"
                 type="file"
                 accept="image/*"
                 style={{
                   display: "none",
                 }}
                 onChange={(e) => {
-                  setImg(URL.createObjectURL(e.target.files[0]));
-                  setIsImageEdited(true);
+                  const file = e.target.files[0];
+                  if (file) {
+                    if (file.type.startsWith("image/")) {
+                      setImg(URL.createObjectURL(file));
+                      setIsImageEdited(true);
+                    } else {
+                      alert("Por favor, seleccione un archivo de imagen válido.");
+                    }
+                    e.target.value = null;
+                  }
                 }}
               />
+
               <Button
                 onClick={() => {
-                  document.querySelector('input[type="file"]').click();
+                  document.getElementById('add-img-btn').click();
                 }}
                 sx={{
                   height: "50px",
@@ -299,7 +313,6 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                     background: "var(--secondary-color)",
                     color: "black",
                   },
-
                 }}
               >
                 Editar
@@ -326,6 +339,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                   sx={{ ...contactInput, width: "100px", height: "40px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[0] : ""}
                   onChange={(e) => handleCategoryChange(0, e.target.value)}
                 />
@@ -333,6 +347,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                   sx={{ ...contactInput, width: "100px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[1] : ""}
                   onChange={(e) => handleCategoryChange(1, e.target.value)}
                 />
@@ -340,6 +355,7 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
                   sx={{ ...contactInput, width: "100px" }}
                   id="outlined-required"
                   size="small"
+                  inputProps={{ maxLength: 15 }}
                   value={course.categories ? course.categories[2] : ""}
                   onChange={(e) => handleCategoryChange(2, e.target.value)}
                 />
@@ -376,32 +392,21 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
           </Box>
         </Box>
 
-        <ModalContainer
-          open={openModal}
-          handleClose={() => setOpenModal(false)}
-          additionalStyles={{
-            width: "auto",
-            height: "auto",
-            padding: "0",
-            border: "none",
-            borderRadius: "20px",
-            overflow: "hidden",
-          }}
-        >
-          <CourseCard
-            title={course["name"]}
-            img={img}
-            lessonHours={Number(course["hours"])}
-            largeDescription={course["largeDescription"]}
-            shortDescription={course["smallDescription"]}
-          />
-        </ModalContainer>
+        <CardModal 
+        name={course["name"]}
+        img={img}
+        lessonHours={Number(course["hours"])}
+        largeDescription={course["largeDescription"]}
+        shortDescription={course["smallDescription"]}
+        useStateModal={[openModal, setOpenModal]}
+        />
+
         <ConfirmationDialog
           agreedFuntion={handleSavedChanges}
           state={[handleDialog, setHandleDialog]}
           modalTitle={textConfirmationModal}
         />
-        <AdminFormBtn handleOpenPreview={() => setOpenModal(true)} />
+        <AdminFormBtn handleOpenPreview={() => setOpenModal(true)} handleCloseAction={handleClose}/>
       </Box>
     </AdminAddEditFormLayout>
   );
@@ -410,4 +415,6 @@ export function CourseAddEdit({ uidParam = null, isEditingParam = false }) {
 CourseAddEdit.propTypes = {
   uidParam: propTypes.string,
   isEditingParam: propTypes.bool.isRequired,
+  handleStateAction: propTypes.func.isRequired,
+  handleClose: propTypes.func
 };

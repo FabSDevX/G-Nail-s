@@ -7,6 +7,10 @@ import Login from "./component/adminLogin/Login";
 import AdminManagement from "./page/admin/managementUser/adminManagement";
 import NotFound from "./page/notFound/NotFound";
 import AdminLayout from "./utils/layout/AdminLayout";
+import ClientLayout from "./utils/layout/ClientLayout";
+import ContactAdmin from "./page/admin/contactAdmin/ContactAdmin";
+import {Calendario} from "./page/Calendario/Calendario";
+import {CarouselAdmin} from "./page/admin/carousel-admin/CarouselAdmin"
 import { CourseAdmin } from "./page/admin/courseAdmin/CourseAdmin";
 import AdminDashboard from "./page/admin/dashBoard-Statics/AdminDashboard";
 import { useEffect } from "react";
@@ -32,18 +36,25 @@ function App() {
         <TrackPublicRoutes />
         <Routes>
           {/* Rutas públicas para la parte de clientes */}
-          <Route path="/" element={<ClientHome />} />
-          <Route path="courseAdmin" element={<CourseAdmin />} /> {/* ACTUALMENTE TRABAJANDO */}
-          <Route path="/contacto" element={<Contact />} />
+          <Route element={<ClientLayout />}>
+            <Route path="/" element={<ClientHome />} />
+            <Route path="/contacto" element={<Contact />} />
+          </Route>    
 
           {/* Ruta de autenticación */}
-          <Route path="/login" element={<Login />} />
+
+          <Route path="/login" element={<Login />} />     
+
 
           {/* Rutas protegidas para la parte de administración */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin/management" element={<AdminManagement />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/contact" element={<ContactAdmin />} />
+              <Route path="/admin/courses" element={<CourseAdmin />} />
+              <Route path="/admin/calendar" element={<Calendario />} />
+              <Route path="/admin/carousel" element={<CarouselAdmin />} />
             </Route>
           </Route>
 
