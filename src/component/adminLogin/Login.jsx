@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -12,21 +12,23 @@ const Login = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [errorMessage, setErrorMessage] = useState("");
 
   const signInWithGoogle = async () => {
+    setErrorMessage(""); // Reset the error message before attempting to sign in
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const isAllowed = await isUserAllowed(user.email);
       if (!isAllowed) {
-        console.error("Acceso denegado. Usuario no autorizado.");
-        auth.signOut();
+        setErrorMessage("Acceso denegado. Usuario no autorizado.");
+        await auth.signOut(); // Ensure user is signed out
       } else {
         setUser(user);
         navigate("/");
       }
     } catch (error) {
-      console.error("Error en el login:", error);
+      setErrorMessage("Error en el login. Inténtalo de nuevo.");
     }
   };
 
@@ -52,7 +54,7 @@ const Login = () => {
       </Typography>
       <Box
         component="img"
-        src="/ruta/logo.png"
+        src="public\LOGO_GNAILS_rezi.png"
         alt="Logo Nails Professional Academy"
         sx={{
           width: isMobile ? "150px" : "200px",
@@ -78,8 +80,12 @@ const Login = () => {
       >
         Iniciar Sesión con Google
       </Button>
+      {errorMessage && (
+        <Typography color="error" variant="body2" sx={{ marginTop: theme.spacing(2) }}>
+          {errorMessage}
+        </Typography>
+      )}
     </Box>
   );
 };
-
 export default Login;
