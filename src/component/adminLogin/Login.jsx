@@ -15,10 +15,17 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const signInWithGoogle = async () => {
-    setErrorMessage(""); // Reset the error message before attempting to sign in
+    setErrorMessage(""); 
+
     try {
+      // Fuerza a Google a mostrar la ventana de selección de cuentas
+      googleProvider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
+
       const isAllowed = await isUserAllowed(user.email);
       if (!isAllowed) {
         setErrorMessage("Acceso denegado. Usuario no autorizado.");
@@ -54,7 +61,7 @@ const Login = () => {
       </Typography>
       <Box
         component="img"
-        src="public\LOGO_GNAILS_rezi.png"
+        src="/LOGO_GNAILS_rezi.png"
         alt="Logo Nails Professional Academy"
         sx={{
           width: isMobile ? "150px" : "200px",
@@ -88,4 +95,5 @@ const Login = () => {
     </Box>
   );
 };
+
 export default Login;

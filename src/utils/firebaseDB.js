@@ -10,6 +10,7 @@ import {
 import { v4 } from "uuid";
 
 
+import { getAuth, signOut } from "firebase/auth";
 
 
 
@@ -400,3 +401,19 @@ export async function getCarouselImages(){
   return updatedImageList
 }
 
+
+/**
+ * Log out the current user
+ * @returns {Promise<void>}
+ */
+
+// Función para cerrar sesión (async/await)
+export const logOutUser = async () => {
+  const auth = getAuth();
+  try {
+    await signOut(auth); // Espera a que la sesión sea cerrada
+    console.log("Usuario ha cerrado sesión correctamente");
+  } catch (error) {
+    console.error("Error al cerrar sesión: ", error);
+  }
+};
