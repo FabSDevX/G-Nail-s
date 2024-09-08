@@ -8,11 +8,10 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { Box, Button, Divider, IconButton, Paper, Typography, useMediaQuery } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { db } from '../../../../firebase';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { InfoScheduledCourse } from './InfoScheduledCourse';
+import { getDocumentById } from '../../../utils/firebaseDB';
 
-const calendarMobile = {
+const calendarIsNotMobile = {
   picker: {
     margin: 'auto', 
     width: '45px', 
@@ -57,13 +56,12 @@ function fakeFetch(date, dates,  { signal }) {
     const timeout = setTimeout(() => {
       let daysToHighlight = []
       dates.map((d) => {
-        if(d.getMonth() === date.month()){
-          daysToHighlight.push(d.getDate())
+        if(d.date.getMonth() === date.month()){
+          daysToHighlight.push({day:d.date.getDate(), count:d.count})
         }
       })
-      // console.log("Dias en el mes ", date.month(), ": ", daysToHighlight)
       resolve({ daysToHighlight });
-    }, 500);
+    }, 0);
 
     signal.onabort = () => {
       clearTimeout(timeout);
@@ -75,44 +73,50 @@ function fakeFetch(date, dates,  { signal }) {
 
 function ServerDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-  const isMobile = useMediaQuery('(max-width:1090px)');
+  const isMobile = useMediaQuery('(max-width:680px)');
+
+  const highlightedDay = highlightedDays.find(
+    (highlight) => highlight.day === day.date()
+  );
 
   const isSelected =
-    !outsideCurrentMonth && highlightedDays.indexOf(day.date()) >= 0;
+    !outsideCurrentMonth && highlightedDay !== undefined;
+
+  const count = isSelected ? highlightedDay.count : undefined;
 
   return (
     <Badge
       key={day.toString()}
       overlap="circular"
       color="secondary"
-      badgeContent={isSelected ? '1' : undefined}
+      badgeContent={count}
     >
       <PickersDay
         {...other}
         outsideCurrentMonth={outsideCurrentMonth}
         day={day}
-        sx={!isMobile?{...calendarMobile.picker}:null}
+        sx={!isMobile?{...calendarIsNotMobile.picker}:null}
       />
     </Badge>
   );
 }
 
-export default function Calendar() {
+export default function Calendar(props) {
   const [showPanel, setShowPanel] = React.useState(false);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
+  const [highlightedDays, setHighlightedDays] = React.useState([]);
   const [value, setValue] = React.useState(dayjs());
-  const isMobile = useMediaQuery('(max-width:1090px)');
+  const isMobile = useMediaQuery('(max-width:680px)');
   const [data, setData] = React.useState([]);
   const [dates, setDates] = React.useState([]);
   const [todayActivities, setTodayActivities] = React.useState([]);
+  const [hours, setHours] = React.useState(["Error con el horario", "Error con el horario", "Error con el horario", "Error con el horario"]);
 
   const requestAbortController = React.useRef(null);
 
   const fetchHighlightedDays = (date1, dates1) => {
     const controller = new AbortController();
-    // console.log("Haciendo el fetch con: ", dates1)
     fakeFetch(date1, dates1, {
       signal: controller.signal,
     })
@@ -130,31 +134,42 @@ export default function Calendar() {
   };
 
   React.useEffect(() => {
-    const  getData = async () => {
-      const tempData = []
-      const tempDates = []
-      const querySnapshot = await getDocs(collection(db, "Agenda"));
-      querySnapshot.forEach((doc) => {
-        tempData.push({'date':doc.id, ...doc.data()})
-        let [day, month, year] = doc.id.split("-");
-        const dateObject = new Date(year, month - 1, day);
-        tempDates.push(dateObject);
-        // console.log(tempData[tempData.length-1]);
-        // console.log("Fecha: ", tempDates[tempData.length-1].getDate());
-      });
-      setData(tempData);
-      setDates(tempDates);
-      fetchHighlightedDays(value, tempDates);
+    setIsLoading(true);  // Iniciar el estado de carga
+    
+    const getData = async () => {
+      try {
+          setData(props.data); // Actualiza el estado cuando cambian los datos
+          setDates(props.dates);
+
+          const informacion = await getDocumentById("Contact info", "Information");
+          setHours(informacion.lessonSchedule)
+
+          setIsLoading(false);  // Terminar el estado de carga después de las actualizaciones
+      } catch (error) {
+          console.error("Error fetching data: ", error);
+          setIsLoading(false);  // Asegurarse de desactivar el estado de carga en caso de error
+      }
     }
     getData();
     return () => requestAbortController.current?.abort();
-  }, [data, dates]);
+  }, [props]);
+
+  
+  React.useEffect(() => {
+    fetchHighlightedDays(value, dates);
+    data.map((date) => {
+      if (date.date == value.format('DD-MM-YYYY')){
+        setTodayActivities(date.scheduledCoursesUids)
+      }
+    })
+  }, [dates, data]);
+
+
 
   const handleMonthChange = (date) => {
     if (requestAbortController.current) {
       requestAbortController.current.abort();
     }
-
     setIsLoading(true);
     setHighlightedDays([]);
     fetchHighlightedDays(date, dates);
@@ -165,7 +180,7 @@ export default function Calendar() {
     setValue(newValue);
     data.map((date) => {
       if (date.date == newValue.format('DD-MM-YYYY')){
-        setTodayActivities(date.courseScheduled)
+        setTodayActivities(date.scheduledCoursesUids)
       }
     })
 
@@ -198,7 +213,7 @@ export default function Calendar() {
               highlightedDays,
             },
           }}
-          sx={!isMobile?{...calendarMobile.calendar, margin :isMobile?'70px auto 0 auto':'0 0 0 auto'}:
+          sx={!isMobile?{...calendarIsNotMobile.calendar, margin :isMobile?'70px auto a auto':'auto 0 auto auto'}:
             {
               border: '1px black solid',
               borderRadius:isMobile? '15px 15px 0 0px':'15px',
@@ -207,6 +222,9 @@ export default function Calendar() {
               '& .MuiBadge-root': {
                 border: '1px solid gray',
               },
+              '.MuiDayCalendar-weekContainer':{
+                margin:0
+              }
             }
           }
         />
@@ -232,12 +250,12 @@ export default function Calendar() {
               </em>
           </Typography>
           <Divider />
-          <Box display={'flex'} margin={'auto'} justifyContent={'center'} alignContent={'center'} height={isMobile?'fit-content':'312px'}>
+          <Box justifyContent={'center'} alignContent={'center'} minHeight={isMobile?'fit-content':'312px'}>
             {todayActivities.length>0?
               (
-                todayActivities.map((course, index) => (
-                  <Box key={index} margin={'auto'}>
-                    <InfoScheduledCourse name={course.courseName} id={course.courseID} cupo={course.cupo} group={course.group} hours={course.hours} />
+                todayActivities.map((reservationUID, index) => (
+                  <Box key={index} margin={'20px auto'} >
+                    <InfoScheduledCourse id={reservationUID} date={value.format('DD-MM-YYYY')}/>
                   </Box>
                 ))
               )
@@ -247,13 +265,7 @@ export default function Calendar() {
               )
             }
           </Box>
-
-{/* 
-          <Button variant="contained" sx={{ mt: 2 }}>
-            Acción 
-          </Button> */}
         </Paper>
-    
     </Box>
   );
 }

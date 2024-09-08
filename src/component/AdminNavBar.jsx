@@ -30,7 +30,7 @@ export const AdminNavBar = () => {
     { text: 'Cursos', path: '/cursos' },
     { text: 'Estadísticas', path: '/estadisticas' },
     { text: 'Usuarios administradores', path: '/usuarios' },
-    { text: 'Calendario', path: '/calendario' },
+    { text: 'Calendario', path: '/admin/calendar' },
     { text: 'Consultas realizadas', path: '/consultas' },
   ];
 
