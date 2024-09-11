@@ -14,9 +14,9 @@ export const ClientNavBar = () => {
     const [anchorElement, setAnchorElement] = useState(null);
     const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
 
-    const navBarFirstVersionDisplay = useMediaQuery('(min-width:672px)');
+    const navBarFirstVersionDisplay = useMediaQuery('(min-width:715px)');
 
-    const navBarSecondVersionDisplay = useMediaQuery('(max-width:672px)');
+    const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
 
 
     const availableCourses = [

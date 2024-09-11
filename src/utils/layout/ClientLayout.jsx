@@ -8,7 +8,7 @@ const ClientLayout = () => {
   return (
     <>
      <ClientNavBar />
-      <Box sx={{ paddingTop: "100px" }}>
+      <Box sx={{ paddingTop: "110px", paddingBottom: "110px"}}>
         <Outlet />
       </Box>
       <ClientFooter />
