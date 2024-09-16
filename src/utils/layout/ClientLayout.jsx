@@ -6,13 +6,25 @@ import Box from '@mui/material/Box';
 
 const ClientLayout = () => {
   return (
-    <>
-     <ClientNavBar />
-      <Box sx={{ paddingTop: "110px", paddingBottom: "110px"}}>
+    <Box 
+      sx={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        minHeight: "100vh" // Hace que ocupe el 100% de la altura de la ventana
+      }}
+    >
+      <ClientNavBar />
+      <Box 
+        sx={{ 
+          flex: "1", 
+          paddingTop: "110px", 
+          paddingBottom: "110px"
+        }}
+      >
         <Outlet />
       </Box>
       <ClientFooter />
-    </>
+    </Box>
   );
 };
 
