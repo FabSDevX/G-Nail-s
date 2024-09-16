@@ -1,11 +1,11 @@
 import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '@mui/material/styles';
+import { AutoAwesome } from '@mui/icons-material';  
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import { Style } from "@mui/icons-material";
+
 
 export const ClientNavBar = () => {
 
@@ -163,7 +163,7 @@ export const ClientNavBar = () => {
                     </Box>
                     <Box sx={{ml:'auto'}}>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='logo'>
-                            <img src="/WishListIcon.png" alt="Logo" style={{ height: '50px' }} />
+                            <AutoAwesome sx={{ color: 'black', fontSize: '50px' }} />  {/* Aquí el nuevo icono */}
                         </IconButton>
                     </Box>
                 </Toolbar>
