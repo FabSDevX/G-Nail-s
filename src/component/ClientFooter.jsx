@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import { Facebook, Instagram, WhatsApp } from '@mui/icons-material';
+import { Facebook, Instagram, WhatsApp, LogoDev } from '@mui/icons-material';
 import { useMediaQuery } from "@mui/material";
 import { getDocumentById } from "../utils/firebaseDB";
+import { useNavigate } from 'react-router-dom';
 
 const ClientFooter = () => {
 
   const isMobile = useMediaQuery('(max-width:740px)');
+
+  const navigate = useNavigate();
 
   const [contactInfo, setContactInfo] = useState({
     location: '',
@@ -130,6 +133,9 @@ const ClientFooter = () => {
         <IconButton href={`https://wa.me/${contactInfo.phone}`} target="_blank" aria-label="WhatsApp">
           <WhatsApp sx={{ color: "#25D366" }}/>
         </IconButton>
+        <IconButton onClick={() => navigate('/developers')} target="_blank" aria-label="Developers">
+          <LogoDev sx={{ color: "#ffa500" }}/>
+        </IconButton>        
       </Box>
     </Box>
   );
