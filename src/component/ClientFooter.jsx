@@ -83,9 +83,9 @@ const ClientFooter = () => {
         {/* Logo Section */}
         <Box sx={{ flex: 1, textAlign: "center" }}>
           <img 
-            src="/LOGO_GNAILS.png" 
+            src="/LOGO_GNAILS_rezi.png" 
             alt="Logo" 
-            style={{ height: "170px", width: "170px" }} 
+            style={{ height: "100px", width: "170px" }} 
           />
         </Box>
 

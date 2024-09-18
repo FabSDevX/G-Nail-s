@@ -74,7 +74,7 @@ export const ClientNavBar = () => {
                             style={{ padding: 0 }}
                             onClick={() => navigate('/')}
                         >
-                            <img src="/LOGO_GNAILS.png" alt="Logo" style={{ height: '100px', width: '100px' }} />
+                            <img src="/LOGO_GNAILS_rezi.png" alt="Logo" style={{ height: '55px', width: '100px' }} />
                         </IconButton>
                     </Box>
                     {/* Menú responsivo en pantallas pequeñas */}
