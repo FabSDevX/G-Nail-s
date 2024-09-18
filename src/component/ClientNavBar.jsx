@@ -68,7 +68,7 @@ export const ClientNavBar = () => {
     return (
         <Box>
             <AppBar position="fixed"  style={{ backgroundColor: '#F1D9DD', overflow:'hidden'}}>
-                <Toolbar style={{ minHeight: '64px', padding: '0 24px' }}>
+                <Toolbar style={{ minHeight: '80px', padding: '0 24px' }}>
                     <Box>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='logo' disableRipple 
                             style={{ padding: 0 }}
