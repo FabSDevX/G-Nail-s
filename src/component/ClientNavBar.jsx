@@ -163,7 +163,7 @@ export const ClientNavBar = () => {
                     </Box>
                     <Box sx={{ml:'auto'}}>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='logo'>
-                            <AutoAwesome sx={{ color: 'black', fontSize: '50px' }} />  {/* Aquí el nuevo icono */}
+                            <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />  {/* Aquí el nuevo icono */}
                         </IconButton>
                     </Box>
                 </Toolbar>
