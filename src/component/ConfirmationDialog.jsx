@@ -69,7 +69,7 @@ export function ConfirmationDialog(data) {
             sx={{ ...buttonStyle, background: "var(--delete-color)" }}
             onClick={handleClose}
           >
-            Aceptar
+            Rechazar
           </Button>
           <Button
             sx={{ ...buttonStyle, background: "var(--agreed-color)" }}
@@ -79,7 +79,7 @@ export function ConfirmationDialog(data) {
             }}
             autoFocus
           >
-            Rechazar
+            Aceptar
           </Button>
         </DialogActions>
       </Dialog>
