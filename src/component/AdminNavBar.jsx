@@ -32,13 +32,12 @@ export const AdminNavBar = () => {
   };
 
   const menuItems = [
-    { text: 'Información de contacto', path: '/contacto' },
-    { text: 'Imágenes del carrusel', path: '/carrusel' },
-    { text: 'Cursos', path: '/cursos' },
-    { text: 'Estadísticas', path: '/estadisticas' },
-    { text: 'Usuarios administradores', path: '/usuarios' },
-    { text: 'Calendario', path: '/calendario' },
-    { text: 'Consultas realizadas', path: '/consultas' },
+    { text: 'Información de contacto', path: '/admin/contact' },
+    { text: 'Imágenes del carrusel', path: '/admin/carousel' },
+    { text: 'Cursos', path: '/admin/courses' },
+    { text: 'Estadísticas', path: '/admin/dashboard' },
+    { text: 'Usuarios administradores', path: '/admin/management' },
+    { text: 'Calendario', path: '/admin/calendar' },
   ];
 
   const CustomListItemButton = styled(ListItemButton)({
