@@ -105,7 +105,6 @@ export function CourseAdmin() {
           maxWidth: "1444px",
           height: {
             xs: "76vh",
-            md: "auto"
           },
           padding: "0",
           border: "none",
