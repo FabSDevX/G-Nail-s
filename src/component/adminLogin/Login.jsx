@@ -32,7 +32,7 @@ const Login = () => {
         await auth.signOut(); // Ensure user is signed out
       } else {
         setUser(user);
-        navigate("/");
+        navigate("/admin/contact");
       }
     } catch (error) {
       setErrorMessage("Error en el login. Inténtalo de nuevo.");
