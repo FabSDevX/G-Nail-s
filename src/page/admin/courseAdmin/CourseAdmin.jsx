@@ -1,80 +1,84 @@
-import { Box, Button } from "@mui/material";
-import { getAllDocuments } from "../../../utils/firebaseDB";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
+import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
-import ModalContainer from "../../../component/ModalContainer";
 import { useState } from "react";
 import { CourseAddEdit } from "../../../component/courseAdmin/CourseAddEdit";
 import { useEffect } from "react";
-
-const courses = await getAllDocuments("Course");
+import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
+import { Toaster } from "sonner";
+import { promiseToast } from "../../../utils/toast";
+import { courseModel } from "../../../model/model";
+import noImageBackground from "../../../assets/noImageBackground.svg";
+import ModalContainer from "../../../component/ModalContainer";
+import ReutilizableDataGrid from "../../../component/courseAdmin/ReutilizableDataGrid";
+import CardModal from "../../../component/courseAdmin/CardModal";
+import getColumns from "../../../component/courseAdmin/handleCourseData";
 
 export function CourseAdmin() {
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(courseModel);
+  const [selectedImg, setSelectedImg] = useState(noImageBackground);
+  const [isCourseUpdated, setIsCourseUpdated] = useState(false);
   const [actualUid, setActualUid] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openCardModal, setOpenCardModal] = useState(false);
+  const [handleDialog, setHandleDialog] = useState(false);
+  const refreshCourses = async () => {
+    const courseValues = await getAllDocuments("Course");
+    setCourses(courseValues);
+  };
 
   useEffect(() => {
+    refreshCourses();
+  }, []);
+
+  useEffect(() => {
+    if (isCourseUpdated) {
+      refreshCourses();
+      setIsCourseUpdated(false);
+    }
+  }, [isCourseUpdated]);
+
+  useEffect(() => {
+    setIsCourseUpdated(false);
     if (!openModal) {
       setActualUid(null);
       setIsEditing(false);
     }
-  }, [openModal]);
+    if (!openCardModal) {
+      setSelectedImg(noImageBackground);
+      setSelectedCourse(courseModel);
+    }
+  }, [openModal, openCardModal]);
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "name",
-      headerName: "First name",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "smallDescription",
-      headerName: "Last name",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "largeDescription",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: false,
-    },
-    {
-      field: "hours",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-    },
-    {
-      field: "edit",
-      headerName: "Editar",
-      width: 150,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "var(--edit-changes-color);",
-            width: "40px",
-          }}
-          onClick={() => {
-            setActualUid(params.row.id);
-            setIsEditing(true);
-            setOpenModal(true);
-          }}
-        >
-          Editar
-        </Button>
-      ),
-    },
-  ];
+  const columns = getColumns(
+    setSelectedImg,
+    setSelectedCourse,
+    setOpenCardModal,
+    setActualUid,
+    setIsEditing,
+    setOpenModal,
+    setHandleDialog
+  );
 
-  const VISIBLE_FIELDS = Object.keys(courses[0]);
-  console.log(courses);
+  async function handleDelete() {
+    try {
+      promiseToast(
+        async () => {
+          await deleteDocumentById("Course", actualUid, true);
+          setActualUid(null);
+        },
+        "Curso borrado correctamente",
+        "Error"
+      );
+      setIsCourseUpdated(true);
+    } catch (error) {
+      console.error("Deleting course problem:", error);
+    }
+  }
+
   return (
     <AdminSectionLayout id={"courses-admin"} title={"Cursos"}>
       <AddBtn
@@ -85,40 +89,51 @@ export function CourseAdmin() {
         }}
       />
 
-      <Box sx={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={courses}
+      <Box sx={{ width: "100%" }}>
+        <ReutilizableDataGrid
           columns={columns}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
+          rows={courses}
+          hiddenRowsJson={{ id: false, img: false }}
         />
       </Box>
 
       <ModalContainer
         open={openModal}
-        handleClose={() => setOpenModal(false)}
+        disableBackdropClose = {true}
         additionalStyles={{
-          width: "auto",
-          height: "auto",
+          width: "70vw",
+          maxWidth: "1444px",
+          height: {
+            xs: "76vh",
+          },
           padding: "0",
           border: "none",
           borderRadius: "20px",
-          overflow: "hidden",
+          overflow: "auto",
         }}
       >
-        <CourseAddEdit isEditingParam={isEditing} uidParam={actualUid} />
+        <CourseAddEdit
+          isEditingParam={isEditing}
+          uidParam={actualUid}
+          handleStateAction={setIsCourseUpdated}
+          handleClose={() => setOpenModal(false)}
+        />
       </ModalContainer>
+
+      <ConfirmationDialog
+        agreedFuntion={() => handleDelete()}
+        state={[handleDialog, setHandleDialog]}
+        modalTitle={"Seguro de querer eliminar este curso?"}
+      />
+      <Toaster richColors />
+      <CardModal
+        name={selectedCourse["name"]}
+        img={selectedImg}
+        lessonHours={Number(selectedCourse["numLessons"])}
+        largeDescription={selectedCourse["largeDescription"]}
+        shortDescription={selectedCourse["smallDescription"]}
+        useStateModal={[openCardModal, setOpenCardModal]}
+      />
     </AdminSectionLayout>
   );
 }
