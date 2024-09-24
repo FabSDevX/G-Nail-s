@@ -45,6 +45,10 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges, handleClose
           ...formButtons,
           background: "var(--preview-changes-color)",
           color: "white",
+          "&:hover": {
+            background: "var(--preview-changes-hover)",
+            color: "white",
+          },
         }}
       >
         Prevista
@@ -56,6 +60,10 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges, handleClose
           ...formButtons,
           background: "var(--cancel-changes-color)",
           color: "#444444",
+          "&:hover": {
+            background: "var(--cancel-changes-hover)",
+            color: "white",
+          },
         }}
       >
         Cancelar
@@ -68,6 +76,9 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges, handleClose
           ...formButtons,
           background: "var(--save-changes-color)",
           color: "white",
+          "&:hover": {
+            background: "var(--save-changes-hover)",
+          },
         }}
       >
         Guardar cambios

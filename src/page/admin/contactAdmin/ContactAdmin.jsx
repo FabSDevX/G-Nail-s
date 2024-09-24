@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { promiseToast } from "../../../utils/toast";
 import ModalContainer from "../../../component/ModalContainer";
 import { AdminFormBtn } from "../../../component/AdminFormBtn";
+import { contactModel } from "../../../model/model";
 
 const contactAdminTitles = {
   fontSize: "x-large",
@@ -52,31 +53,15 @@ function ContactAdmin() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [handleDialog, setHandleDialog] = useState(false);
-  const [contactInfo, setContactInfo] = useState({
-    location: "",
-    phone: "",
-    mail: "",
-    facebook: "",
-    instagram: "",
-    iFrame: "",
-    schedule: {
-      schedule1: { day: "N", time: "N" },
-      schedule2: { day: "N", time: "N" },
-      schedule3: { day: "N", time: "N" },
-    },
-    lessonSchedule: "",
-    locationLink: "",
-    socialMedia: {
-      facebook: "",
-      instagram: "",
-    },
-  });
+  const [auxiliarContactInfo, setAuxiliarContactInfo] = useState(null);
+  const [contactInfo, setContactInfo] = useState(contactModel);
 
   useEffect(() => {
     const fetchContactInfo = async () => {
       const data = await getDocumentById("Contact info", "Information");
       if (data) {
         setContactInfo(data);
+        setAuxiliarContactInfo(data)
       }
     };
     fetchContactInfo();
@@ -88,6 +73,7 @@ function ContactAdmin() {
       "Cambios guardado",
       "Error"
     );
+    setAuxiliarContactInfo(contactInfo);
   }
 
   const handleScheduleChange = (index, field, value) => {
@@ -336,7 +322,7 @@ function ContactAdmin() {
                   </Box>
                   <Box>
                     <Typography sx={contactAdminSubTitles}>
-                      Ubicacion link:
+                    Enlace de ubicación:
                     </Typography>
                     <TextField
                       sx={{ width: "100%" }}
@@ -412,6 +398,7 @@ function ContactAdmin() {
           <AdminFormBtn
             handleOpenPreview={handleOpen}
             handleSaveChanges={setHandleDialog}
+            handleCloseAction={() => setContactInfo(auxiliarContactInfo)}
           />
         </Box>
       </Box>
