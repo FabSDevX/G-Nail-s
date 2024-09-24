@@ -43,6 +43,12 @@ function ReutilizableDataGrid({ rows, columns, hiddenRowsJson }) {
           "&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
             py: "5px",
           },
+          "& .MuiDataGrid-cell": {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
         }}
       />
     </ThemeProvider>
