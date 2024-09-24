@@ -11,21 +11,26 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-
+import { Box, Button } from '@mui/material';
+import { logOutUser } from '../utils/firebaseDB';
 
 export const AdminNavBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const toggleDrawer = (open) => () => {
     setIsDrawerOpen(open);
   };
 
+  const handleLogOut = async () => {
+    try {
+      await logOutUser();
+      navigate('/login');
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+    }
+  };
 
-  //De momento se agregan las rutas de las páginas que se quieren mostrar en el menú
-  //Posteriormente se configurara cuando se prepare el Provider de rutas
   const menuItems = [
     { text: 'Información de contacto', path: '/admin/contact' },
     { text: 'Imágenes del carrusel', path: '/admin/carousel' },
@@ -36,7 +41,7 @@ export const AdminNavBar = () => {
   ];
 
   const CustomListItemButton = styled(ListItemButton)({
-    color: '#000000', // Color del texto negro
+    color: '#000000', 
     '&:hover': {
       backgroundColor: '#F2B0BA',
     },
@@ -49,22 +54,27 @@ export const AdminNavBar = () => {
 
   return (
     <div>
-      <AppBar position="static" style={{ background: 'linear-gradient(90deg, rgba(255,192,203,1) 0%, rgba(255,182,193,1) 100%)' }}>
-        <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
-            <img src="logo.png" alt="Logo" style={{ height: '40px' }} />
-          </Typography>
+      <AppBar position="static" sx={{ background: 'linear-gradient(90deg, rgba(255,192,203,1) 0%, rgba(255,182,193,1) 100%)' }}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Box
+            onClick={() => navigate('/admin/dashboard')}
+            sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          >
+            <img src="/LOGO_GNAILS_rezi.png" alt="Logo" style={{ height: '40px' }} />
+          </Box>
           <IconButton edge="end" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuIcon style={{ color: '#000000' }} />
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Drawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer(false)} PaperProps={{ style: { backgroundColor: '#F1D9DD' } }}>
-        <div
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
-        >
+
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={toggleDrawer(false)}
+        PaperProps={{ style: { backgroundColor: '#F1D9DD' } }}
+      >
+        <div role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
           <List>
             {menuItems.map((item, index) => (
               <CustomListItemButton key={index} onClick={() => handleNavigation(item.path)}>

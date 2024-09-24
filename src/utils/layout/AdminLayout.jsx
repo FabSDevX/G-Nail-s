@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 const AdminLayout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  //Responsive add
   return (
     <>
       <AdminNavBar />
