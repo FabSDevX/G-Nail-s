@@ -2,20 +2,45 @@ import { Box, Typography } from "@mui/material";
 import { ContactInformation } from "./components/ContactInformation";
 import { getDocumentById } from "../../utils/firebaseDB";
 import { ContactForm } from "./components/ContactForm";
-
-const contactInfo = await getDocumentById("Contact info", "Information");
+import { useEffect, useState } from "react";
 
 export function Contact() {
-  const {
-    location,
-    iFrame,
-    mail,
-    phone,
-    schedule,
-    lessonSchedule,
-    locationLink,
-    socialMedia,
-  } = contactInfo;
+
+  const [contactInfo, setContactInfo] = useState({
+    location: '',
+    phone: '',
+    mail: '',
+    facebook: '',
+    instagram: '',
+    iFrame: '',
+    schedule: '',
+    lessonSchedule: '',
+    locationLink: '',
+    socialMedia: ''
+  });
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      const data = await getDocumentById('Contact info', 'Information');
+      if (data) {
+        setContactInfo({
+          location: data.location || 'Ubicación no disponible',
+          phone: data.phone || 'Teléfono no disponible',
+          mail: data.mail || 'Correo no disponible',
+          iFrame: data.iFrame || 'Mapa no disponible',
+          schedule: data.schedule || 'Horario no disponible',
+          lessonSchedule: data.lessonSchedule || 'Horario de lecciones no disponible',
+          locationLink: data.locationLink || 'https://maps.google.com',      
+          socialMedia: {
+            facebook: data.socialMedia?.facebook || 'https://facebook.com',
+            instagram: data.socialMedia?.instagram || 'https://instagram.com',
+          },
+        });
+      }
+    };
+    fetchContactInfo();
+  }, []);
+  
   return (
     <Box id="contact">
       <Box
@@ -58,18 +83,18 @@ export function Contact() {
 
       <Box className="contact-container">
         <ContactInformation
-          location={location}
-          iFrame={iFrame}
-          mail={mail}
-          phone={phone}
-          schedule={schedule}
-          lessonSchedule={lessonSchedule}
-          locationLink={locationLink}
-          socialMedia={socialMedia}
+          location={contactInfo.location}
+          iFrame={contactInfo.iFrame}
+          mail={contactInfo.mail}
+          phone={contactInfo.phone}
+          schedule={contactInfo.schedule}
+          lessonSchedule={contactInfo.lessonSchedule}
+          locationLink={contactInfo.locationLink}
+          socialMedia={contactInfo.socialMedia}
         />
       </Box>
       <Box>
-        <ContactForm email={mail} />
+        <ContactForm email={contactInfo.mail} />
       </Box>
     </Box>
   );

@@ -16,8 +16,11 @@
 
   --admin-title-color: #d12b28;
   --save-changes-color: #337ab7;
+  --save-changes-hover: #1263aa;
   --cancel-changes-color: #afbbc2;
+  --cancel-changes-hover: #9ba0a3;
   --preview-changes-color: #5cb85c;
+  --preview-changes-hover: #2f741c;
   --edit-changes-color: #F0AD4E;
   --delete-color: #d12b28;
   --agreed-color: #48b02c;

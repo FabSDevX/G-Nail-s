@@ -9,12 +9,8 @@ import { toast } from "sonner";
 export function promiseToast(promiseParam, successFullMsg, failureMsg) {
   toast.promise(promiseParam, {
     loading: "Cargando...",
-    success: () => {
-      toast.success(successFullMsg);
-    },
-    error: () => {
-      toast.warning(failureMsg);
-    },
+    success: successFullMsg,
+    error: failureMsg,
   });
 }
 
