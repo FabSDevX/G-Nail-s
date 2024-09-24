@@ -26,3 +26,4 @@ dist-ssr
 .env
 firebase.js
 ngrok.exe
+package-lock.json
