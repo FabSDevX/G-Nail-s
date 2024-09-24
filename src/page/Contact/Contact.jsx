@@ -48,7 +48,7 @@ export function Contact() {
         sx={{
           backgroundImage: "url(/contact-background.webp)",
           backgroundRepeat: "repeat",
-          height: "288px",
+          height: "225px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
