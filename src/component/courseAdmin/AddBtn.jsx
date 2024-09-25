@@ -13,7 +13,7 @@ export function AddBtn({ addFunction }) {
       }}
       onClick={addFunction}
     >
-      + Agregar nuevo
+      + Nuevo
     </Button>
   );
 }

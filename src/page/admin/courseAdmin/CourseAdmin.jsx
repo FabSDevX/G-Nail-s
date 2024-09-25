@@ -99,14 +99,12 @@ export function CourseAdmin() {
 
       <ModalContainer
         open={openModal}
-        handleClose={() => setOpenModal(false)}
+        disableBackdropClose = {true}
         additionalStyles={{
           width: "70vw",
           maxWidth: "1444px",
           height: {
             xs: "76vh",
-            sm: "76vh",
-            md: "auto",
           },
           padding: "0",
           border: "none",
@@ -118,6 +116,7 @@ export function CourseAdmin() {
           isEditingParam={isEditing}
           uidParam={actualUid}
           handleStateAction={setIsCourseUpdated}
+          handleClose={() => setOpenModal(false)}
         />
       </ModalContainer>
 

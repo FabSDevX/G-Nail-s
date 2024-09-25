@@ -1,11 +1,11 @@
 import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '@mui/material/styles';
+import { AutoAwesome } from '@mui/icons-material';  
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import { Style } from "@mui/icons-material";
+
 
 export const ClientNavBar = () => {
 
@@ -14,9 +14,9 @@ export const ClientNavBar = () => {
     const [anchorElement, setAnchorElement] = useState(null);
     const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
 
-    const navBarFirstVersionDisplay = useMediaQuery('(min-width:672px)');
+    const navBarFirstVersionDisplay = useMediaQuery('(min-width:715px)');
 
-    const navBarSecondVersionDisplay = useMediaQuery('(max-width:672px)');
+    const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
 
 
     const availableCourses = [
@@ -68,13 +68,13 @@ export const ClientNavBar = () => {
     return (
         <Box>
             <AppBar position="fixed"  style={{ backgroundColor: '#F1D9DD', overflow:'hidden'}}>
-                <Toolbar style={{ minHeight: '64px', padding: '0 24px' }}>
+                <Toolbar style={{ minHeight: '80px', padding: '0 24px' }}>
                     <Box>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='logo' disableRipple 
                             style={{ padding: 0 }}
                             onClick={() => navigate('/')}
                         >
-                            <img src="/LOGO_GNAILS.png" alt="Logo" style={{ height: '100px', width: '100px' }} />
+                            <img src="/LOGO_GNAILS_rezi.png" alt="Logo" style={{ height: '55px', width: '100px' }} />
                         </IconButton>
                     </Box>
                     {/* Menú responsivo en pantallas pequeñas */}
@@ -163,7 +163,7 @@ export const ClientNavBar = () => {
                     </Box>
                     <Box sx={{ml:'auto'}}>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='logo'>
-                            <img src="/WishListIcon.png" alt="Logo" style={{ height: '50px' }} />
+                            <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />  {/* Aquí el nuevo icono */}
                         </IconButton>
                     </Box>
                 </Toolbar>

@@ -10,6 +10,7 @@ const buttonStyle = {
     xs: "8x",
   },
   "&:hover": {
+    border: "none",
     background: "var(--primary-color)",
   },
   "&:focus": {
@@ -69,17 +70,19 @@ export function ConfirmationDialog(data) {
             sx={{ ...buttonStyle, background: "var(--delete-color)" }}
             onClick={handleClose}
           >
-            Desacuerdo
+            Rechazar
           </Button>
           <Button
-            sx={{ ...buttonStyle, background: "var(--agreed-color)" }}
+            sx={{ ...buttonStyle, background: "var(--agreed-color)", "&:hover": {
+              background: "var(--preview-changes-hover)",
+            }, }}
             onClick={() => {
               data.agreedFuntion();
               handleClose();
             }}
             autoFocus
           >
-            De acuerdo
+            Aceptar
           </Button>
         </DialogActions>
       </Dialog>

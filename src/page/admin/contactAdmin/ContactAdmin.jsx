@@ -1,6 +1,6 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { updateDocumentById } from "../../../utils/firebaseDB";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContactInformation } from "../../Contact/components/ContactInformation";
 import { getDocumentById } from "../../../utils/firebaseDB";
 import { ConfirmationDialog } from "../../../component/ConfirmationDialog";
@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { promiseToast } from "../../../utils/toast";
 import ModalContainer from "../../../component/ModalContainer";
 import { AdminFormBtn } from "../../../component/AdminFormBtn";
+import { contactModel } from "../../../model/model";
 
 const contactAdminTitles = {
   fontSize: "x-large",
@@ -47,37 +48,47 @@ const inputSeparation = {
   },
 };
 
-const contactInfo = await getDocumentById("Contact info", "Information");
 function ContactAdmin() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [handleDialog, setHandleDialog] = useState(false);
-  const [modifiedData, setModifiedData] = useState({});
-  const [lessonSchedule, setLessonSchedule] = useState(
-    contactInfo.lessonSchedule
-  );
-  const [scheduleData, setScheduleData] = useState(contactInfo.schedule);
-  const [location, setLocation] = useState(contactInfo.location);
-  const [iFrame, setIFrame] = useState(contactInfo.iFrame);
-  const [mail, setMail] = useState(contactInfo.mail);
-  const [phone, setPhone] = useState(contactInfo.phone);
-  const [locationLink, setLocationLink] = useState(contactInfo.locationLink);
-  const [socialMedia, setSocialMedia] = useState(contactInfo.socialMedia);
+  const [auxiliarContactInfo, setAuxiliarContactInfo] = useState(null);
+  const [contactInfo, setContactInfo] = useState(contactModel);
 
-  function onChangeFields(key, value) {
-    const newModifiedData = { ...modifiedData, [key]: value };
-    setModifiedData(newModifiedData);
-  }
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      const data = await getDocumentById("Contact info", "Information");
+      if (data) {
+        setContactInfo(data);
+        setAuxiliarContactInfo(data)
+      }
+    };
+    fetchContactInfo();
+  }, []);
 
   function handleSavedChanges() {
     promiseToast(
-      updateDocumentById("Contact info", "Information", modifiedData),
+      updateDocumentById("Contact info", "Information", contactInfo),
       "Cambios guardado",
       "Error"
     );
+    setAuxiliarContactInfo(contactInfo);
   }
-  
+
+  const handleScheduleChange = (index, field, value) => {
+    setContactInfo((prev) => ({
+      ...prev,
+      schedule: {
+        ...prev.schedule,
+        [`schedule${index + 1}`]: {
+          ...prev.schedule[`schedule${index + 1}`],
+          [field]: value,
+        },
+      },
+    }));
+  };
+
   return (
     <Box
       id="contact-admin"
@@ -104,14 +115,14 @@ function ContactAdmin() {
       <Box>
         <ModalContainer open={open} handleClose={handleClose}>
           <ContactInformation
-            location={location}
-            iFrame={iFrame}
-            mail={mail}
-            phone={phone}
-            schedule={scheduleData}
-            lessonSchedule={lessonSchedule}
-            locationLink={locationLink}
-            socialMedia={socialMedia}
+            location={contactInfo.location}
+            iFrame={contactInfo.iFrame}
+            mail={contactInfo.mail}
+            phone={contactInfo.phone}
+            schedule={contactInfo.schedule}
+            lessonSchedule={contactInfo.lessonSchedule}
+            locationLink={contactInfo.locationLink}
+            socialMedia={contactInfo.socialMedia}
           />
         </ModalContainer>
 
@@ -152,15 +163,17 @@ function ContactAdmin() {
                     <Typography sx={contactAdminSubTitles}>Telefono</Typography>
                     <TextField
                       sx={contactInput}
-                      id="outlined-required"
-                      defaultValue={phone}
+                      id="phone"
+                      value={contactInfo.phone || ""}
                       name="phone"
                       required
                       inputProps={{ maxLength: 12 }}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        onChangeFields(e.target.name, e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setContactInfo({
+                          ...contactInfo,
+                          phone: e.target.value,
+                        })
+                      }
                     />
                   </Box>
                   <Box sx={contactTitleInput}>
@@ -168,15 +181,14 @@ function ContactAdmin() {
                     <TextField
                       sx={contactInput}
                       id="outlined-required"
-                      defaultValue={mail}
+                      value={contactInfo.mail || ""}
                       name="mail"
                       type="email"
                       required
                       inputProps={{ maxLength: 30 }}
-                      onChange={(e) => {
-                        setMail(e.target.value);
-                        onChangeFields(e.target.name, e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setContactInfo({ ...contactInfo, mail: e.target.value })
+                      }
                     />
                   </Box>
                 </Box>
@@ -190,15 +202,17 @@ function ContactAdmin() {
                     sx={{ width: "100%" }}
                     id="outlined-multiline-static"
                     multiline
-                    defaultValue={location}
+                    value={contactInfo.location || ""}
                     rows={5}
                     inputProps={{ maxLength: 100 }}
                     name="location"
                     required
-                    onChange={(e) => {
-                      setLocation(e.target.value);
-                      onChangeFields(e.target.name, e.target.value);
-                    }}
+                    onChange={(e) =>
+                      setContactInfo({
+                        ...contactInfo,
+                        location: e.target.value,
+                      })
+                    }
                   />
                   <Typography
                     sx={{ color: "gray", opacity: "85%", textAlign: "end" }}
@@ -214,18 +228,18 @@ function ContactAdmin() {
                   <TextField
                     sx={contactInput}
                     id="outlined-required"
-                    defaultValue={socialMedia["facebook"]}
+                    value={contactInfo.socialMedia["facebook"] || ""}
                     name="socialMedia"
                     required
                     onChange={(e) => {
-                      setSocialMedia({
-                        ...socialMedia,
-                        ["facebook"]: e.target.value,
-                      });
-                      onChangeFields(e.target.name, {
-                        ...socialMedia,
-                        ["facebook"]: e.target.value,
-                      });
+                      const updatedSocialMedia = {
+                        ...contactInfo.socialMedia,
+                        facebook: e.target.value,
+                      };
+                      setContactInfo((prev) => ({
+                        ...prev,
+                        socialMedia: updatedSocialMedia,
+                      }));
                     }}
                   />
                 </Box>
@@ -234,18 +248,18 @@ function ContactAdmin() {
                   <TextField
                     sx={contactInput}
                     id="outlined-required"
-                    defaultValue={socialMedia["instagram"]}
+                    value={contactInfo.socialMedia["instagram"] || ""}
                     name="socialMedia"
                     required
                     onChange={(e) => {
-                      setSocialMedia({
-                        ...socialMedia,
-                        ["instagram"]: e.target.value,
-                      });
-                      onChangeFields(e.target.name, {
-                        ...socialMedia,
-                        ["instagram"]: e.target.value,
-                      });
+                      const updatedSocialMedia = {
+                        ...contactInfo.socialMedia,
+                        instagram: e.target.value,
+                      };
+                      setContactInfo((prev) => ({
+                        ...prev,
+                        socialMedia: updatedSocialMedia,
+                      }));
                     }}
                   />
                 </Box>
@@ -254,90 +268,34 @@ function ContactAdmin() {
                 <Typography sx={{ ...contactAdminTitles, marginBottom: "5px" }}>
                   Horario de consulta
                 </Typography>
-                <Box sx={inputSeparation}>
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule1"].day = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule1"].day}
-                  />
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule1"].time = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule1"].time}
-                  />
-                </Box>
-                <Box sx={inputSeparation}>
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule2"].day = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule2"].day}
-                  />
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule2"].time = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule2"].time}
-                  />
-                </Box>
-                <Box sx={inputSeparation}>
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule3"].day = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule3"].day}
-                  />
-                  <TextField
-                    id="outlined-required"
-                    name="schedule"
-                    required
-                    inputProps={{ maxLength: 20 }}
-                    onChange={(e) => {
-                      const newScheduleData = scheduleData;
-                      newScheduleData["schedule3"].time = e.target.value;
-                      setScheduleData(newScheduleData);
-                      onChangeFields(e.target.name, newScheduleData);
-                    }}
-                    defaultValue={scheduleData["schedule3"].time}
-                  />
-                </Box>
+                {[...Array(3)].map((_, index) => (
+                  <Box key={index} sx={inputSeparation}>
+                    <TextField
+                      sx={contactInput}
+                      id={`schedule-day-${index}`}
+                      value={
+                        contactInfo.schedule[`schedule${index + 1}`]?.day || ""
+                      }
+                      name={`schedule-day-${index}`}
+                      required
+                      onChange={(e) =>
+                        handleScheduleChange(index, "day", e.target.value)
+                      }
+                    />
+                    <TextField
+                      sx={contactInput}
+                      id={`schedule-time-${index}`}
+                      value={
+                        contactInfo.schedule[`schedule${index + 1}`]?.time || ""
+                      }
+                      name={`schedule-time-${index}`}
+                      required
+                      onChange={(e) =>
+                        handleScheduleChange(index, "time", e.target.value)
+                      }
+                    />
+                  </Box>
+                ))}
               </Box>
             </Box>
             <Box sx={{ width: "100%" }}>
@@ -350,30 +308,34 @@ function ContactAdmin() {
                       sx={{ width: "100%" }}
                       id="outlined-multiline-static"
                       multiline
-                      defaultValue={iFrame}
+                      value={contactInfo.iFrame || ""}
                       rows={11}
                       name="iFrame"
                       required
-                      onChange={(e) => {
-                        setIFrame(e.target.value);
-                        onChangeFields(e.target.name, e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setContactInfo({
+                          ...contactInfo,
+                          iFrame: e.target.value,
+                        })
+                      }
                     />
                   </Box>
                   <Box>
                     <Typography sx={contactAdminSubTitles}>
-                      Ubicacion link:
+                    Enlace de ubicación:
                     </Typography>
                     <TextField
                       sx={{ width: "100%" }}
                       id="outlined-required"
-                      defaultValue={locationLink}
+                      value={contactInfo.locationLink || ""}
                       name="locationLink"
                       required
-                      onChange={(e) => {
-                        setLocationLink(e.target.value);
-                        onChangeFields(e.target.name, e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setContactInfo({
+                          ...contactInfo,
+                          locationLink: e.target.value,
+                        })
+                      }
                     />
                   </Box>
                 </Box>
@@ -384,43 +346,49 @@ function ContactAdmin() {
                 </Typography>
                 <TextField
                   id="outlined-required"
-                  defaultValue={lessonSchedule[0]}
+                  value={contactInfo.lessonSchedule[0] || ""}
                   name="lessonSchedule"
                   required
                   inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
-                    const newLessonSchedule = [...lessonSchedule];
+                    const newLessonSchedule = [...contactInfo.lessonSchedule];
                     newLessonSchedule[0] = e.target.value;
-                    setLessonSchedule(newLessonSchedule);
-                    onChangeFields(e.target.name, newLessonSchedule);
+                    setContactInfo({
+                      ...contactInfo,
+                      lessonSchedule: newLessonSchedule,
+                    });
                   }}
                 />
                 <br />
                 <TextField
                   id="outlined-required"
-                  defaultValue={lessonSchedule[1]}
+                  value={contactInfo.lessonSchedule[1] || ""}
                   name="lessonSchedule"
                   required
                   inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
-                    const newLessonSchedule = [...lessonSchedule];
+                    const newLessonSchedule = [...contactInfo.lessonSchedule];
                     newLessonSchedule[1] = e.target.value;
-                    setLessonSchedule(newLessonSchedule);
-                    onChangeFields(e.target.name, newLessonSchedule);
+                    setContactInfo({
+                      ...contactInfo,
+                      lessonSchedule: newLessonSchedule,
+                    });
                   }}
                 />
                 <br />
                 <TextField
                   id="outlined-required"
-                  defaultValue={lessonSchedule[2]}
+                  value={contactInfo.lessonSchedule[2] || ""}
                   name="lessonSchedule"
                   required
                   inputProps={{ maxLength: 20 }}
                   onChange={(e) => {
-                    const newLessonSchedule = [...lessonSchedule];
+                    const newLessonSchedule = [...contactInfo.lessonSchedule];
                     newLessonSchedule[2] = e.target.value;
-                    setLessonSchedule(newLessonSchedule);
-                    onChangeFields(e.target.name, newLessonSchedule);
+                    setContactInfo({
+                      ...contactInfo,
+                      lessonSchedule: newLessonSchedule,
+                    });
                   }}
                 />
               </Box>
@@ -430,6 +398,7 @@ function ContactAdmin() {
           <AdminFormBtn
             handleOpenPreview={handleOpen}
             handleSaveChanges={setHandleDialog}
+            handleCloseAction={() => setContactInfo(auxiliarContactInfo)}
           />
         </Box>
       </Box>

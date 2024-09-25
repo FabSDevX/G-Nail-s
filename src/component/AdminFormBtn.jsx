@@ -20,7 +20,7 @@ const formButtons = {
   },
 };
 
-export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
+export function AdminFormBtn({ handleOpenPreview, handleSaveChanges, handleCloseAction = null}) {
   return (
     <Box
       sx={{
@@ -45,17 +45,25 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
           ...formButtons,
           background: "var(--preview-changes-color)",
           color: "white",
+          "&:hover": {
+            background: "var(--preview-changes-hover)",
+            color: "white",
+          },
         }}
       >
         Prevista
       </Button>
       <Button
-        onClick={() => window.location.reload()}
+        onClick={handleCloseAction ? handleCloseAction : () => window.location.reload()}
         variant="outlined"
         sx={{
           ...formButtons,
           background: "var(--cancel-changes-color)",
           color: "#444444",
+          "&:hover": {
+            background: "var(--cancel-changes-hover)",
+            color: "white",
+          },
         }}
       >
         Cancelar
@@ -68,6 +76,9 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
           ...formButtons,
           background: "var(--save-changes-color)",
           color: "white",
+          "&:hover": {
+            background: "var(--save-changes-hover)",
+          },
         }}
       >
         Guardar cambios
@@ -79,4 +90,5 @@ export function AdminFormBtn({ handleOpenPreview, handleSaveChanges}) {
 AdminFormBtn.propTypes = {
   handleOpenPreview: PropTypes.func.isRequired,
   handleSaveChanges: PropTypes.func,
+  handleCloseAction: PropTypes.func
 };
