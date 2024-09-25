@@ -3,7 +3,9 @@ import { ref, uploadBytes, listAll, deleteObject, getDownloadURL } from 'firebas
 import {
   addDoc, collection, getDoc,
   updateDoc, getDocs, deleteDoc,
-  doc, where, query, orderBy, setDoc,
+  doc, where, query,
+  arrayRemove,
+  orderBy, setDoc,
   increment, Timestamp,
   onSnapshot
 } from "firebase/firestore";
@@ -13,6 +15,7 @@ import { v4 } from "uuid";
 import { getAuth, signOut } from "firebase/auth";
 
 
+import { arraysEqual, differenceFirstArrayObjects } from "./utilsFunctions";
 
 /**
  * Get a specific document in a collection
@@ -401,7 +404,139 @@ export async function getCarouselImages(){
   return updatedImageList
 }
 
+// -------------------Funciones para manejar reservas de cursos y la agenda -----------------------------
+/**
+ * Delete a scheduled courses
+ * @param {string} collectionName
+ * @param {string} documentID
+ */
+export async function deleteScheduledCoursesAndAgenda(documentID) {
+  try {
+    const docRef = await doc(db, "Scheduled Courses", documentID);
+    let docData = await getDoc(docRef);
+    docData = docData.data()
+    let dates = docData.dates;
+    dates = dates.map((e) => 
+      e.date
+    )
+    await Promise.all(dates.map(async (date) => {
+      const agendaRef = await doc(db, "Calendar", date);
+      const docSnapshot = await getDoc(agendaRef);
+      if(docSnapshot.data().scheduledCoursesUids.length == 1)
+        await deleteDoc(agendaRef);
+      else{
+        await updateDoc(agendaRef, {
+          scheduledCoursesUids: arrayRemove(documentID)
+        });  
+      }
+    }))
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Error deleting document: ");
+  }
+}
 
+/**
+ * Add or update a scheduled courses
+ * @param {string} collectionName
+ * @param {string} documentID (optional)
+ * @param {JSON} jsonData
+ */
+export async function upsertScheduledCoursesAndAgenda(collectionName, documentID = null, jsonData) {
+  try {
+    if (documentID) {
+      // NO SE HA IMPLEMENTADO AUN
+      const docRef = doc(db, collectionName, documentID);
+      let docSnapshot = await getDoc(docRef);
+      const oldDates = docSnapshot.data().dates
+      const newDates = jsonData.dates
+      // console.log("Comparando ",JSON.stringify(oldDates), " con ", JSON.stringify(newDates))
+      if(arraysEqual(oldDates, newDates)){
+        console.log("No hubo cambio en la fechas")
+        await updateDoc(docRef, jsonData);
+      } 
+      else {
+        console.log("Si hubo cambio en las fechas")
+        //Eliminar de la agenda las fechas que se borraron
+        const datesToDelete = differenceFirstArrayObjects(oldDates, newDates) 
+        //Las fechas que estan en el array viejo y que no estan en el nuevo es porque se borraron
+        if(datesToDelete){
+          console.log("Se borraron las fechas: ",JSON.stringify(datesToDelete))
+          let dates = datesToDelete.map((e) => 
+            e.date
+          )
+          await Promise.all(dates.map(async (date) => {
+            const agendaRef = await doc(db, "Calendar", date);
+            const docSnapshot = await getDoc(agendaRef);
+            if(docSnapshot.data().scheduledCoursesUids.length == 1)
+              await deleteDoc(agendaRef);
+            else{
+              await updateDoc(agendaRef, {
+                scheduledCoursesUids: arrayRemove(documentID)
+              });  
+            }
+          }))
+        }
+
+        //Agregar a la agenda las fechas que se insertaron
+        const datesToInsert = differenceFirstArrayObjects(newDates, oldDates) 
+        //Las fechas que estan en el array viejo y que no estan en el nuevo es porque se borraron
+        if(datesToInsert){
+          console.log("Se agregaron las fechas: ",JSON.stringify(datesToInsert))
+          let dates = datesToInsert.map((e) => 
+            e.date
+          )
+          for (const date of dates) {
+            let agendaRef = doc(db, "Calendar", date);
+            // Verificar si el documento existe
+            let docSnapshot = await getDoc(agendaRef);
+            if (docSnapshot.exists()) {
+              const data = docSnapshot.data();
+              const scheduledCoursesUids = data.scheduledCoursesUids || [];
+              // Agregar el nuevo UID al array
+              scheduledCoursesUids.push(docRef.id);
+              // Actualizar el documento con el array modificado
+              await updateDoc(agendaRef, { scheduledCoursesUids });
+            } else {
+              await setDoc(agendaRef, {
+                scheduledCoursesUids: [docRef.id]
+              });
+            }
+          }
+        }
+        await updateDoc(docRef, jsonData);
+      }
+      
+      return documentID;
+    } else {
+      const docRef = await addDoc(collection(db, collectionName), jsonData);
+      let dates = jsonData.dates
+      dates = dates.map((e) => 
+        e.date
+      )
+      for (const date of dates) {
+        let agendaRef = doc(db, "Calendar", date);
+        // Verificar si el documento existe
+        let docSnapshot = await getDoc(agendaRef);
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data();
+          const scheduledCoursesUids = data.scheduledCoursesUids || [];
+          // Agregar el nuevo UID al array
+          scheduledCoursesUids.push(docRef.id);
+          // Actualizar el documento con el array modificado
+          await updateDoc(agendaRef, { scheduledCoursesUids });
+        } else {
+          await setDoc(agendaRef, {
+            scheduledCoursesUids: [docRef.id]
+          });
+        }
+      }
+      return docRef.id;
+    }
+  } catch (error) {
+    console.error("Error upserting document: ", error);
+  }
+}
 /**
  * Log out the current user
  * @returns {Promise<void>}

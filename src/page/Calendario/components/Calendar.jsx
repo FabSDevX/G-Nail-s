@@ -10,13 +10,18 @@ import { Box, Button, Divider, IconButton, Paper, Typography, useMediaQuery } fr
 import CloseIcon from '@mui/icons-material/Close';
 import { InfoScheduledCourse } from './InfoScheduledCourse';
 import { getDocumentById } from '../../../utils/firebaseDB';
+import { DayInformation } from './DayInformation';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchScheduledCourses } from '../../../store/slices/ScheduledCoursesSlice';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../../firebase';
 
 const calendarIsNotMobile = {
   picker: {
     margin: 'auto', 
     width: '45px', 
     height: '45px', 
-    '&:hover':{bgcolor:'lightblue'}
+    '&:hover':{bgcolor:'#ffc9d9'}
   },
   calendar:{
     p: '10px',
@@ -88,20 +93,26 @@ function ServerDay(props) {
     <Badge
       key={day.toString()}
       overlap="circular"
-      color="secondary"
+      // color="primary"
       badgeContent={count}
+      sx={{
+        '& .MuiBadge-standard':{
+          backgroundColor:'var(--secondary-color)'
+        }
+      }}
     >
       <PickersDay
         {...other}
         outsideCurrentMonth={outsideCurrentMonth}
         day={day}
         sx={!isMobile?{...calendarIsNotMobile.picker}:null}
+        
       />
     </Badge>
   );
 }
 
-export default function Calendar(props) {
+export default function Calendar({propsdata, propsdates, isEditable, onButtonClick}) {
   const [showPanel, setShowPanel] = React.useState(false);
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -112,8 +123,9 @@ export default function Calendar(props) {
   const [dates, setDates] = React.useState([]);
   const [todayActivities, setTodayActivities] = React.useState([]);
   const [hours, setHours] = React.useState(["Error con el horario", "Error con el horario", "Error con el horario", "Error con el horario"]);
-
   const requestAbortController = React.useRef(null);
+  const dispatch = useDispatch();
+  const { scheduledCourses, status, error } = useSelector((state) => state.scheduledCourses);
 
   const fetchHighlightedDays = (date1, dates1) => {
     const controller = new AbortController();
@@ -134,15 +146,41 @@ export default function Calendar(props) {
   };
 
   React.useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente
+    }
+  }, [status, dispatch]);
+
+  React.useEffect(() => {
     setIsLoading(true);  // Iniciar el estado de carga
-    
+    setHighlightedDays([])
     const getData = async () => {
       try {
-          setData(props.data); // Actualiza el estado cuando cambian los datos
-          setDates(props.dates);
+          setData(propsdata); // Actualiza el estado cuando cambian los datos
+          setDates(propsdates);
 
           const informacion = await getDocumentById("Contact info", "Information");
-          setHours(informacion.lessonSchedule)
+          let todayActivitiesTemp = informacion.lessonSchedule
+          todayActivitiesTemp = todayActivitiesTemp.map((e) => ({hours:e, activity:null}))
+          setTodayActivities(todayActivitiesTemp);
+          setHours(informacion.lessonSchedule);
+
+          fetchHighlightedDays(value, propsdates);
+          propsdata.map((date) => {
+            if (date.date == value.format('DD-MM-YYYY')){
+              // console.log("Actividades de hoy: ", date.scheduledCoursesUids)
+      
+              date.scheduledCoursesUids.map((e) => {
+                let infoCourse = getInfoReservation(e);
+                const schedule = getScheduleCourse(infoCourse, value.format('DD-MM-YYYY'))
+                setTodayActivities((prevActivities) =>
+                  prevActivities.map((item, index) =>
+                    schedule.includes(index) ? { ...item, activity: infoCourse } : item
+                  )
+                );
+              })
+            }
+          }) 
 
           setIsLoading(false);  // Terminar el estado de carga después de las actualizaciones
       } catch (error) {
@@ -152,19 +190,26 @@ export default function Calendar(props) {
     }
     getData();
     return () => requestAbortController.current?.abort();
-  }, [props]);
+  }, [propsdata, propsdates]);
 
-  
-  React.useEffect(() => {
-    fetchHighlightedDays(value, dates);
-    data.map((date) => {
-      if (date.date == value.format('DD-MM-YYYY')){
-        setTodayActivities(date.scheduledCoursesUids)
+  const getInfoReservation = (idReservation) => {
+    let infoCourse = null
+    scheduledCourses.map((e)=> {
+      if (e.id == idReservation)
+        infoCourse = e
+    })   
+    return {id:idReservation, ...infoCourse} 
+  }
+
+  const getScheduleCourse = (courseInfo, date) => {
+    let schedule = []
+    courseInfo.dates.map((e) => {
+      if(e.date == date){
+        schedule.push(e.hours);
       }
     })
-  }, [dates, data]);
-
-
+    return schedule
+  }
 
   const handleMonthChange = (date) => {
     if (requestAbortController.current) {
@@ -176,18 +221,33 @@ export default function Calendar(props) {
   };
 
   const handleDaySelectedChange= (newValue) => {
-    setTodayActivities([])
     setValue(newValue);
+
+    setTodayActivities((prevActivities) =>
+      prevActivities.map((item) => ({ ...item, activity: null }))
+    );
+    
     data.map((date) => {
       if (date.date == newValue.format('DD-MM-YYYY')){
-        setTodayActivities(date.scheduledCoursesUids)
+        // console.log("Actividades de hoy: ", date.scheduledCoursesUids)
+
+        date.scheduledCoursesUids.map((e) => {
+          let infoCourse = getInfoReservation(e);
+          const schedule = getScheduleCourse(infoCourse, newValue.format('DD-MM-YYYY'))
+          setTodayActivities((prevActivities) =>
+            prevActivities.map((item, index) =>
+              schedule.includes(index) ? { ...item, activity: infoCourse } : item
+            )
+          );
+        })
       }
     })
+    // console.log(todayActivities)
 
   };
 
   return (
-    <Box mt={'80px'} sx={{ display:isMobile?'inline':'flex', justifyContent:'center' }}>
+    <Box sx={{ display:isMobile?'inline':'flex', justifyContent:'center' }}>
       <LocalizationProvider 
         dateAdapter={AdapterDayjs} 
         adapterLocale="es" 
@@ -229,43 +289,7 @@ export default function Calendar(props) {
           }
         />
       </LocalizationProvider>
-        <Paper
-          elevation={isMobile?0:3}
-          sx={{
-            padding: '16px',
-            borderRadius:isMobile? '0 0 15px 15px':'15px',
-            border:isMobile?'1px black solid':'none',
-            borderTop:'none',
-            backgroundColor: '#ffd3e5',
-            width:isMobile?'289px':'200px',
-            margin:isMobile?'auto':'0 auto 0 5px'
-          }}
-        >
-          <Typography variant="h6" mb={'5px'}>
-              Agenda del 
-              <em style={{fontSize:'16px', marginLeft:'5px'}}>
-                <b>
-                   {value.format('DD-MM-YYYY')}
-                </b>
-              </em>
-          </Typography>
-          <Divider />
-          <Box justifyContent={'center'} alignContent={'center'} minHeight={isMobile?'fit-content':'312px'}>
-            {todayActivities.length>0?
-              (
-                todayActivities.map((reservationUID, index) => (
-                  <Box key={index} margin={'20px auto'} >
-                    <InfoScheduledCourse id={reservationUID} date={value.format('DD-MM-YYYY')}/>
-                  </Box>
-                ))
-              )
-              :
-              (
-                <Typography margin={'auto'} textAlign={'center'} fontStyle={'italic'}>*No hay cursos agendados para esta fecha*</Typography>
-              )
-            }
-          </Box>
-        </Paper>
+      <DayInformation todayActivities={todayActivities} isMobile={isMobile} value={value} isEditable={isEditable} onButtonClick={onButtonClick}/>
     </Box>
   );
 }
