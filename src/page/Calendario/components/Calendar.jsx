@@ -21,7 +21,7 @@ const calendarIsNotMobile = {
     margin: 'auto', 
     width: '45px', 
     height: '45px', 
-    '&:hover':{bgcolor:'lightblue'}
+    '&:hover':{bgcolor:'#ffc9d9'}
   },
   calendar:{
     p: '10px',
@@ -93,14 +93,20 @@ function ServerDay(props) {
     <Badge
       key={day.toString()}
       overlap="circular"
-      color="secondary"
+      // color="primary"
       badgeContent={count}
+      sx={{
+        '& .MuiBadge-standard':{
+          backgroundColor:'var(--secondary-color)'
+        }
+      }}
     >
       <PickersDay
         {...other}
         outsideCurrentMonth={outsideCurrentMonth}
         day={day}
         sx={!isMobile?{...calendarIsNotMobile.picker}:null}
+        
       />
     </Badge>
   );
