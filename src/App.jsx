@@ -12,6 +12,8 @@ import {CourseAdmin} from "./page/admin/courseAdmin/CourseAdmin";
 import ContactAdmin from "./page/admin/contactAdmin/ContactAdmin";
 import {Calendario} from "./page/Calendario/Calendario";
 import {CarouselAdmin} from "./page/admin/carousel-admin/CarouselAdmin"
+import { FormAgenda } from "./page/Calendario/FormAgenda";
+import Reservas from "./store/useExample";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
               <Route path="/admin/contact" element={<ContactAdmin />} />
               <Route path="/admin/courses" element={<CourseAdmin />} />
               <Route path="/admin/calendar" element={<Calendario />} />
+              <Route path="/admin/redux/example" element={<Reservas />} />
+              <Route path="/admin/calendar/course/:id?" element={<FormAgenda />} />
               <Route path="/admin/carousel" element={<CarouselAdmin />} />
             </Route>
           </Route>
