@@ -18,6 +18,8 @@ import AdminDashboard from "./page/admin/dashBoard-Statics/AdminDashboard";
 import { useEffect } from "react";
 import { trackVisit } from "./utils/firebaseDB";
 import DevelopersList from "./page/devsInfo/DevelopersList";
+import AboutUs from "./page/AboutUs/AboutUs";
+
 // Componente para manejar el tracking de rutas públicas
 function TrackPublicRoutes() {
   const location = useLocation();  // Hook para obtener la ruta actual
@@ -42,6 +44,7 @@ function App() {
             <Route path="/" element={<ClientHome />} />
             <Route path="/contacto" element={<Contact />} />
             <Route path="/developers" element={<DevelopersList />} />
+            <Route path="/AboutUs" element={<AboutUs />} />
           </Route>    
 
           {/* Ruta de autenticación */}

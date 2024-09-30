@@ -112,7 +112,7 @@ export const ClientNavBar = () => {
                             }}
                         >
                             <MenuItem key= 'option1' onClick={() => navigate('/contacto')} >Contáctenos</MenuItem>
-                            <MenuItem>Sobre nosotros</MenuItem>
+                            <MenuItem key='option2' onClick={() => navigate('/AboutUs')}>Sobre nosotros</MenuItem>
                             <MenuItem>Cursos Disponibles</MenuItem>
                             <MenuItem>Cursos ya programados</MenuItem>
                         </Menu>
@@ -123,7 +123,7 @@ export const ClientNavBar = () => {
                         <Stack direction='row' spacing={0.5}>
 
                             <Button color="inherit" sx={{ color: 'black'}} onClick={() => navigate('/contacto')} >Contáctenos </Button>
-                            <Button color="inherit" sx={{ color: 'black' }}> Sobre nosotros </Button>
+                            <Button color="inherit" sx={{ color: 'black' }} onClick={() => navigate('/AboutUs')}> Sobre nosotros </Button>
                             <Button color="inherit" id="resources-button" onClick={handleOpenCoursesMenu} sx={{ color: 'black' }}> 
                                 Nuestros Cursos {Boolean(anchorElement) ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
                             </Button>
