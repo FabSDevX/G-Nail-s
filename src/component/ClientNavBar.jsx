@@ -169,6 +169,7 @@ export const ClientNavBar = () => {
                 </Toolbar>
             </AppBar>
 
+
             <Drawer anchor='right' open={wishlistOpen} onClose={toggleWishlist}>
                 <WishlistComponent />
             </Drawer>

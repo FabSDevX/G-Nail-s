@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-
+//De momento se pasan datos quemados
 const wishlistItems = [
   { id: 1, name: 'Tecnica 1', lessons: 2 },
   { id: 2, name: 'Tecnica 2', lessons: 1 },
@@ -25,6 +25,7 @@ const WishlistComponent = () => {
           Mi Lista de Deseos
         </Typography>
         
+
         <List>
           {wishlistItems.map((item) => (
             <ListItem
