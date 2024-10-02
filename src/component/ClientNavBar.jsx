@@ -1,28 +1,28 @@
-import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery,Drawer  } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { AutoAwesome } from '@mui/icons-material';  
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-
+import WishlistComponent from '../utils/layout/WishlistComponent';
 
 export const ClientNavBar = () => {
 
     const navigate = useNavigate();
-
+    const [wishlistOpen, setWishlistOpen] = useState(false);  // Estado para manejar la apertura de la wishlist
     const [anchorElement, setAnchorElement] = useState(null);
     const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
-
     const navBarFirstVersionDisplay = useMediaQuery('(min-width:715px)');
-
     const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
-
-
     const availableCourses = [
         { text: 'Cursos disponibles', path: '/admin/contact' },
         { text: 'Cursos programados', path: '/admin/carousel' },
     ];
+
+    const toggleWishlist = () => {
+        setWishlistOpen(!wishlistOpen);
+    };
 
     const handleOpenCoursesMenu = (event) => {
 
@@ -162,12 +162,16 @@ export const ClientNavBar = () => {
                         </Menu>
                     </Box>
                     <Box sx={{ml:'auto'}}>
-                        <IconButton size='medium' edge='start' color='inherit' aria-label='logo'>
-                            <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />  {/* Aquí el nuevo icono */}
+                        <IconButton size='medium' edge='start' color='inherit' aria-label='wishlist' onClick={toggleWishlist}>
+                            <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
+
+            <Drawer anchor='right' open={wishlistOpen} onClose={toggleWishlist}>
+                <WishlistComponent />
+            </Drawer>
         </Box>
     );
 }
