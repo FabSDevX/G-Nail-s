@@ -404,6 +404,15 @@ export async function getCarouselImages(){
   return updatedImageList
 }
 
+export async function getAllImages(directoryName){
+  const Ref = ref(storageDB, directoryName);
+  const result = await listAll(Ref);
+
+  const urls = await Promise.all(result.items.map((itemRef) => getDownloadURL(itemRef)));
+
+  return urls
+}
+
 // -------------------Funciones para manejar reservas de cursos y la agenda -----------------------------
 /**
  * Delete a scheduled courses
