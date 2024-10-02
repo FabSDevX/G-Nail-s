@@ -1,8 +1,8 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { sendEmail } from "../../../utils/services/emailjs/emailSender";
 import { Toaster, toast } from "sonner";
-import "../../../utils/services/emailjs/emailjsConfig.js";
 import { setDocumentByCollection } from "../../../utils/firebaseDB.js";
+import "../../../utils/services/emailjs/emailjsConfig.js";
 
 const inputStyles = { background: "white", width: "100%", borderRadius: "5px" };
 const typographyStyles = {
@@ -27,17 +27,18 @@ export function ContactForm(emailData) {
     if (consult.length < 0) {
       consult = "(El usuario no ha proporcionado ninguna consulta)";
     }
-
+    
     const options = {
       timeZone: "America/Costa_Rica", // Costa Rica
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     };
-
+    
     const dateFormat = new Intl.DateTimeFormat("es-CR", options);
     const todayDate = dateFormat.format(date);
-
+    
+    console.log("Funciona")
     const templateParams = {
       email: email,
       name: name,
@@ -47,7 +48,7 @@ export function ContactForm(emailData) {
     const response = sendEmail(templateParams);
     toast.promise(response, {
       loading: "Cargando...",
-      success: (data) => {
+      success: () => {
         setDocumentByCollection("Consults", {
           clientName: name,
           date: todayDate,
@@ -56,7 +57,7 @@ export function ContactForm(emailData) {
         });
         return "Mensaje enviado";
       },
-      error: (err) => {
+      error: () => {
         return "Mensaje no enviado";
       },
     });
@@ -67,8 +68,12 @@ export function ContactForm(emailData) {
       sx={{
         background:
           "linear-gradient(90deg, rgba(242,188,212,1) 0%, rgba(249,136,181,1) 100%)",
-        margin: "0 40px 40px 40px",
+        margin: {
+          xs:"0 40px 40px 40px",
+          xl:"0 auto"
+        },
         borderRadius: "25px",
+        maxWidth: "1444px",
         height: {
           xs: "auto",
           sm: "550px",
@@ -92,7 +97,7 @@ export function ContactForm(emailData) {
       >
         Envianos una consulta
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Box
           sx={{
             gridTemplateColumns: "repeat(2, 1fr)",
@@ -117,6 +122,7 @@ export function ContactForm(emailData) {
             </Typography>
             <TextField
               name="contact-name-field"
+              autoComplete="false"
               style={inputStyles}
               required
               id="outlined-required"
@@ -146,6 +152,7 @@ export function ContactForm(emailData) {
             </Typography>
             <TextField
               style={inputStyles}
+              autoComplete="false"
               id="outlined-multiline-static"
               name="contact-consult-field"
               multiline
@@ -169,7 +176,7 @@ export function ContactForm(emailData) {
             },
           }}
         >
-          <Toaster />
+          <Toaster richColors/>
           <Button
             variant="outlined"
             type="submit"
@@ -181,13 +188,12 @@ export function ContactForm(emailData) {
               fontSize: "25px",
               borderRadius: "10px",
               border:"3px solid var(--primary-color)",
-
               width: {
                 xs: "130px",
                 sm: "200px",
               },
               "&:hover": {
-                background: "var(--primary-color)",
+                background: "#fd779a",
                 border:"3px solid var(--secondary-color)",
                 color:"white"
               },
@@ -196,7 +202,7 @@ export function ContactForm(emailData) {
             Enviar
           </Button>
         </Box>
-      </form>
+      </Box>
     </Box>
   );
 }

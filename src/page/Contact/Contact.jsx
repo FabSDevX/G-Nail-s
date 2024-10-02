@@ -3,21 +3,11 @@ import { ContactInformation } from "./components/ContactInformation";
 import { getDocumentById } from "../../utils/firebaseDB";
 import { ContactForm } from "./components/ContactForm";
 import { useEffect, useState } from "react";
+import { contactModel } from "../../model/model";
 
 export function Contact() {
 
-  const [contactInfo, setContactInfo] = useState({
-    location: '',
-    phone: '',
-    mail: '',
-    facebook: '',
-    instagram: '',
-    iFrame: '',
-    schedule: '',
-    lessonSchedule: '',
-    locationLink: '',
-    socialMedia: ''
-  });
+  const [contactInfo, setContactInfo] = useState(contactModel);
 
   useEffect(() => {
     const fetchContactInfo = async () => {
