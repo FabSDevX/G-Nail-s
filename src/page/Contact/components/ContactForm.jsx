@@ -95,7 +95,7 @@ export function ContactForm(emailData) {
           },
         }}
       >
-        Envianos una consulta
+        Envíanos una consulta
       </Typography>
       <Box component="form" onSubmit={handleSubmit}>
         <Box
@@ -134,7 +134,7 @@ export function ContactForm(emailData) {
               sx={{ ...typographyStyles, fontSize: { xs: "18px", sm: "24px" } }}
               style={typographyStyles}
             >
-              Numero de telefono
+              Número de teléfono
             </Typography>
             <TextField
               name="contact-phone-field"

@@ -322,7 +322,7 @@ export function ContactInformation(data) {
                 },
               }}
             >
-              Horario de lecciones
+              Horario de lecciónes
             </Typography>
 
             <Box
