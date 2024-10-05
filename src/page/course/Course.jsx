@@ -164,9 +164,10 @@ function Course() {
             </Typography>
 
             <Grid container rowSpacing={3} columnSpacing={2} justifyContent="center">
-                {currentCourses.map(({ img, largeDescription, name, numLessons, smallDescription }, index) => (
+                {currentCourses.map(({ img, largeDescription, name, numLessons, smallDescription, id }, index) => (
                     <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
                         <CourseCard
+                            id={id}
                             title={name}
                             shortDescription={smallDescription}
                             lessonHours={numLessons}
