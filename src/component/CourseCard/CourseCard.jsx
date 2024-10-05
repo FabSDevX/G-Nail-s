@@ -74,7 +74,7 @@ export function CourseCard({title, shortDescription, lessonHours, img, largeDesc
           transition: "transform 0.6s",
         }}
       >
-        <WishListButton isFlipped={isFlipped} />
+        <WishListButton isFlipped={isFlipped} title={title} lessons={lessonHours} />
       </CardActions>
     </Card>
   );
