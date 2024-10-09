@@ -1,9 +1,15 @@
 import { Box, Button } from "@mui/material";
 import propTypes from "prop-types";
 
-export function WishListButton({ isFlipped }) {
+export function WishListButton({ isFlipped, title, lessons, id }) {
+
+  function doSomething(){
+    console.log(id, title, lessons)
+  }
+
   return (
     <Button
+      onClick={doSomething}
       sx={{
         background: "var(--secondary-color)",
         padding: "15px",
@@ -37,5 +43,8 @@ export function WishListButton({ isFlipped }) {
 }
 
 WishListButton.propTypes = {
+  id: propTypes.string.isRequired,
   isFlipped: propTypes.bool.isRequired,
+  title: propTypes.string.isRequired,
+  lessons: propTypes.number.isRequired
 };
