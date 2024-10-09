@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllDocuments } from "../../utils/firebaseDB";
 import { Box, Button, Grid, Typography, TextField } from "@mui/material";
 import { CourseCard } from "../../component/CourseCard/CourseCard";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Course() {
     const [courses, setCourses] = useState([]);
@@ -94,15 +95,20 @@ function Course() {
         for (let i = startPage; i <= endPage; i++) {
             pageNumbers.push(
                 <Button
+                    size="small"
                     key={i}
                     variant={i === currentPage ? "contained" : "outlined"}
                     onClick={() => handlePageClick(i)}
-                    sx={{ margin: "0 4px" }}
-                >
-                    {i}
-                </Button>
+                    sx={{margin: "0 4px", border:"2px solid var(--primary-color)", color:"black",
+                        backgroundColor: i === currentPage ? "var(--primary-color) " : "transparent",
+                        "&:hover": {
+                            backgroundColor: i === currentPage ? "var(--secondary-color)" : "var(--primary-color)",
+                        },
+                    }}
+                >{i}</Button>
             );
         }
+        
 
         // Asegurarse de que siempre se muestre el primer y el último botón
         if (startPage > 1) {
@@ -134,7 +140,8 @@ function Course() {
     };
 
     return (
-        <Box sx={{ maxWidth: "1444px", margin: "0 auto", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ maxWidth: "1444px", px: {xs:"15px", sm: "40px"}, margin: "0 auto", display: "flex", flexDirection: "column" }}>
+            <Typography sx={{fontSize: {xs:"1rem",sm:"2rem", md:"3rem"}, fontWeight:"500", marginTop:"35px", marginBottom:"20px"}}>Cursos disponibles</Typography>
             <Box sx={{ display: "flex", marginBottom: 2 }}>
                 <TextField
                     variant="outlined"
@@ -143,19 +150,13 @@ function Course() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     sx={{ flexGrow: 1, marginRight: 1 }}
                 />
-                <Button variant="contained" onClick={handleSearch}>
-                    Buscar
-                </Button>
+                <Button variant="contained" size="small" sx={{background:"var(--primary-color)", "&:hover":{background:"var(--secondary-color)"}}} onClick={handleSearch}><SearchIcon/></Button>
             </Box>
             {searchTerm && (
-                <Box sx={{ marginBottom: 2 }}>
-                    <Button variant="outlined" onClick={handleClearFilters}>
-                        Limpiar Filtros
-                    </Button>
-                </Box>
+                <Box sx={{margin:"0 0 2px auto" }}><Button variant="contained" sx={{background:"#C7839A", color:"black", "&:hover":{background:"var(--primary-color)"}}} onClick={handleClearFilters}>Limpiar filtros</Button></Box>
             )}
 
-            <Typography margin="5px 15px 50px auto" fontWeight="normal" fontSize="18px" component="p">
+            <Typography margin="5px 0 50px auto" fontWeight="normal" fontSize="18px" component="p">
                 Se han encontrado{" "}
                 <Typography fontSize="20px" color="var(--primary-color)" component="span">
                     {totalCoursesNumber}
@@ -178,12 +179,12 @@ function Course() {
                 ))}
             </Grid>
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-                <Button variant="contained" onClick={handlePrevPage} disabled={currentPage === 1}>
+                <Button variant="text" onClick={handlePrevPage} disabled={currentPage === 1}>
                     Anterior
                 </Button>
                 {renderPageNumbers()}
                 <Button
-                    variant="contained"
+                    variant="text"
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
                     sx={{ marginLeft: 1 }}
