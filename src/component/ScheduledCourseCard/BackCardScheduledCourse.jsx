@@ -36,8 +36,9 @@ export function BackCardScheduledCourse({ dates, img }) {
           padding: "15px 0 15px 0 ",
         }}
       >
+        <Typography textAlign={"center"} fontSize={18} fontWeight={700} mt={2}>Fechas</Typography>
         {dates.map((e) => 
-          <Box display={'flex'} justifyContent={'center'} gap={'20px'} margin={'10px auto'}>
+          <Box key={e.date} display={'flex'} justifyContent={'center'} gap={'20px'} margin={'10px auto'}>
             <Typography variant="body2" color="text.secondary" sx={textStyles}>
               {e.date}
             </Typography>

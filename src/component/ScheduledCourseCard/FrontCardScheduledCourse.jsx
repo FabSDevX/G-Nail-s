@@ -1,9 +1,17 @@
 import { Box, CardContent, CardMedia, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+const subsectionCardStyle = {
+  padding: "10px 10px 0 10px",
+  textAlign: "center",
+  maxWidth: "13ch",
+};
+
 export function FrontCardScheduledCourse({
   title,
   shortDescription,
   img,
+  cupo,
+  group
 }) {
   return (
     <Box
@@ -66,6 +74,24 @@ export function FrontCardScheduledCourse({
         >
           {shortDescription}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "20px",
+            alignContent: "center",
+            justifyContent: "center",
+            marginTop: "auto",
+            borderTop: "1px solid #999",
+          }}
+        >
+          <Typography variant="body2" sx={{ ...subsectionCardStyle }}>
+            Cupo: {cupo}
+          </Typography>
+          <Box sx={{ borderRight: "1px solid #999" }}></Box>
+          <Typography variant="body2" sx={subsectionCardStyle}>
+            Grupo: {group}
+          </Typography>
+        </Box>
       </CardContent>
     </Box>
   );

@@ -11,7 +11,7 @@ const subsectionCardStyle = {
   maxWidth: "13ch",
 };
 
-export function ScheduledCourseCard({title, shortDescription, img, dates}) {
+export function ScheduledCourseCard({title, shortDescription, img, dates, cupo, group}) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
@@ -57,6 +57,8 @@ export function ScheduledCourseCard({title, shortDescription, img, dates}) {
             shortDescription={shortDescription}
             img={img}
             subsectionCardStyle={subsectionCardStyle}
+            cupo={cupo}
+            group={group}
           />
         ) : (
           <BackCardScheduledCourse

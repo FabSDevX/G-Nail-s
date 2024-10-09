@@ -46,13 +46,10 @@ function App() {
             <Route path="/contacto" element={<Contact />} />
             <Route path="/developers" element={<DevelopersList />} />
             <Route path="/AboutUs" element={<AboutUs />} />
-
-            <Route path="/card" element={<ScheduledCourseCard title="Pintar unas" shortDescription="Esta es la descripcion corta del curso asdasdfas asasdasdd asd af"  img="src\assets\upRightArrow.svg" dates={[{date:"23/08/2024", hours:"9:00 am - 12:00 md"}, {date:"25/08/2024", hours:"9:00 am - 12:00 md"}, {date:"28/08/2024", hours:"9:00 am - 12:00 md"}]} />} />
-
           </Route>    
 
-          {/* Ruta de autenticación */}
 
+          {/* Ruta de autenticación */}
           <Route path="/login" element={<Login />} />     
 
 

@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { getCarouselImages } from '../../utils/firebaseDB';
 import { CarouselContainer } from '../admin/carousel-admin/components/CarouselContainer';
+import { ScheduledCoursesRow } from './ScheduledCoursesRow';
 
-
+const titlesStyles = {
+  fontSize: '30px',
+  ml:'20px',
+  fontWeight:'400',
+  py:'20px'
+}
 
 const ClientHome = () => {
 
@@ -32,15 +38,17 @@ const ClientHome = () => {
 
   return (
     <Box>
-
       <Box
         sx={{
           width: '80%', 
-          height: '400px', 
+          // height: '400px', 
           margin: '0 auto', 
         }}
       >
         <CarouselContainer imageList = {Object.values(sortedImageList)}/>
+        <Typography variant='h1' sx={titlesStyles}>Cursos agendados</Typography>
+        <ScheduledCoursesRow />
+        <Typography  variant='h1' sx={titlesStyles}>Cursos destacados</Typography>
       </Box>
 
     </Box>
