@@ -25,9 +25,9 @@ export const DayInformation =({todayActivities, isMobile, value, isEditable, onB
               </em>
           </Typography>
           <Divider />
-          <Box justifyContent={'center'} alignContent={'center'} minHeight={isMobile?'fit-content':'312px'}>
+          <Box justifyContent={'center'} alignContent={'center'} minHeight={isMobile?'fit-content':'312px'} display={'flex'} flexDirection={'column'}>
             {todayActivities.map((item, index) => (
-                  <Box key={index} margin={'20px auto'} >
+                  <Box key={index} margin={'20px 0'} >
                     <InfoScheduledCourse hours={item.hours} courseInfo={item.activity} date={value.format('DD-MM-YYYY')} isEditable={isEditable} onButtonClick={onButtonClick}/>
                   </Box>
                 ))

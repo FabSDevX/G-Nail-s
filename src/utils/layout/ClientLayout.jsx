@@ -40,7 +40,7 @@ const ClientLayout = () => {
       <Box 
         sx={{ 
           flex: "1", 
-          paddingTop: "80px", 
+          paddingTop: "100px", 
           paddingBottom: "110px"
         }}
       >

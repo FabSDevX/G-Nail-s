@@ -26,7 +26,7 @@ const calendarIsNotMobile = {
   calendar:{
     p: '10px',
     minWidth: 370, // Ajusta el tamaño general del calendario
-    minHeight: 370,
+    minHeight: 400,
     border: '1px black solid',
     borderRadius: 5,
     overflow:'visible',
@@ -45,12 +45,17 @@ const calendarIsNotMobile = {
     '& .MuiPickersDay-root': {
       fontSize: '1rem', // Ajusta el tamaño de la fuente para los días
     },
+    '& .MuiPickersDay-root.Mui-selected': {
+      '&:focus':{backgroundColor:'var(--primary-color)'},
+      '&:hover':{backgroundColor:'var(--secondary-color)'},
+      backgroundColor:'var(--primary-color)'
+    },
     '& .MuiPickersSlideTransition-root': {
       overflowX: 'visible',
     },
     '& .MuiBadge-root': {
       width: 50,
-      height: 50,
+      height: 48,
       border: '1px solid gray',
     },
   }

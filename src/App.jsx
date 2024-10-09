@@ -51,8 +51,8 @@ function App() {
             <Route path="/cursos" element={<Course />} />
           </Route>    
 
-          {/* Ruta de autenticación */}
 
+          {/* Ruta de autenticación */}
           <Route path="/login" element={<Login />} />     
 
 
