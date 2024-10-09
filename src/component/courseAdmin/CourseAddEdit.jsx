@@ -92,8 +92,10 @@ export function CourseAddEdit({
           "courses",
           previousImg
         );
-        handledData["img"] = handleImagePath;
+        const downloadPath = await getImageByUrl(handleImagePath);
+        handledData["img"] = downloadPath;
       }
+      setCourse(handledData);
       setHandleDialog(true);
     } catch (error) {
       console.error(error);
