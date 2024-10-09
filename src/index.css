@@ -26,6 +26,17 @@
   --agreed-color: #48b02c;
 
   /*
+  General button style
+  */
+  button:hover {
+    border: none;
+  }
+  button:focus{
+    outline: none;
+  }
+}
+
+  /*
   General anchor style
   */
   a {
@@ -36,17 +47,6 @@
     font-weight: 700;
     color: var(--secondary-color);
   }
-
-  /*
-  General button style
-  */
-  button:hover {
-    border: none;
-  }
-  button:focus{
-    outline: none;
-  }
-}
 
 body {
   margin: 0;

@@ -23,7 +23,10 @@ const contactInfoSubTitleStyles = {
 const subSectionStyles = {
   background: "white",
   margin: "15px",
-  padding: "0 15px 15px 15px",
+  padding: {
+    xs: "5px",
+    sm: "0 15px 15px 15px"
+  },
   borderRadius: "10px",
 };
 
@@ -47,6 +50,7 @@ export function ContactInformation(data) {
         justifyContent: "center",
         alignItems: "center",
         gap: "40px",
+        overflow: "hidden",
         flexDirection: {
           xs: "column",
           sm: "column",
@@ -66,7 +70,10 @@ export function ContactInformation(data) {
           backgroundRepeat: "round",
           display: "flex",
           flexDirection: "column",
-          padding: "10px",
+          padding: {
+            xs: "0",
+            sm: "10px"
+          },
           width: {
             sm: "80vw",
             md: "600px",
@@ -122,7 +129,7 @@ export function ContactInformation(data) {
             className="contact-location"
           >
             <Typography sx={contactInfoTitleStyles}>Ubicación</Typography>
-            <Typography sx={{ padding: "15px 0", width: "60%" }}>
+            <Typography sx={{ padding: "15px 0", width: {xs: "100%", sm:"80%", md: "70%"} }}>
               {location}
             </Typography>
           </Box>
@@ -189,7 +196,6 @@ export function ContactInformation(data) {
           className="footer-contact-container"
           sx={{
             ...subSectionStyles,
-
             display: {
               xs: "grid",
               sm: "grid",
@@ -199,21 +205,20 @@ export function ContactInformation(data) {
             gridTemplateColumns: {
               xs: "repeat(1, 1fr)",
               sm: "repeat(2, 1fr)",
-              md: "",
             },
 
             gridTemplateRows: {
               xs: "repeat(1, 1fr)",
               sm: "repeat(1, 1fr)",
-              md: "",
             },
             gap: {
               xs: "8px",
-              sm: "8px",
-              md: "30px",
+              sm: "px",
+              md: "15px",
+              lg: "30px"
             },
             width: {
-              xs: "50vw",
+              xs: "60%",
               sm: "auto",
             },
             justifyItems: {
@@ -221,7 +226,7 @@ export function ContactInformation(data) {
               sm: "center",
             },
             margin: {
-              xs: "0 auto",
+              xs: "15px auto",
               sm: "15px",
             },
           }}
@@ -232,9 +237,9 @@ export function ContactInformation(data) {
                 ...contactInfoTitleStyles,
                 margin: "15px 0 0 0",
                 fontSize: {
-                  xs: "16px",
-                  md: "18px",
-                  lg: "24px",
+                  xs: "20px",
+                  md: "15px",
+                  lg: "21px",
                 },
               }}
             >
@@ -247,6 +252,10 @@ export function ContactInformation(data) {
                 marginTop: "16px",
                 gap: "10px",
                 flexDirection: "column",
+                alignItems: {
+                  xs: "center",
+                  sm: "baseline"
+                }
               }}
             >
               {Object.entries(schedule).map(([schedule, value]) => (
@@ -261,7 +270,7 @@ export function ContactInformation(data) {
                       ...contactInfoSubTitleStyles,
                       textWrap: "nowrap",
                       fontSize: {
-                        md: "16px",
+                        md: "14px",
                         lg: "20px",
                       },
                       display: {
@@ -276,18 +285,23 @@ export function ContactInformation(data) {
                         xs: "column",
                         sm: "row",
                       },
+                      alignItems: {
+                        xs: "center",
+                        sm: "start"
+                      }
                     }}
                   >
                     {value.day}{" "}
-                    <span
-                      style={{
+                    <Box
+                      component="span"
+                      sx={{
                         textWrap: "wrap",
                         fontWeight: "500",
                         fontSize: "14px",
                       }}
                     >
                       {value.time}
-                    </span>
+                    </Box>
                   </Typography>
                 </Box>
               ))}
@@ -297,15 +311,18 @@ export function ContactInformation(data) {
             <Typography
               sx={{
                 ...contactInfoTitleStyles,
-                margin: "15px 0 0 0",
+                margin: {
+                  xs: "0",
+                  sm: "15px 0 0 0"
+                },
                 fontSize: {
-                  xs: "16px",
-                  md: "18px",
-                  lg: "24px",
+                  xs: "20px",
+                  md: "15px",
+                  lg: "21px",
                 },
               }}
             >
-              Horario de lecciones
+              Horario de lecciónes
             </Typography>
 
             <Box

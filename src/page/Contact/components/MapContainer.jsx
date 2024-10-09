@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import PropTypes from "prop-types";
 
 export function MapContainer({ locationLink, iFrame }) {
@@ -6,43 +6,38 @@ export function MapContainer({ locationLink, iFrame }) {
   const urlIFrame = filteredIFrame ? filteredIFrame[1] : null;
   return (
     <>
-      <iframe
+      <Box
+        component="iframe"
         src={urlIFrame}
         style={{
           height: "500px",
           border: "0",
-          allowfullscreen: "",
-          loading: "lazy",
         }}
+        allowFullScreen
+        loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
-      ></iframe>
+      ></Box>
+
       <Button
         href={locationLink}
         variant="outlined"
+        type="button"
         target="_blank"
         sx={{
           background: "var(--secondary-color)",
           color: "black",
           height: "81px",
-          fontSize: "25px",
-          '&:hover':{
-            background: "var(--primary-color)",
-            border:"3px solid var(--secondary-color)",
-            color:"white"
-            }
+          fontSize: {
+            sm: "18px",
+            md: "22px"
+          },
+          "&:hover": {
+            background: "#fd779a",          
+            color: "white",
+          },
         }}
       >
-        <Typography
-          sx={{
-            fontSize: {
-              xs: "16px",
-              sm: "20px",
-            },
-            
-          }}
-        >
           Ir a la ubicación
-        </Typography>
       </Button>
     </>
   );
