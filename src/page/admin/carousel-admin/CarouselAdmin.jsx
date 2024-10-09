@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from 'react';
 import { ImageUploadCard } from './components/ImageUploadCard';
-import { AdminFormBtn } from '../../../component/AdminFormBtn';
+import { FormButtons } from "../../../component/FormButtons";
 import ModalContainer from '../../../component/ModalContainer';
 import { CarouselContainer } from './components/CarouselContainer';
 import { deleteImage, uploadCarouselImageByUrl, getCarouselImages } from '../../../utils/firebaseDB';
@@ -13,6 +13,8 @@ export function CarouselAdmin(){
 
     const [imageList, setImageList] = useState({});
     const [handleDeletedImages, setHandleDeletedImages] = useState([]);
+
+    const [hasChanges, setHasChanges] = useState(false);
 
     const sortedImageList = Object.keys(imageList) 
     .sort()  
@@ -28,7 +30,7 @@ export function CarouselAdmin(){
       const handleImageListChange = (name, url) => {
         const value = {...imageList, [name] : {'url':url, 'isStored': false}};
         setImageList(value);
-        console.log("Agregado", value)
+        setHasChanges(true); 
       };
 
       const handleDeletedImage = (name,url) => {
@@ -39,6 +41,7 @@ export function CarouselAdmin(){
           console.log(listValues)
         }
         delete imageList[name];
+        setHasChanges(true);
       }    
 
       const saveImages = async () => {
@@ -55,6 +58,7 @@ export function CarouselAdmin(){
           deleteImage(element);
         });
         setHandleDeletedImages([]);
+        setHasChanges(false);
       };
 
 
@@ -141,10 +145,12 @@ export function CarouselAdmin(){
 
             </Box>
 
-            <AdminFormBtn
+            <FormButtons
               handleOpenPreview={handleOpen}
-              handleSaveChanges={handleSave}            
-            />
+              handleSaveChanges={handleSave}
+              disabled={hasChanges} // Se habilitan si ha habido cambios            
+            />      
+
             
             <Toaster richColors position="bottom-right" />
 
