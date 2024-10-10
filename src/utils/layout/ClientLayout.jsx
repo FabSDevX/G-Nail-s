@@ -5,7 +5,7 @@ import { ClientNavBar } from "../../component/ClientNavBar";
 import Box from '@mui/material/Box';
 import { getDocumentById } from "../firebaseDB";
 import IconButton from '@mui/material/IconButton';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp'; // Ícono de WhatsApp
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const ClientLayout = () => {
 
@@ -17,11 +17,11 @@ const ClientLayout = () => {
     return /Mobi|Android/i.test(navigator.userAgent);
   };
 
-  // Función para redirigir a WhatsApp
+
   const handleWhatsAppClick = () => {
 
     const message = "Hola! Me gustaría obtener información sobre los cursos disponibles.";
-    const encodedMessage = encodeURIComponent(message); // Codifica el mensaje para incluirlo en la URL
+    const encodedMessage = encodeURIComponent(message); 
 
     const phoneNumber = phoneNumberInfo.phone;
 
@@ -55,7 +55,7 @@ const ClientLayout = () => {
       sx={{ 
         display: "flex", 
         flexDirection: "column", 
-        minHeight: "100vh" // Hace que ocupe el 100% de la altura de la ventana
+        minHeight: "100vh" 
       }}
     >
       <ClientNavBar />
@@ -80,15 +80,15 @@ const ClientLayout = () => {
           position: "fixed",
           bottom: 16,
           right: 16,
-          backgroundColor: "#25D366", // Color de WhatsApp
+          backgroundColor: "#25D366", 
           color: "white",
           width: "56px",
           height: "56px",
           boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
           '&:hover': {
-            backgroundColor: "#128C7E", // Color más oscuro en hover
+            backgroundColor: "#128C7E", 
           },
-          zIndex: 1000, // Asegurarse de que esté por encima de otros elementos
+          zIndex: 1000,
         }}
       >
         <WhatsAppIcon fontSize="large" />
