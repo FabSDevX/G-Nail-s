@@ -21,7 +21,7 @@ export function CourseCard({id, title, shortDescription, lessonHours, img, large
   return (
     <Card
       sx={{
-        width: "310px",
+        width: "290px",
         borderRadius: "10px",
         perspective: "1000px",
         boxShadow: "none",
@@ -33,7 +33,9 @@ export function CourseCard({id, title, shortDescription, lessonHours, img, large
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0)",
           transformStyle: "preserve-3d",
           transition: "transform 0.6s",
-          height: "430px",
+          maxHeight: "430px",
+          height: "400px",
+          overflowY:"scroll",
           boxSizing: "border-box",
           padding: "0",
           "&:focus": {
