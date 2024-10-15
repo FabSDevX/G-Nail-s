@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { getCarouselImages } from '../../utils/firebaseDB';
 import { CarouselContainer } from '../admin/carousel-admin/components/CarouselContainer';
 import { ScheduledCoursesRow } from './ScheduledCoursesRow';
+import { HighlightsCourses } from './HighlightsCourses';
 
 const titlesStyles = {
   fontSize: '30px',
@@ -49,6 +50,7 @@ const ClientHome = () => {
         <Typography variant='h1' sx={titlesStyles}>Cursos agendados</Typography>
         <ScheduledCoursesRow />
         <Typography  variant='h1' sx={titlesStyles}>Cursos destacados</Typography>
+        <HighlightsCourses/>
       </Box>
 
     </Box>
