@@ -16,8 +16,8 @@ export const ClientNavBar = () => {
     const navBarFirstVersionDisplay = useMediaQuery('(min-width:715px)');
     const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
     const availableCourses = [
-        { text: 'Cursos disponibles', path: '/admin/contact' },
-        { text: 'Cursos programados', path: '/admin/carousel' },
+        { text: 'Cursos disponibles', path: '/cursos' },
+        { text: 'Cursos programados', path: '/cursosAgendados' },
     ];
 
     const toggleWishlist = () => {
