@@ -18,18 +18,18 @@ export const HighlightsCourses = () => {
     }, []);
 
     return (
-        <Box display={"flex"} justifyContent={"space-evenly"} flexWrap={"wrap"} gap={"10px"}>
+        <Box display={"flex"} justifyContent={"space-between"} flexWrap={"wrap"} gap={"12px"}>
             {courses.length > 0 ? (
                 // Limit to 4 courses using slice(0, 4)
                 courses.slice(0, 4).map((course, index) => (
                     <CourseCard
                         key={index}
+                        id={course.id}
                         title={course.name}
                         shortDescription={course.smallDescription}
-                        img={course.img}
-                        numLessons={course.numLessons}
-                        hours={course.hours}
                         largeDescription={course.largeDescription}
+                        img={course.img}
+                        lessonHours={course.numLessons}
                     />
                 ))
             ) : (
