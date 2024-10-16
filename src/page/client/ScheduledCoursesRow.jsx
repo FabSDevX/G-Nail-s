@@ -16,6 +16,7 @@ export const ScheduledCoursesRow = () => {
       if (status === 'idle') {
         dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente   
       }
+
     }, [status, dispatch]);
 
     useEffect(() => {
@@ -28,22 +29,15 @@ export const ScheduledCoursesRow = () => {
 
     useEffect(() => {
         const getCoursesData = async () => {
+            let listScheduledCourses = []
             const courseDataPromises = scheduledCourses.map(async (e) => {
                 const response = await getDocumentById("Course", e.courseUID);
-                return {[e.courseUID]: response};
+                listScheduledCourses.push({...response, cupo:e.cupo, dates:e.dates, group:e.group, idReservation:e.id})
             });
 
-            const courseDataArray = await Promise.all(courseDataPromises); // Esperar que se resuelvan todas las consultas
+            await Promise.all(courseDataPromises);
 
-            // Crear el nuevo objeto a agregar
-            const newCourseInfo = courseDataArray.reduce((acc, course) => {
-                return {...acc, ...course};
-            }, {});
-
-            setCourseInfo((prevCourseInfo) => ({
-                ...prevCourseInfo,
-                ...newCourseInfo // Insertar el nuevo dato al final
-            }));
+            setCourseInfo(listScheduledCourses);
         };
 
         getCoursesData();
@@ -51,22 +45,21 @@ export const ScheduledCoursesRow = () => {
     
     return (
         <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
-            {Object.keys(courseInfo).length > 0 && scheduledCourses.map((e) => {
-                const course = courseInfo[e.courseUID];
+            {courseInfo.length > 0 && courseInfo.map((e) => {
                 const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
-                return course ? (
+                return (
                     <ScheduledCourseCard
-                        key={e.courseUID + e.group}
-                        title={course.name}
-                        shortDescription={course.smallDescription}
-                        img={course.img}
+                        key={e.idReservation}
+                        title={e.name}
+                        shortDescription={e.smallDescription}
+                        img={e.img}
                         dates={dateWithHours}
                         cupo={e.cupo}
                         group={e.group}
                     />
-                ) : null;
+                )
             })}
-            <SeeMoreCard route={'scheduledCourses'}/>
+            <SeeMoreCard route={'cursosAgendados'}/>
         </Box>
     );
 }

@@ -21,6 +21,7 @@ import DevelopersList from "./page/devsInfo/DevelopersList";
 import AboutUs from "./page/AboutUs/AboutUs";
 import { CourseCard } from "./component/CourseCard/CourseCard";
 import Course from "./page/course/Course";
+import CourseScheduled from "./page/course/CourseScheduled";
 
 // Componente para manejar el tracking de rutas públicas
 function TrackPublicRoutes() {
@@ -49,6 +50,7 @@ function App() {
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/pruebas" element={<CourseCard title="Nada" shortDescription="Corto" lessonHours={2} largeDescription="Largo" img="https://firebasestorage.googleapis.com/v0/b/g-nails.appspot.com/o/courses%2F3d74703f-930a-4df5-a802-05888f342116?alt=media&token=47b36c13-7e30-4915-a211-2e60f6e392ba"  />} />
             <Route path="/cursos" element={<Course />} />
+            <Route path="/cursosAgendados" element={<CourseScheduled />} />
           </Route>    
 
 
