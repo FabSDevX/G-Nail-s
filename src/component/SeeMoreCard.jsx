@@ -12,7 +12,7 @@ export function SeeMoreCard({route}) {
   return (
     <Card
       sx={{
-        width: "310px",
+        width: "290px",
         borderRadius: "10px",
         perspective: "1000px",
         boxShadow: "none",
@@ -23,7 +23,7 @@ export function SeeMoreCard({route}) {
       <CardActionArea
         sx={{
           transformStyle: "preserve-3d",
-          height: "100%",
+          height: "456.250px",
           boxSizing: "border-box",
           padding: "0",
           "&:focus": {

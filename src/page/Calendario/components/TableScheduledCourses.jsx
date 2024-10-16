@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport, GridToolbarExportContainer } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { Alert, AlertTitle, Snackbar, Typography, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,20 +13,37 @@ import { deleteScheduledCourses, fetchScheduledCourses } from '../../../store/sl
 import { ConfirmationDialog } from '../../../component/ConfirmationDialog';
 import { promiseToast } from '../../../utils/toast';
 import { toast } from 'sonner';
-
-const rows = [
-  { id: 1, curso: 'Matemáticas', grupo: 'A',cupo:4, fechas: ['10/08/2024', '15/12/2024', '10/08/2024', '15/12/2024'] },
-  { id: 2, curso: 'Ciencias', grupo: 'B',cupo:4, fechas: ['12/08/2024', '20/12/2024'] },
-  { id: 3, curso: 'Historia', grupo: 'A',cupo:4, fechas: ['11/08/2024', '18/12/2024'] },
-  { id: 4, curso: 'Geografía', grupo: 'C', cupo:4,fechas: ['09/08/2024', '14/12/2024'] },
-  { id: 5, curso: 'Física', grupo: 'B',cupo:4, fechas: ['13/08/2024', '21/12/2024'] },
-];
+import { CSVLink } from "react-csv"; // Usa react-csv para exportar en formato CSV
 
 const textConfirmationModal = "¿Está seguro de eliminar el curso agendado?"
 
 const getCourseName = async (courseUID) => {
   const course = await getDocumentById("Course", courseUID);
   return course.name;
+}
+
+function GridToolbarCustom(){
+  return (
+    <GridToolbarContainer>
+      <GridToolbarExport       
+        printOptions={{
+          hideFooter: true,
+          hideToolbar: true,
+          pageStyle: `
+            .MuiDataGrid-columnHeader[data-field="curso"]{ 
+              width: 240px !important; 
+            } 
+            .MuiDataGrid-cell[data-field="curso"] { 
+              width: 400px !important; 
+            }
+            .MuiDataGrid-cell[data-field="fechas"] { 
+              width: 210px !important; 
+            }
+          `
+        }}
+      />
+    </GridToolbarContainer>
+  );
 }
 
 export default function QuickFilteringGrid({onAction}) {
@@ -63,7 +80,7 @@ export default function QuickFilteringGrid({onAction}) {
           fechas: e.dates
         };
       }));
-      
+
       setRows(tempRows)
     }
     getData();
@@ -106,7 +123,7 @@ export default function QuickFilteringGrid({onAction}) {
   };
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 40 },
+    { field: 'id', headerName: 'ID', width: 40, disableExport: true },
     { field: 'curso', headerName: 'Curso', width: 200 },
     { field: 'grupo', headerName: 'Grupo', width: 60 },
     { field: 'cupo', headerName: 'Cupo', width: 60 },
@@ -114,6 +131,7 @@ export default function QuickFilteringGrid({onAction}) {
       field: 'fechas',
       headerName: 'Fechas',
       width: 108,
+      valueFormatter: (value) => value.map(date => date.date).join(' & '),
       renderCell: (params) => (
         <Box>
         {params.value.map((fecha, index) => (
@@ -128,6 +146,7 @@ export default function QuickFilteringGrid({onAction}) {
       field: 'editar',
       headerName: 'Editar',
       width: 80,
+      disableExport: true,
       renderCell: (params) => (
         <Box margin={'auto'}>
           <Button variant="contained" sx={{bgcolor:'orange','&:hover': {backgroundColor: 'darkorange'}}} onClick={() => handleEditClick(params.row.uid)}>
@@ -140,6 +159,7 @@ export default function QuickFilteringGrid({onAction}) {
       field: 'eliminar',
       headerName: 'Eliminar',
       width: 80,
+      disableExport: true,
       renderCell: (params) => (
         <Box margin={'auto'}>
           <Button variant="contained" sx={{bgcolor:'red','&:hover': {backgroundColor: '#bb0000'}}} onClick={() => handleDeleteClick(params.row.uid)}>
@@ -162,10 +182,13 @@ export default function QuickFilteringGrid({onAction}) {
         disableColumnMenu
         disableColumnSorting
         disableRowSelectionOnClick
-        slots={{ toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbarCustom }}
         slotProps={{
           toolbar: {
-            showQuickFilter: true,
+            printOptions:{
+              pageStyle: '.MuiDataGrid-columnHeader[data-field="curso"] { width: 300px !important; }'
+            },
+            showQuickFilter: true
           },
         }}
         initialState={{
@@ -178,6 +201,7 @@ export default function QuickFilteringGrid({onAction}) {
         pageSizeOptions={[5, 10, 15]}
         autoHeight
         getRowHeight={() => 'auto'}
+        
       />
       <ConfirmationDialog
         agreedFuntion={deleteRow}
