@@ -29,6 +29,7 @@ export const HighlightsCourses = () => {
                         img={course.img}
                         numLessons={course.numLessons}
                         hours={course.hours}
+                        largeDescription={course.largeDescription}
                     />
                 ))
             ) : (
