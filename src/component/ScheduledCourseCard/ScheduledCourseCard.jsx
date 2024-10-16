@@ -35,7 +35,6 @@ export function ScheduledCourseCard({title, shortDescription, img, dates, cupo, 
           transition: "transform 0.6s",
           maxHeight: "430px",
           height: "400px",
-          overflowY:"scroll",
           boxSizing: "border-box",
           padding: "0",
           "&:focus": {
