@@ -36,7 +36,12 @@ export function CourseCard({id, title, shortDescription, lessonHours, img, large
           maxHeight: "430px",
           height: "400px",
           boxSizing: "border-box",
+          borderRadius: "10px 10px 0 0",
+          border: "1px solid rgba(0,0,0,.16)",
           padding: "0",
+          "&:hover": {
+            border: "1px solid rgba(0,0,0,.16)",
+          },
           "&:focus": {
             outline: "none",
           },

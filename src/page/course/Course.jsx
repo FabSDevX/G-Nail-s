@@ -1,8 +1,8 @@
-import CourseTemplate from "../../component/course/CourseTemplate";
+import CourseTemplate from "../../component/course/CourseTemplate"
 
 function Course() {
     return (
-        <CourseTemplate dataset="Course" pageTitle={"Cursos disponibles"} isScheduled={false}/>
+        <CourseTemplate dataset="Course" pageTitle={"Cursos disponibles"}/>
     );
 }
 
