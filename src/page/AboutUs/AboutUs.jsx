@@ -1,6 +1,7 @@
 import React, { useEffect, useState }  from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { getAllImages } from "../../utils/firebaseDB";
+import '../../index.css';
 
 
 const AboutUs = () => {
@@ -27,12 +28,12 @@ const AboutUs = () => {
         {
           title: "Sobre nosotros",
           content:
-            " Somos una una academia comprometida con el aprendizaje de nuestros clientes. Gnails ofrece los mejores cursos de belleza, para que cualquier persona interesada pueda llegar al mejor nivel en cualquiera de las ténicas conocidas de esta disciplina.",
+            "Somos una academia comprometida con el aprendizaje de nuestros clientes. Gnails ofrece los mejores cursos de belleza, para que cualquier persona interesada pueda llegar al mejor nivel en cualquiera de las ténicas conocidas de esta disciplina.",
         },
         {
             title: "Visión",
             content:
-              "El objetivo de Gnail como academia es alcanzar la excelencia en enseñanza de belleza. Deseamos continuar evolucionando hasta convertirnos en un referente a nivel nacional.",
+              "El objetivo de G'nails como academia es alcanzar la excelencia en enseñanza de belleza. Deseamos continuar evolucionando hasta convertirnos en un referente a nivel nacional.",
           },
         {
           title: "Misión",
@@ -82,13 +83,16 @@ const AboutUs = () => {
             >
                 <Typography
                 variant="h4"
-                sx={{ color: "#F0589C" }} 
+                fontFamily={'Cream_Cake'}
+                fontSize={'50px'}
+                sx={{ color: "#F0589C"}} 
                 >
                 {section.title}
                 </Typography>
                 <Typography
-                variant="body1"
-                sx={{ color: "black", marginTop: "-10px", fontSize: flexMax? "20px" : "15px" }}
+                variant="body3"
+                fontFamily={'Warung_Kopi'}
+                sx={{ color: "black", marginTop: "-10px", fontSize: flexMax? "22px" : "18px" }}
                 >
                 {section.content}
                 </Typography>
