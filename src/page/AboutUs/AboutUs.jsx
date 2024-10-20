@@ -28,7 +28,7 @@ const AboutUs = () => {
         {
           title: "Sobre nosotros",
           content:
-            "Somos una academia comprometida con el aprendizaje de nuestros clientes. Gnails ofrece los mejores cursos de belleza, para que cualquier persona interesada pueda llegar al mejor nivel en cualquiera de las ténicas conocidas de esta disciplina.",
+            "Somos una academia comprometida con el aprendizaje de nuestros clientes. Gnails ofrece los mejores cursos de belleza, para que cualquier persona interesada pueda llegar al mejor nivel en cualquiera de las técnicas conocidas de esta disciplina.",
         },
         {
             title: "Visión",
