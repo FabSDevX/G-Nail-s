@@ -6,9 +6,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 
-import VisitsChart from './VisitsChart';  // Reutiliza el componente de gráfico
-import VisitsTable from './VisitsTable';  // Reutiliza el componente de tabla
-import { getCourseSelectionsByDateRange } from '../../utils/firebaseDB';  // Nueva función en firebaseDB.js
+import VisitsChart from './VisitsChart';
+import VisitsTable from './VisitsTable';
+import { getCourseSelectionsByDateRange } from '../../utils/firebaseDB';
 
 const AdminDashboardCourseSelections = () => {
     const [startDate, setStartDate] = useState(dayjs().subtract(30, 'day'));
@@ -19,12 +19,14 @@ const AdminDashboardCourseSelections = () => {
         try {
             const startTimestamp = startDate.toDate();
             const endTimestamp = endDate.toDate();
+
             const selections = await getCourseSelectionsByDateRange(startTimestamp, endTimestamp);
 
-            // Asegúrate de convertir el campo date a un objeto válido de dayjs
+            // Formateo de los datos obtenidos para el dashboard
             const formattedData = selections.map(selection => ({
-                date: dayjs(selection.date.toDate()).format('DD/MM/YY'),  // Convertir el timestamp y formatear la fecha
-                selections: selection.selection_count
+                date: dayjs(selection.date).format('DD/MM/YY'),
+                selections: selection.selection_count,
+                course_name: selection.course_name
             }));
 
             setSelectionData(formattedData);
@@ -73,7 +75,7 @@ const AdminDashboardCourseSelections = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <VisitsChart data={selectionData} dataKey="selections" />
+            <VisitsChart data={selectionData} dataKey="selections" chartType="courseSelections" />
             <VisitsTable data={selectionData} label="Selecciones" dataKey="selections" />
         </LocalizationProvider>
     );
