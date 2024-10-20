@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { getAllDocuments } from "../../utils/firebaseDB";
 import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from "prop-types";
-import { CardTemplate } from "../CardTemplate";
+import { CourseCard } from "../CourseCard/CourseCard";
 
-function CourseTemplate({ dataset, pageTitle, isScheduled }) {
+function CourseTemplate({ dataset, pageTitle}) {
     const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [categories, setCategories] = useState([]);
@@ -203,17 +203,13 @@ function CourseTemplate({ dataset, pageTitle, isScheduled }) {
             <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-between"}}}>
                 {currentCourses.map((course, index) => (
                     <Grid item size="auto" key={index}>
-                        <CardTemplate
-                            type={isScheduled ? 'scheduled' : 'course'}
+                        <CourseCard
                             id={course.id}
                             title={course.name}
                             shortDescription={course.smallDescription}
                             img={course.img}
                             largeDescription={course.largeDescription}
                             lessonHours={course.numLessons}
-                            dates={course.dates}
-                            cupo={course.cupo}
-                            group={course.group}
                         />
                     </Grid>
                 ))}
