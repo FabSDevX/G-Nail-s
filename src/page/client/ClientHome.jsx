@@ -46,7 +46,9 @@ const ClientHome = () => {
           margin: '0 auto', 
         }}
       >
-        <CarouselContainer imageList = {Object.values(sortedImageList)}/>
+        {Object.keys(sortedImageList).length > 0 && (
+          <CarouselContainer imageList={Object.values(sortedImageList)} />
+        )}
         <Typography variant='h1' sx={titlesStyles}>Cursos agendados</Typography>
         <ScheduledCoursesRow />
         <Typography  variant='h1' sx={titlesStyles}>Cursos destacados</Typography>

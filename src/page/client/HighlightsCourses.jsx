@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllDocuments } from "../../utils/firebaseDB";
+import { getAllDocumentsOrdered } from "../../utils/firebaseDB";
 import { SeeMoreCard } from "../../component/SeeMoreCard";
 import { CourseCard } from "../../component/CourseCard/CourseCard";
 
@@ -10,7 +10,7 @@ export const HighlightsCourses = () => {
     // Fetch courses from the "Course" collection
     useEffect(() => {
         const fetchCourses = async () => {
-            const coursesData = await getAllDocuments("Course");
+            const coursesData = await getAllDocumentsOrdered("Course", "views", "desc");
             setCourses(coursesData); 
         };
 

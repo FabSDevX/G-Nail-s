@@ -141,5 +141,18 @@ button:focus-visible {
   right: 15px; 
 }
 
+@font-face {
+  font-family: 'Cream_Cake';
+  src: url('./fonts/Cream_Cake.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
+
+@font-face {
+  font-family: 'Warung_Kopi';
+  src: url('./fonts/Warung_Kopi.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 

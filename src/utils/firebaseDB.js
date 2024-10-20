@@ -98,6 +98,24 @@ export async function getAllDocuments(collectionName) {
   }
 }
 
+/**
+ * Get all documents from a specific collection ordered by a field
+ * @param {string} collectionName - The name of the collection
+ * @param {string} orderByField - The field to order the documents by
+ * @param {string} orderDirection - The direction to order the documents ('asc' or 'desc')
+ * @returns {Array} Array of document data
+ */
+export async function getAllDocumentsOrdered(collectionName, orderByField, orderDirection = 'asc') {
+  try {
+    const q = query(collection(db, collectionName), orderBy(orderByField, orderDirection));
+    const querySnapshot = await getDocs(q);
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents: ", error);
+    return [];
+  }
+}
 
 //USAGE EXAMPLE
 // useEffect(() => {
