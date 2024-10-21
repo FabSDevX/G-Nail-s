@@ -17,7 +17,7 @@ export const ClientNavBar = () => {
     const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
     const availableCourses = [
         { text: 'Cursos disponibles', path: '/cursos' },
-        { text: 'Cursos programados', path: '/cursosAgendados' },
+        { text: 'Cursos agendados', path: '/cursosAgendados' },
     ];
 
     const toggleWishlist = () => {

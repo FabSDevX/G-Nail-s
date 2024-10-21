@@ -18,24 +18,26 @@ export const HighlightsCourses = () => {
     }, []);
 
     return (
-        <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
+        <Box>
             {courses.length > 0 ? (
-                // Limit to 4 courses using slice(0, 4)
-                courses.slice(0, 3).map((course, index) => (
-                    <CourseCard
-                        key={index}
-                        id={course.id}
-                        title={course.name}
-                        shortDescription={course.smallDescription}
-                        largeDescription={course.largeDescription}
-                        img={course.img}
-                        lessonHours={course.numLessons}
-                    />
-                ))
+                // Limit to 3 courses using slice(0, 3)
+                <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
+                    {courses.slice(0, 3).map((course, index) => (
+                        <CourseCard
+                            key={index}
+                            id={course.id}
+                            title={course.name}
+                            shortDescription={course.smallDescription}
+                            largeDescription={course.largeDescription}
+                            img={course.img}
+                            lessonHours={course.numLessons}
+                        />
+                    ))}
+                    <SeeMoreCard route={"cursos"} />
+                </Box>
             ) : (
-                <Typography>No courses found</Typography>
+                <Typography>No hay cursos registrados</Typography>
             )}
-            <SeeMoreCard route={"cursos"} />
         </Box>
     );
 };

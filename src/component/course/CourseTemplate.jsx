@@ -198,7 +198,7 @@ function CourseTemplate({ dataset, pageTitle}) {
                     No se han encontrado cursos.
                 </Typography>
             ) : (
-            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-between"}}}>
+            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-evenly"}}}>
                 {currentCourses.map((course, index) => (
                     <Grid item size="auto" key={index}>
                         <CourseCard
