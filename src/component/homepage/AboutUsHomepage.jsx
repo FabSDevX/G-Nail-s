@@ -32,7 +32,7 @@ function AboutUsHomepage() {
           width: { sm: "auto", md: "600px" },
           height: { sm: "auto", md: "250px" },
           position: { sm: "-moz-initial", md: "absolute" },
-          right: {sm: "50px", xl:"25%"},
+          right: "50px",
           top: "20px",
         }}
       >
