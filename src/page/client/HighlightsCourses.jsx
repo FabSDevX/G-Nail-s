@@ -21,7 +21,7 @@ export const HighlightsCourses = () => {
         <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
             {courses.length > 0 ? (
                 // Limit to 4 courses using slice(0, 4)
-                courses.slice(0, 4).map((course, index) => (
+                courses.slice(0, 3).map((course, index) => (
                     <CourseCard
                         key={index}
                         id={course.id}
