@@ -21,7 +21,7 @@ function CourseScheduled() {
   
     useEffect(() => {
       if (status === 'idle') {
-        dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente   
+        dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente 
       }
     }, [status, dispatch]);
 
@@ -43,6 +43,7 @@ function CourseScheduled() {
 
             await Promise.all(courseDataPromises);
 
+            listScheduledCourses = listScheduledCourses.filter((e) => e.cupo > 0)
             // Ordenar los cursos por nombre
             const sortedCourses = listScheduledCourses.sort((a, b) => a.name.localeCompare(b.name));
             setCourses(sortedCourses);
@@ -194,24 +195,39 @@ function CourseScheduled() {
                 resultados
             </Typography>
 
-            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-between"}}}>
-                {currentCourses.map((e, index) => {
-                    const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
-                    return (
-                        <Grid item size="auto" key={index}>
-                            <ScheduledCourseCard
-                                key={e.idReservation}
-                                title={e.name}
-                                shortDescription={e.smallDescription}
-                                img={e.img}
-                                dates={dateWithHours}
-                                cupo={e.cupo}
-                                group={e.group}
-                            />
-                        </Grid>
-                    )
-                })}
-            </Grid>
+            {/* Courses */}
+            {totalCoursesNumber === 0 && currentCourses.length !== 0 ? (
+                <Typography textAlign="center" fontSize="1.5rem" color="gray" marginY="50px">
+                    No se han encontrado cursos.
+                </Typography>
+            ) : (
+                currentCourses.length === 0 ? (
+                    <Typography textAlign="center" fontSize="1.5rem" color="gray" marginY="50px">
+                        Actualmente no hay cursos agendados con cupos disponibles. <br></br>
+                        ¡Armá tu propio curso!
+                    </Typography>
+                ) : (
+                    <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-evenly"}}}>
+                        {currentCourses.map((e, index) => {
+                            const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
+                            return (
+                                <Grid item size="auto" key={index}>
+                                    <ScheduledCourseCard
+                                        key={e.idReservation}
+                                        title={e.name}
+                                        shortDescription={e.smallDescription}
+                                        img={e.img}
+                                        dates={dateWithHours}
+                                        cupo={e.cupo}
+                                        group={e.group}
+                                    />
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                )
+            )}
+
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
                 <Button variant="text" onClick={handlePrevPage} disabled={currentPage === 1}>
                     Anterior
