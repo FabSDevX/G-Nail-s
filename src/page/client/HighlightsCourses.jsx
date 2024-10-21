@@ -18,7 +18,7 @@ export const HighlightsCourses = () => {
     }, []);
 
     return (
-        <Box display={"flex"} justifyContent={"space-between"} flexWrap={"wrap"} gap={"12px"}>
+        <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
             {courses.length > 0 ? (
                 // Limit to 4 courses using slice(0, 4)
                 courses.slice(0, 4).map((course, index) => (

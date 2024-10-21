@@ -41,13 +41,12 @@ const ClientHome = () => {
 
 
   return (
-    <Box>
+    <Box sx={{maxWidth:"1444px", margin: '0 auto' }}>
       <Box
         sx={{
           width: '80%',
           maxWidth:"1444px", 
-          // height: '400px', 
-          margin: '0 auto', 
+          margin: '0 auto',
         }}
       >
         {Object.keys(sortedImageList).length > 0 && (
