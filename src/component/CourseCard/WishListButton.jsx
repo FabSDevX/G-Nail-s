@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import propTypes from "prop-types";
 import { getDocumentById, incrementCourseSelectionCount } from "../../utils/firebaseDB";
 
-export function WishListButton({ isFlipped, title, lessons, id }) {
+export function WishListButton({ isFlipped, title, lessons, id, isFunctional = true }) {
   
   async function handleAddToWishlist() {
     try {
@@ -42,7 +42,7 @@ export function WishListButton({ isFlipped, title, lessons, id }) {
 
   return (
     <Button
-      onClick={handleAddToWishlist}
+      onClick={isFunctional ? handleAddToWishlist : () => {}}
       sx={{
         background: "var(--secondary-color)",
         padding: "15px",
@@ -79,5 +79,6 @@ WishListButton.propTypes = {
   id: propTypes.string.isRequired,
   isFlipped: propTypes.bool.isRequired,
   title: propTypes.string.isRequired,
-  lessons: propTypes.number.isRequired
+  lessons: propTypes.number.isRequired,
+  isFunctional: propTypes.bool
 };

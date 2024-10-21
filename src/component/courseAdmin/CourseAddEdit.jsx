@@ -5,6 +5,7 @@ import { AdminFormBtn } from "../AdminFormBtn";
 import noImageBackground from "../../assets/noImageBackground.svg";
 import { useState } from "react";
 import {
+  deleteImageFirebaseUri,
   getDocumentById,
   getImageByUrl,
   uploadImageByUrl,
@@ -13,7 +14,6 @@ import {
 import { useEffect } from "react";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { promiseToast, warningToast } from "../../utils/toast";
-import { getActualDate } from "../../utils/date";
 import { courseModel } from "../../model/model";
 import CardModal from "./CardModal";
 
@@ -82,39 +82,52 @@ export function CourseAddEdit({
         warningToast("Imagen obligatoria");
         return;
       }
-      const handledData = course;
-      if (!isEditing)
-        handledData["views"] = { [getActualDate("YYYY-MMMM")]: 0 };
-      handledData["numLessons"] = course["hours"] * 3;
-      if (isImageEdited) {
-        const handleImagePath = await uploadImageByUrl(
-          img,
-          "courses",
-          previousImg
-        );
-        const downloadPath = await getImageByUrl(handleImagePath);
-        handledData["img"] = downloadPath;
-      }
+      
+      const handledData = { ...course, numLessons: course["hours"] * 3 };
       setCourse(handledData);
-      setHandleDialog(true);
+      setHandleDialog(true); // Abrir el modal de confirmación.
+      
     } catch (error) {
       console.error(error);
     }
   }
-
+  
+  
   async function handleSavedChanges() {
-    promiseToast(
-      async () => {
-        const id = await upsertDocument("Course", uid, course);
-        setUid(id);
-      },
-      textConfirmationToast,
-      "Error"
-    );
-    if (!isEditing) setIsEditing(true);
-    setIsImageEdited(false);
-    handleStateAction(true);
+    let handleImagePath = null;
+    try {
+      const handledData = course;
+      if (isImageEdited) {
+        // Intentar subir la imagen
+        handleImagePath = await uploadImageByUrl(img, "courses", previousImg);
+        const downloadPath = await getImageByUrl(handleImagePath);
+        handledData["img"] = downloadPath;
+      }
+      setCourse(handledData);
+      
+      promiseToast(
+        async () => {
+          const id = await upsertDocument("Course", uid, handledData);
+          setUid(id);
+        },
+        textConfirmationToast,
+        "Error"
+      );
+      
+      if (!isEditing) setIsEditing(true);
+      setIsImageEdited(false);
+      handleStateAction(true);
+    } catch (error) {
+      console.error(error);
+      alert("Problema al agregar el curso");
+      
+      // Si hay un error y ya se subió una imagen, eliminarla
+      if (isImageEdited && handleImagePath) {
+        await deleteImageFirebaseUri(handleImagePath);
+      }
+    }
   }
+  
 
   return (
     <AdminAddEditFormLayout>
@@ -265,6 +278,7 @@ export function CourseAddEdit({
               <Box
                 sx={{
                   borderRadius: "20px 20px 0 0",
+                  objectFit: "cover",
                   height: "160px",
                   width: {
                     xs: "250px",

@@ -6,7 +6,7 @@ export const courseModel = {
   name: "",
   numLessons: 0,
   smallDescription: "",
-  views: {},
+  views: 0,
 };
 
 export const contactModel = {

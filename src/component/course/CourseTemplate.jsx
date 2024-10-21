@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Typography, TextField, Select, MenuItem } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllDocuments } from "../../utils/firebaseDB";
 import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from "prop-types";
@@ -73,11 +73,9 @@ function CourseTemplate({ dataset, pageTitle}) {
         setCurrentPage(1);
     };
 
-    const handleSearchRef = useRef(handleSearch);
-
     // Se actualiza el filtro cada vez que cambia la búsqueda o la categoría
     useEffect(() => {
-        handleSearchRef.current();
+        handleSearch();
     }, [selectedCategory]);
 
     const handleClearFilters = () => {
