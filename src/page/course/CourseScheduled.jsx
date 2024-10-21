@@ -194,11 +194,11 @@ function CourseScheduled() {
                 resultados
             </Typography>
 
-            <Grid container rowSpacing={3} columnSpacing={2} justifyContent="center">
+            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-between"}}}>
                 {currentCourses.map((e, index) => {
                     const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
                     return (
-                        <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
+                        <Grid item size="auto" key={index}>
                             <ScheduledCourseCard
                                 key={e.idReservation}
                                 title={e.name}
