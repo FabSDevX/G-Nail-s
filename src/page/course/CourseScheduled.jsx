@@ -171,7 +171,7 @@ function CourseScheduled() {
 
     return (
         <Box sx={{ maxWidth: "1444px", px: {xs:"15px", sm: "40px"}, margin: "0 auto", display: "flex", flexDirection: "column" }}>
-            <Typography sx={{fontSize: {xs:"1rem",sm:"2rem", md:"3rem"}, fontWeight:"500", marginTop:"35px", marginBottom:"20px"}}>Cursos agendados disponibles</Typography>
+            <Typography sx={{fontSize: {xs:"1rem",sm:"2rem", md:"3rem"}, fontWeight:"500", marginTop:"35px", marginBottom:"20px", fontFamily: "Warung_Kopi", color:"var(--title-text-color)"}}>Cursos agendados disponibles</Typography>
             <Box sx={{ display: "flex", marginBottom: 2 }}>
                 <TextField
                     variant="outlined"

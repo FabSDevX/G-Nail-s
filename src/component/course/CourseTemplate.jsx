@@ -139,7 +139,7 @@ function CourseTemplate({ dataset, pageTitle}) {
 
     return (
         <Box sx={{ maxWidth: "1444px", px: { xs: "15px", sm: "40px" },  display: "flex", flexDirection: "column", margin: "0 auto" }}>
-            <Typography sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" }, fontWeight: "500", marginTop: "35px", marginBottom: "20px" }}>{pageTitle}</Typography>
+            <Typography sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" }, fontWeight: "500", marginTop: "35px", marginBottom: "20px", fontFamily: "Warung_Kopi", color:"var(--title-text-color)" }}>{pageTitle}</Typography>
             
             {/* Filters */}
             <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: {xs: "column", sm: "row"}, marginBottom: 2, gap: {xs:2, sm:10} }}>

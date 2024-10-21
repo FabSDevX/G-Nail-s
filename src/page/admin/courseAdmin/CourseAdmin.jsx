@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { deleteDocumentById, getAllDocuments, getDocumentsByField } from "../../../utils/firebaseDB";
+import { deleteDocumentById, deleteScheduledCoursesAndAgenda, getAllDocuments, getDocumentsByField } from "../../../utils/firebaseDB";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
 import { useState } from "react";
@@ -77,7 +77,7 @@ export function CourseAdmin() {
   
           if (scheduledCourses.length > 0) {
             const deletePromises = scheduledCourses.map(doc => 
-              deleteDocumentById("Scheduled Courses", doc.id, true)
+              deleteScheduledCoursesAndAgenda(doc.id)
             );
   
             // Esperar a que se completen todas las eliminaciones
