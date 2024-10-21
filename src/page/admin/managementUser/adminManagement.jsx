@@ -4,7 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { AdminToolbar } from '../../../component/managementAdmin/AdminToolbar';
 import { useAdminColumns } from '../../../component/managementAdmin/useAdminColumns';
 import { useAdminDataHandling } from '../../../component/managementAdmin/useAdminDataHandling';
-import { ConfirmDialog } from '../../../component/managementAdmin/ConfirmDialog';
+import { ConfirmationDialog } from '../../../component/ConfirmationDialog';
 import { StatusSnackbar } from '../../../component/managementAdmin/StatusSnackbar';
 import { SearchField } from '../../../component/managementAdmin/SearchField';
 import { GridRowModes } from '@mui/x-data-grid';
@@ -28,22 +28,23 @@ const AdminManagement = () => {
         handleAddClick,
         handleEditClick,
         handleSaveClick,
-        handleCancelClick, 
+        handleCancelClick,
         handleDeleteClick,
         processRowUpdate,
         snackbarState,
         setSnackbarState,
     } = useAdminDataHandling();
-    
+
     const columns = useAdminColumns({
         rowModesModel,
         handleSaveClick,
         handleCancelClick,
         handleEditClick,
         setOpenDialog,
-        setDeleteId,   
+        setDeleteId,
     });
-    
+
+    // Adaptación de la lógica de confirmación para `ConfirmationDialog`
     const confirmDelete = async () => {
         await handleDeleteClick(deleteId)();
         setOpenDialog(false);
@@ -62,10 +63,10 @@ const AdminManagement = () => {
     );
 
     const handleAddClickAndGoToFirstPage = () => {
-        handleAddClick();  
+        handleAddClick();
         setPaginationModel((prevModel) => ({
             ...prevModel,
-            page: 0, 
+            page: 0,
         }));
     };
 
@@ -74,12 +75,12 @@ const AdminManagement = () => {
             sx={{
                 height: 'auto',
                 width: '100%',
-                maxWidth: isSmallScreen ? '100%' : '70%',  // Limitar el ancho en pantallas grandes
+                maxWidth: isSmallScreen ? '100%' : '70%',
                 margin: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 mt: 5,
-                px: isSmallScreen ? 2 : 0,  // Padding en pantallas pequeñas
+                px: isSmallScreen ? 2 : 0,
                 alignItems: 'center',
             }}
         >
@@ -102,21 +103,21 @@ const AdminManagement = () => {
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}
                         disableRowSelectionOnClick
-                        autoHeight  // Ajuste de altura automática
+                        autoHeight
                         onProcessRowUpdateError={(error) => {
                             console.error('Error al procesar la actualización de la fila:', error);
                             setSnackbarState({
                                 open: true,
                                 message: 'Error al actualizar el usuario',
-                                severity: 'error'
+                                severity: 'error',
                             });
                         }}
                         onRowEditStop={(params, event) => {
                             if (params.reason !== 'enterKeyDown' && params.reason !== 'buttonClick') {
-                                event.defaultMuiPrevented = true; 
+                                event.defaultMuiPrevented = true;
                                 setRowModesModel((prevModel) => ({
                                     ...prevModel,
-                                    [params.id]: { mode: GridRowModes.Edit }, 
+                                    [params.id]: { mode: GridRowModes.Edit },
                                 }));
                             }
                         }}
@@ -127,14 +128,12 @@ const AdminManagement = () => {
                 open={snackbarState.open}
                 message={snackbarState.message}
                 severity={snackbarState.severity}
-                onClose={() => setSnackbarState(prev => ({ ...prev, open: false }))}
+                onClose={() => setSnackbarState((prev) => ({ ...prev, open: false }))}
             />
-            <ConfirmDialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                onConfirm={confirmDelete}
-                title="Confirmar eliminación"
-                content="¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer."
+            <ConfirmationDialog
+                agreedFuntion={confirmDelete}
+                state={[openDialog, setOpenDialog]}
+                modalTitle="Confirmar eliminación"
             />
         </Box>
     );

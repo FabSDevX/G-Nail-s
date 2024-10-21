@@ -9,11 +9,12 @@ import {
   increment, Timestamp,
   onSnapshot
 } from "firebase/firestore";
+
+import dayjs from 'dayjs';
+
 import { v4 } from "uuid";
 
-
 import { getAuth, signOut } from "firebase/auth";
-
 
 import { arraysEqual, differenceFirstArrayObjects } from "./utilsFunctions";
 
@@ -32,6 +33,22 @@ export async function getDocumentById(collectionName, documentID) {
     console.error("No such document");
   }
 }
+
+/**
+ * Add a course to wishlist collection
+ * @param {string} courseId
+ * @param {Object} data
+ */
+export async function addCourseToWishlist(courseId, data) {
+  try {
+    await setDoc(doc(db, "wishlist", courseId), data);
+    console.log("Curso agregado a la wishlist correctamente");
+  } catch (error) {
+    console.error("Error al agregar el curso a la wishlist:", error);
+  }
+}
+
+
 
 /**
  * Set a new document in a collection
@@ -81,6 +98,37 @@ export async function getAllDocuments(collectionName) {
   }
 }
 
+export async function getDocumentsByField(collectionName, fieldName, value) {
+  try {
+    const q = query(collection(db, collectionName), where(fieldName, "==", value));
+    const querySnapshot = await getDocs(q);
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents by field: ", error);
+    return [];
+  }
+}
+
+
+/**
+ * Get all documents from a specific collection ordered by a field
+ * @param {string} collectionName - The name of the collection
+ * @param {string} orderByField - The field to order the documents by
+ * @param {string} orderDirection - The direction to order the documents ('asc' or 'desc')
+ * @returns {Array} Array of document data
+ */
+export async function getAllDocumentsOrdered(collectionName, orderByField, orderDirection = 'asc') {
+  try {
+    const q = query(collection(db, collectionName), orderBy(orderByField, orderDirection));
+    const querySnapshot = await getDocs(q);
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents: ", error);
+    return [];
+  }
+}
 
 //USAGE EXAMPLE
 // useEffect(() => {
@@ -292,39 +340,74 @@ export async function trackCourseSelection(courseId, courseName) {
   }
 }
 
-
-
-/**
- * Gety course selections by date range
- * @param {Date} startDate - Start of the date range
- * @param {Date} endDate - End of the date range
- * @returns {Array} List of course selections with date and selection_count
- */
-export const getCourseSelectionsByDateRange = async (startDate, endDate) => {
+export async function incrementCourseSelectionCount(courseId, courseName, date) {
   try {
-    const courseSelectionsRef = collection(db, 'course_selections');  // Referencia a la colección
-    const q = query(
-      courseSelectionsRef,
-      where('date', '>=', startDate),  // Filtra por fecha de inicio
-      where('date', '<=', endDate)     // Filtra por fecha de fin
-    );
+    const docRef = doc(db, "course_selections", `${courseId}_${date}`);
+    
+    const docSnap = await getDoc(docRef);
 
-    const querySnapshot = await getDocs(q);  // Ejecuta la consulta
-    const selections = [];
-
-    querySnapshot.forEach((doc) => {
-      selections.push({
-        id: doc.id,
-        ...doc.data()  // Agrega los datos del documento
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {
+        selection_count: increment(1)
       });
+    } else {
+      await setDoc(docRef, {
+        course_name: courseName,
+        date: date,
+        selection_count: 1
+      });
+    }
+    console.log("Contador de selecciones actualizado correctamente para el curso:", courseId);
+
+    const courseDocRef = doc(db, "Course", courseId);
+    await updateDoc(courseDocRef, {
+      views: increment(1)
     });
 
-    return selections;  // Retorna un array con los datos
+    console.log("Views actualizado correctamente en Course para el curso:", courseId);
+
   } catch (error) {
-    console.error('Error fetching course selections:', error);
-    throw new Error('Error fetching course selections');
+    console.error("Error al incrementar el contador de selecciones:", error);
   }
-};
+}
+
+/**
+ * Obtener selecciones de cursos en un rango de fechas
+ * @param {Date} startDate
+ * @param {Date} endDate
+ * @returns
+ */
+export async function getCourseSelectionsByDateRange(startDate, endDate) {
+  try {
+    // Convertir las fechas al formato adecuado para comparar solo la fecha sin tiempo
+    const startDay = dayjs(startDate).format('YYYY-MM-DD');
+    const endDay = dayjs(endDate).format('YYYY-MM-DD');
+
+    // Crear la referencia a la colección `course_selections`
+    const courseSelectionsRef = collection(db, "course_selections");
+
+    // Crear una consulta con `where` para filtrar por fecha en el rango especificado
+    const q = query(courseSelectionsRef,
+      where("date", ">=", startDay),
+      where("date", "<=", endDay)
+    );
+
+    // Obtener los documentos
+    const querySnapshot = await getDocs(q);
+    
+    // Formatear la data
+    const selections = [];
+    querySnapshot.forEach((doc) => {
+      selections.push({ ...doc.data(), id: doc.id });
+    });
+
+    return selections;
+  } catch (error) {
+    console.error("Error fetching course selections by date range:", error);
+    throw error;
+  }
+}
+
 
 export async function uploadCarouselImageByUrl(url, directoryPath, name){
 
@@ -387,6 +470,28 @@ export async function deleteImage(urlImage){
     }
   
 }
+
+export async function deleteImageFirebaseUri(urlImage) {
+  // Extraer la parte relativa del archivo desde la URL completa
+  const regex = /\/o\/(.*?)\?/;
+  const matches = urlImage.match(regex);
+  const relativePath = matches ? decodeURIComponent(matches[1]) : null;
+
+  if (!relativePath) {
+    console.error("No se pudo extraer la ruta de la imagen");
+    return;
+  }
+
+  const urlImageReference = ref(storageDB, relativePath);
+  
+  try {
+    await deleteObject(urlImageReference);
+    console.log("Imagen eliminada exitosamente");
+  } catch (error) {
+    console.error("Error al eliminar la imagen:", error);
+  }
+}
+
 
 export async function getCarouselImages(){
   const carouselRef = ref(storageDB, 'carousel');

@@ -24,11 +24,13 @@ function CardModal({
       }}
     >
       <CourseCard
+        id=''
         title={name}
         img={img}
         lessonHours={lessonHours}
         largeDescription={largeDescription}
         shortDescription={shortDescription}
+        isFunctional={false}
       />
     </ModalContainer>
   );

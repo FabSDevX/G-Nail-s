@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { deleteDocumentById, getAllDocuments } from "../../../utils/firebaseDB";
+import { deleteDocumentById, deleteScheduledCoursesAndAgenda, getAllDocuments, getDocumentsByField } from "../../../utils/firebaseDB";
 import { AddBtn } from "../../../component/courseAdmin/AddBtn";
 import { AdminSectionLayout } from "../../../layout/AdminSectionLayout";
 import { useState } from "react";
@@ -68,15 +68,39 @@ export function CourseAdmin() {
       promiseToast(
         async () => {
           await deleteDocumentById("Course", actualUid, true);
+
+          const scheduledCourses = await getDocumentsByField(
+            "Scheduled Courses", 
+            "courseUID", 
+            actualUid
+          );
+  
+          if (scheduledCourses.length > 0) {
+            const deletePromises = scheduledCourses.map(doc => 
+              deleteScheduledCoursesAndAgenda(doc.id)
+            );
+  
+            // Esperar a que se completen todas las eliminaciones
+            await Promise.all(deletePromises);
+          }
           setActualUid(null);
         },
         "Curso borrado correctamente",
         "Error"
       );
+  
+      // Actualizar el estado de los cursos
       setIsCourseUpdated(true);
     } catch (error) {
       console.error("Deleting course problem:", error);
     }
+  }
+
+
+  function handleClose(){
+    setActualUid(null);
+    setIsEditing(false);
+    setOpenModal(false);
   }
 
   return (
@@ -116,7 +140,7 @@ export function CourseAdmin() {
           isEditingParam={isEditing}
           uidParam={actualUid}
           handleStateAction={setIsCourseUpdated}
-          handleClose={() => setOpenModal(false)}
+          handleClose={() => handleClose()}
         />
       </ModalContainer>
 
