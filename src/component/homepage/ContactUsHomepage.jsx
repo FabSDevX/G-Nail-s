@@ -1,17 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
-import aboutUsHomepage from "../../assets/aboutUsHomepage.jpg";
+import contactUsHomepage from "../../assets/contactUsHomepage.webp";
 import { useNavigate } from "react-router-dom";
-function AboutUsHomepage() {
+function ContactUsHomepage() {
   const navigate = useNavigate();
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: {xs: "column", sm:"column", md:"column", lg:"row"},
+        flexDirection: {xs: "column", sm:"column", md:"column", lg:"row-reverse"},
         alignItems: {md:"center"},
         justifyContent: {md:"start",lg:"center"},
         maxWidth: "1444px",
-        marginBottom: "60px",
+        marginTop: "100px",
       }}
     >
       <Box
@@ -19,9 +19,9 @@ function AboutUsHomepage() {
         sx={{
           width: { sm: "100%", md:"650px", lg: "500px" },
           height: { md: "auto", lg: "auto" },
-          margin: { sm: "auto", lg: "0 15px 0 0" },
+          margin: { sm: "auto", lg: "0 0 0 15px" },
         }}
-        src={aboutUsHomepage}
+        src={contactUsHomepage}
       ></Box>
       <Box
         sx={{
@@ -44,7 +44,7 @@ function AboutUsHomepage() {
               margin: "5px auto",
             }}
           >
-            Salón de belleza G´nails
+            Contáctanos
           </Typography>
           <Box
             sx={{
@@ -62,12 +62,11 @@ function AboutUsHomepage() {
             fontFamily: "Warung_Kopi",
           }}
         >
-          En G´nails, nos enfocamos en ofrecer una experiencia única y
-          personalizada en cada uno de nuestros servicios. Creemos que la
-          belleza no solo está en los detalles, sino en cómo estos influyen en
-          nuestra confianza y bienestar. Cada clase y taller está diseñado para
-          que te sientas inspirado y apoyado en tu camino hacia la excelencia en
-          el arte de la belleza.
+          En G´nails, estamos aquí para ayudarte a dar el siguiente paso en tu pasión por el arte de la belleza. 
+          Si tienes preguntas sobre nuestras clases, talleres, o simplemente quieres saber más sobre cómo podemos 
+          ayudarte a crecer en tu carrera, no dudes en contactarnos. Cada mensaje es una oportunidad para conocerte 
+          mejor y brindarte el soporte personalizado que mereces. Nos encantaría escucharte y ser parte de tu camino 
+          hacia la excelencia.
         </Typography>
         <Button
           sx={{
@@ -80,13 +79,13 @@ function AboutUsHomepage() {
             my: "5px",
             maxWidth: "300px",
           }}
-          onClick={() => navigate("/AboutUs")}
+          onClick={() => navigate("/contacto")}
         >
-          Sobre nosotros
+          Contactenos
         </Button>
       </Box>
     </Box>
   );
 }
 
-export default AboutUsHomepage;
+export default ContactUsHomepage;

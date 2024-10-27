@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography } from "@mui/material";
 import { getCarouselImages } from '../../utils/firebaseDB';
 import { CarouselContainer } from '../admin/carousel-admin/components/CarouselContainer';
 import { ScheduledCoursesRow } from './ScheduledCoursesRow';
 import { HighlightsCourses } from './HighlightsCourses';
-import AboutUsHomepage from '../../component/homepage/aboutUsHomepage';
-
-const titlesStyles = {
-  fontSize: '40px',
-  ml:'20px',
-  fontWeight:'400',
-  fontFamily:'Warung_Kopi',
-  color:"var(--title-text-color)",
-  py:'20px'
-}
+import AboutUsHomepage from '../../component/homepage/AboutUsHomepage';
+import ContactUsHomepage from '../../component/homepage/ContactUsHomepage';
 
 const ClientHome = () => {
 
@@ -44,7 +36,7 @@ const ClientHome = () => {
     <Box sx={{maxWidth:"1444px", margin: '0 auto' }}>
       <Box
         sx={{
-          width: '80%',
+          width: '90%',
           maxWidth:"1444px", 
           margin: '0 auto',
         }}
@@ -60,17 +52,15 @@ const ClientHome = () => {
             fontFamily:'Cream_Cake',
             color:"var(--title-text-color)",
             py:'20px',
-            margin:"10px auto",
+            margin:"25px auto",
             maxWidth:"700px"
           }}>
           En Graci nails<Typography component="span">,</Typography> nos especializamos en clases y talleres personalizados de manicure<Typography component="span">,</Typography> pedicure y uñas esculpidas con certificación avalada.</Typography>
 
         <AboutUsHomepage/>
-
-        <Typography variant='h2' sx={titlesStyles}>Cursos agendados</Typography>
         <ScheduledCoursesRow />
-        <Typography  variant='h2' sx={titlesStyles}>Cursos destacados</Typography>
         <HighlightsCourses/>
+        <ContactUsHomepage/>
       </Box>
 
     </Box>
