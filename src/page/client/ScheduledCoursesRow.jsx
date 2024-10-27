@@ -6,6 +6,15 @@ import { ScheduledCourseCard } from "../../component/ScheduledCourseCard/Schedul
 import { getDocumentById } from "../../utils/firebaseDB";
 import { SeeMoreCard } from "../../component/SeeMoreCard";
 
+const titlesStyles = {
+    fontSize: '40px',
+    ml:'20px',
+    fontWeight:'400',
+    fontFamily:'Warung_Kopi',
+    color:"var(--title-text-color)",
+    py:'20px'
+}
+
 export const ScheduledCoursesRow = () => {
     const dispatch = useDispatch();
     const { scheduledCourses, status, error } = useSelector((state) => state.scheduledCourses);
@@ -46,9 +55,10 @@ export const ScheduledCoursesRow = () => {
     }, [scheduledCourses]);
     
     return (
-        <Box>
-            {courseInfo.length > 0 ? (
-                // Limit to 3 courses using slice(0, 3)
+        courseInfo.length > 0 ? (
+            <Box>
+            <Typography variant='h2' sx={titlesStyles}>Cursos agendados</Typography>
+                {/* Limit to 3 courses using slice(0, 3) */}
                 <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
                     {courseInfo.slice(0, 3).map((e, index) => {
                         const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
@@ -66,13 +76,7 @@ export const ScheduledCoursesRow = () => {
                     })}
                     <SeeMoreCard route={'cursosAgendados'}/>
                 </Box>
-
-            ) : (
-                <Typography fontFamily={"cursive"} textAlign={"center"}>
-                    Actualmente no hay cursos agendados con cupos disponibles. <br></br>
-                    <b>¡Armá tu propio curso!</b>
-                </Typography>
-            )}
         </Box>
+        ) : null
     );
 }

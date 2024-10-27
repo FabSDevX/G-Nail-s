@@ -4,6 +4,15 @@ import { getAllDocumentsOrdered } from "../../utils/firebaseDB";
 import { SeeMoreCard } from "../../component/SeeMoreCard";
 import { CourseCard } from "../../component/CourseCard/CourseCard";
 
+const titlesStyles = {
+    fontSize: '40px',
+    ml:'20px',
+    fontWeight:'400',
+    fontFamily:'Warung_Kopi',
+    color:"var(--title-text-color)",
+    py:'20px'
+}
+
 export const HighlightsCourses = () => {
     const [courses, setCourses] = useState([]);
 
@@ -18,9 +27,10 @@ export const HighlightsCourses = () => {
     }, []);
 
     return (
+        courses.length > 0 ? (
         <Box>
-            {courses.length > 0 ? (
-                // Limit to 3 courses using slice(0, 3)
+            <Typography  variant='h2' sx={titlesStyles}>Cursos destacados</Typography>
+                 {/* Limit to 3 courses using slice(0, 3) */}
                 <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
                     {courses.slice(0, 3).map((course, index) => (
                         <CourseCard
@@ -35,9 +45,7 @@ export const HighlightsCourses = () => {
                     ))}
                     <SeeMoreCard route={"cursos"} />
                 </Box>
-            ) : (
-                <Typography>No hay cursos registrados</Typography>
-            )}
         </Box>
+        ) : null
     );
 };
