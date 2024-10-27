@@ -39,7 +39,7 @@ const AdminDashboardVisits = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <Typography variant="h4" gutterBottom component="div">
-        Dashboard de Visitas
+      Panel de vistas de la web
       </Typography>
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={4}>

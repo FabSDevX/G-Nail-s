@@ -10,19 +10,26 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-
+import { useWishlist } from '../../hooks/WishlistContext';
+import { getContactPhoneNumber } from '../../utils/firebaseDB';
 const WishlistComponent = () => {
-  const [wishlistItems, setWishlistItems] = useState([]);
+  const { wishlistItems, removeFromWishlist } = useWishlist(); // Importar funciones del contexto
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setWishlistItems(storedWishlist);
+    // Obtener el número de teléfono desde Firebase cuando el componente se monte
+    const fetchPhoneNumber = async () => {
+      const number = await getContactPhoneNumber();
+      if (number) {
+        setPhoneNumber(number);
+      }
+    };
+
+    fetchPhoneNumber();
   }, []);
 
   const handleDelete = (courseId) => {
-    const updatedWishlist = wishlistItems.filter(item => item.courseId !== courseId);
-    setWishlistItems(updatedWishlist);
-    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+    removeFromWishlist(courseId); // Utilizar removeFromWishlist del contexto
   };
 
   const handleSendQuote = () => {
@@ -44,8 +51,8 @@ const WishlistComponent = () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const whatsappUrl = isMobile
-      ? `https://wa.me/50661739195?text=${encodedMessage}`
-      : `https://web.whatsapp.com/send?phone=50661739195&text=${encodedMessage}`;
+      ? `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+      : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
 
     window.open(whatsappUrl, "_blank");
   };
@@ -94,12 +101,13 @@ const WishlistComponent = () => {
             color: 'black',
           }}
           onClick={handleSendQuote}
+          disabled={!phoneNumber} // Deshabilitar si no se ha cargado el número de teléfono
         >
           Cotizar
         </Button>
       </Box>
     </Box>
   );
-}
+};
 
 export default WishlistComponent;
