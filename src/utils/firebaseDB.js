@@ -666,3 +666,22 @@ export const logOutUser = async () => {
     console.error("Error al cerrar sesión: ", error);
   }
 };
+
+/**
+ * Get the phone number from the "Contact info" collection
+ * @returns {string|null}
+ */
+export async function getContactPhoneNumber() {
+  try {
+    const data = await getDocumentById('Contact info', 'Information');
+    if (data && data.phone) {
+      return data.phone;
+    } else {
+      console.error("El documento no contiene un número de teléfono válido");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al obtener el número de teléfono desde Firebase:", error);
+    return null;
+  }
+}

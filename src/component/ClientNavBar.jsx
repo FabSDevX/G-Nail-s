@@ -1,4 +1,5 @@
-import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery,Drawer  } from "@mui/material";
+import { useWishlist } from '../hooks/WishlistContext';
+import { AppBar, Toolbar, IconButton, Box, Stack, Button, Menu, MenuItem, Typography, useMediaQuery,Drawer, Badge } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { AutoAwesome } from '@mui/icons-material';  
 import { useState, useEffect } from "react";
@@ -8,13 +9,15 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import WishlistComponent from '../utils/layout/WishlistComponent';
 
 export const ClientNavBar = () => {
-
     const navigate = useNavigate();
-    const [wishlistOpen, setWishlistOpen] = useState(false);  // Estado para manejar la apertura de la wishlist
+    const [wishlistOpen, setWishlistOpen] = useState(false);
     const [anchorElement, setAnchorElement] = useState(null);
     const [mobileMenuAnchor, setMobileMenuAnchor] = useState(null);
     const navBarFirstVersionDisplay = useMediaQuery('(min-width:715px)');
     const navBarSecondVersionDisplay = useMediaQuery('(max-width:715px)');
+
+    const { wishlistItems } = useWishlist(); // Contexto para obtener la wishlist
+
     const availableCourses = [
         { text: 'Cursos disponibles', path: '/cursos' },
         { text: 'Cursos agendados', path: '/cursosAgendados' },
@@ -25,30 +28,26 @@ export const ClientNavBar = () => {
     };
 
     const handleOpenCoursesMenu = (event) => {
-
         if (mobileMenuAnchor) {
             setMobileMenuAnchor(null);
         }
-
         setAnchorElement(event.currentTarget);
-    }
+    };
 
     const handleCloseCoursesMenu = () => {
         setAnchorElement(null);
     };
 
     const handleMobileMenuClick = (event) => {
-        
         if (anchorElement) {
             setAnchorElement(null);
         }
         setMobileMenuAnchor(event.currentTarget);
-    }
+    };
 
     const handleMobileMenuClose = () => {
         setMobileMenuAnchor(null);
-    }
-
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -67,10 +66,15 @@ export const ClientNavBar = () => {
 
     return (
         <Box>
-            <AppBar position="fixed"  style={{ backgroundColor: '#F1D9DD', overflow:'hidden'}}>
+            <AppBar position="fixed" style={{ backgroundColor: '#F1D9DD', overflow: 'hidden' }}>
                 <Toolbar style={{ minHeight: '80px', padding: '0 24px' }}>
                     <Box>
-                        <IconButton size='medium' edge='start' color='inherit' aria-label='logo' disableRipple 
+                        <IconButton
+                            size='medium'
+                            edge='start'
+                            color='inherit'
+                            aria-label='logo'
+                            disableRipple
                             style={{ padding: 0 }}
                             onClick={() => navigate('/')}
                         >
@@ -87,7 +91,7 @@ export const ClientNavBar = () => {
                             onClick={handleMobileMenuClick}
                             color="inherit"
                         >
-                            <MenuIcon  sx={{ color:'black', height: '35px', width: '35px'}}/>
+                            <MenuIcon sx={{ color: 'black', height: '35px', width: '35px' }} />
                         </IconButton>
                         <Menu
                             id="mobile-menu"
@@ -98,7 +102,7 @@ export const ClientNavBar = () => {
                             slotProps={{
                                 paper: {
                                     sx: {
-                                        backgroundColor: '#FFecF2', 
+                                        backgroundColor: '#FFecF2',
                                     },
                                 },
                             }}
@@ -111,27 +115,26 @@ export const ClientNavBar = () => {
                                 horizontal: 'left',
                             }}
                         >
-                            <MenuItem key= 'option1' onClick={() => navigate('/contacto')} >Contáctenos</MenuItem>
+                            <MenuItem key='option1' onClick={() => navigate('/contacto')}>Contáctenos</MenuItem>
                             <MenuItem key='option2' onClick={() => navigate('/AboutUs')}>Sobre nosotros</MenuItem>
                             <MenuItem>Cursos Disponibles</MenuItem>
                             <MenuItem>Cursos ya programados</MenuItem>
                         </Menu>
                     </Box>
-                    
-                    {/* Botones en pantallas grandes */}
-                    <Box sx={{ ml: '1.5%', mr:'0px',flexGrow: 1, display: navBarFirstVersionDisplay ? 'flex' : 'none'}}>
-                        <Stack direction='row' spacing={0.5}>
 
-                            <Button color="inherit" sx={{ color: 'black'}} onClick={() => navigate('/contacto')} >Contáctenos </Button>
-                            <Button color="inherit" sx={{ color: 'black' }} onClick={() => navigate('/AboutUs')}> Sobre nosotros </Button>
-                            <Button color="inherit" id="resources-button" onClick={handleOpenCoursesMenu} sx={{ color: 'black' }}> 
+                    {/* Botones en pantallas grandes */}
+                    <Box sx={{ ml: '1.5%', mr: '0px', flexGrow: 1, display: navBarFirstVersionDisplay ? 'flex' : 'none' }}>
+                        <Stack direction='row' spacing={0.5}>
+                            <Button color="inherit" sx={{ color: 'black' }} onClick={() => navigate('/contacto')}>Contáctenos</Button>
+                            <Button color="inherit" sx={{ color: 'black' }} onClick={() => navigate('/AboutUs')}>Sobre nosotros</Button>
+                            <Button color="inherit" id="resources-button" onClick={handleOpenCoursesMenu} sx={{ color: 'black' }}>
                                 Nuestros Cursos {Boolean(anchorElement) ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
                             </Button>
                         </Stack>
                     </Box>
 
                     {/* Menú de recursos */}
-                    <Box sx={{ display: { xs: 'flex', sm: 'none' }}}>
+                    <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
                         <Menu
                             id='courses-menu'
                             anchorEl={anchorElement}
@@ -149,7 +152,7 @@ export const ClientNavBar = () => {
                             slotProps={{
                                 paper: {
                                     sx: {
-                                        backgroundColor: '#FFecF2', 
+                                        backgroundColor: '#FFecF2',
                                     },
                                 },
                             }}
@@ -161,14 +164,15 @@ export const ClientNavBar = () => {
                             ))}
                         </Menu>
                     </Box>
-                    <Box sx={{ml:'auto'}}>
+                    <Box sx={{ ml: 'auto' }}>
                         <IconButton size='medium' edge='start' color='inherit' aria-label='wishlist' onClick={toggleWishlist}>
-                            <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />
+                            <Badge badgeContent={wishlistItems.length} color="secondary">
+                                <AutoAwesome sx={{ color: 'black', fontSize: '38px' }} />
+                            </Badge>
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
-
 
             <Drawer anchor='right' open={wishlistOpen} onClose={toggleWishlist}>
                 <WishlistComponent />

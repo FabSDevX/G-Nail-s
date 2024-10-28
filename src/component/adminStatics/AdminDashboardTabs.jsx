@@ -61,7 +61,7 @@ const AdminDashboardTabs = () => {
           fontSize: { xs: '1.5rem', sm: '2rem' }  // Ajuste del tamaño de la fuente según el tamaño de la pantalla
         }}
       >
-        Dashboard de Administración
+        Panel de Administración
       </Typography>
       <Paper 
         sx={{ 
