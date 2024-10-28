@@ -61,6 +61,7 @@ function App() {
           {/* Rutas protegidas para la parte de administración */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminManagement />} />
               <Route path="/admin/management" element={<AdminManagement />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/contact" element={<ContactAdmin />} />
