@@ -98,6 +98,37 @@ export async function getAllDocuments(collectionName) {
   }
 }
 
+export async function getDocumentsByField(collectionName, fieldName, value) {
+  try {
+    const q = query(collection(db, collectionName), where(fieldName, "==", value));
+    const querySnapshot = await getDocs(q);
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents by field: ", error);
+    return [];
+  }
+}
+
+
+/**
+ * Get all documents from a specific collection ordered by a field
+ * @param {string} collectionName - The name of the collection
+ * @param {string} orderByField - The field to order the documents by
+ * @param {string} orderDirection - The direction to order the documents ('asc' or 'desc')
+ * @returns {Array} Array of document data
+ */
+export async function getAllDocumentsOrdered(collectionName, orderByField, orderDirection = 'asc') {
+  try {
+    const q = query(collection(db, collectionName), orderBy(orderByField, orderDirection));
+    const querySnapshot = await getDocs(q);
+    const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return documents;
+  } catch (error) {
+    console.error("Error fetching documents: ", error);
+    return [];
+  }
+}
 
 //USAGE EXAMPLE
 // useEffect(() => {
@@ -439,6 +470,28 @@ export async function deleteImage(urlImage){
     }
   
 }
+
+export async function deleteImageFirebaseUri(urlImage) {
+  // Extraer la parte relativa del archivo desde la URL completa
+  const regex = /\/o\/(.*?)\?/;
+  const matches = urlImage.match(regex);
+  const relativePath = matches ? decodeURIComponent(matches[1]) : null;
+
+  if (!relativePath) {
+    console.error("No se pudo extraer la ruta de la imagen");
+    return;
+  }
+
+  const urlImageReference = ref(storageDB, relativePath);
+  
+  try {
+    await deleteObject(urlImageReference);
+    console.log("Imagen eliminada exitosamente");
+  } catch (error) {
+    console.error("Error al eliminar la imagen:", error);
+  }
+}
+
 
 export async function getCarouselImages(){
   const carouselRef = ref(storageDB, 'carousel');

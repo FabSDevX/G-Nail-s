@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, Button } from "@mui/material";
 import propTypes from "prop-types";
 import { useWishlist } from "../../hooks/WishlistContext";
 import { getDocumentById, incrementCourseSelectionCount } from "../../utils/firebaseDB";
 import { StatusSnackbar } from "../../component/managementAdmin/StatusSnackbar";
 
-export function WishListButton({ isFlipped,id }) {
+export function WishListButton({ isFlipped,id, isFunctional = true }) {
   const { wishlistItems, addToWishlist } = useWishlist();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -61,7 +61,7 @@ export function WishListButton({ isFlipped,id }) {
   return (
     <>
       <Button
-        onClick={handleAddToWishlist}
+        onClick={isFunctional ? handleAddToWishlist : () => {}}
         sx={{
           background: "var(--secondary-color)",
           padding: "15px",
@@ -106,6 +106,5 @@ export function WishListButton({ isFlipped,id }) {
 WishListButton.propTypes = {
   id: propTypes.string.isRequired,
   isFlipped: propTypes.bool.isRequired,
-  title: propTypes.string.isRequired,
-  lessons: propTypes.number.isRequired,
+  isFunctional: propTypes.bool
 };

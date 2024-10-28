@@ -1,11 +1,11 @@
 import { Box, Button, Grid, Typography, TextField, Select, MenuItem } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllDocuments } from "../../utils/firebaseDB";
 import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from "prop-types";
-import { CardTemplate } from "../CardTemplate";
+import { CourseCard } from "../CourseCard/CourseCard";
 
-function CourseTemplate({ dataset, pageTitle, isScheduled }) {
+function CourseTemplate({ dataset, pageTitle}) {
     const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [categories, setCategories] = useState([]);
@@ -73,11 +73,9 @@ function CourseTemplate({ dataset, pageTitle, isScheduled }) {
         setCurrentPage(1);
     };
 
-    const handleSearchRef = useRef(handleSearch);
-
     // Se actualiza el filtro cada vez que cambia la búsqueda o la categoría
     useEffect(() => {
-        handleSearchRef.current();
+        handleSearch();
     }, [selectedCategory]);
 
     const handleClearFilters = () => {
@@ -141,7 +139,7 @@ function CourseTemplate({ dataset, pageTitle, isScheduled }) {
 
     return (
         <Box sx={{ maxWidth: "1444px", px: { xs: "15px", sm: "40px" },  display: "flex", flexDirection: "column", margin: "0 auto" }}>
-            <Typography sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" }, fontWeight: "500", marginTop: "35px", marginBottom: "20px" }}>{pageTitle}</Typography>
+            <Typography sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" }, fontWeight: "500", marginTop: "35px", marginBottom: "20px", fontFamily: "Warung_Kopi", color:"var(--title-text-color)" }}>{pageTitle}</Typography>
             
             {/* Filters */}
             <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: {xs: "column", sm: "row"}, marginBottom: 2, gap: {xs:2, sm:10} }}>
@@ -200,20 +198,16 @@ function CourseTemplate({ dataset, pageTitle, isScheduled }) {
                     No se han encontrado cursos.
                 </Typography>
             ) : (
-            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-between"}}}>
+            <Grid container spacing={6} sx={{justifyContent: {xs: "center", sm:"center", md:"space-evenly"}}}>
                 {currentCourses.map((course, index) => (
                     <Grid item size="auto" key={index}>
-                        <CardTemplate
-                            type={isScheduled ? 'scheduled' : 'course'}
+                        <CourseCard
                             id={course.id}
                             title={course.name}
                             shortDescription={course.smallDescription}
                             img={course.img}
                             largeDescription={course.largeDescription}
                             lessonHours={course.numLessons}
-                            dates={course.dates}
-                            cupo={course.cupo}
-                            group={course.group}
                         />
                     </Grid>
                 ))}

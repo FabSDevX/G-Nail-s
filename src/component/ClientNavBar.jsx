@@ -20,7 +20,7 @@ export const ClientNavBar = () => {
 
     const availableCourses = [
         { text: 'Cursos disponibles', path: '/cursos' },
-        { text: 'Cursos programados', path: '/cursosAgendados' },
+        { text: 'Cursos agendados', path: '/cursosAgendados' },
     ];
 
     const toggleWishlist = () => {

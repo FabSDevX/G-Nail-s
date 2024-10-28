@@ -11,7 +11,7 @@ const subsectionCardStyle = {
   maxWidth: "13ch",
 };
 
-export function CourseCard({id, title, shortDescription, lessonHours, img, largeDescription}) {
+export function CourseCard({id, title, shortDescription, lessonHours, img, largeDescription, isFunctional = true}) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
@@ -36,7 +36,12 @@ export function CourseCard({id, title, shortDescription, lessonHours, img, large
           maxHeight: "430px",
           height: "400px",
           boxSizing: "border-box",
+          borderRadius: "10px 10px 0 0",
+          border: "1px solid rgba(0,0,0,.16)",
           padding: "0",
+          "&:hover": {
+            border: "1px solid rgba(0,0,0,.16)",
+          },
           "&:focus": {
             outline: "none",
           },
@@ -75,7 +80,7 @@ export function CourseCard({id, title, shortDescription, lessonHours, img, large
           transition: "transform 0.6s",
         }}
       >
-        <WishListButton isFlipped={isFlipped} id={id} title={title} lessons={lessonHours} />
+        <WishListButton isFlipped={isFlipped} id={id} title={title} lessons={lessonHours} isFunctional={isFunctional} />
       </CardActions>
     </Card>
   );
@@ -88,4 +93,5 @@ CourseCard.propTypes = {
   largeDescription: propTypes.string.isRequired,
   img: propTypes.string.isRequired,
   lessonHours: propTypes.number.isRequired,
+  isFunctional: propTypes.bool
 }
