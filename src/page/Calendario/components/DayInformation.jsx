@@ -2,7 +2,7 @@ import { Box, Divider, Paper } from "@mui/material";
 import { Typography } from "antd";
 import { InfoScheduledCourse } from "./InfoScheduledCourse";
 
-export const DayInformation =({todayActivities, isMobile, value, isEditable, onButtonClick}) => {
+export const DayInformation =({todayActivities, isMobile, value, isEditable, onButtonClick, buttons}) => {
     return (
         <Paper
           elevation={isMobile?0:3}
@@ -28,7 +28,7 @@ export const DayInformation =({todayActivities, isMobile, value, isEditable, onB
           <Box justifyContent={'center'} alignContent={'center'} minHeight={isMobile?'fit-content':'312px'} display={'flex'} flexDirection={'column'}>
             {todayActivities.map((item, index) => (
                   <Box key={index} margin={'20px 0'} >
-                    <InfoScheduledCourse hours={item.hours} courseInfo={item.activity} date={value.format('DD-MM-YYYY')} isEditable={isEditable} onButtonClick={onButtonClick}/>
+                    <InfoScheduledCourse hours={item.hours} courseInfo={item.activity} date={value.format('DD-MM-YYYY')} isEditable={isEditable} onButtonClick={onButtonClick} isEnabled={buttons.includes(index)}/>
                   </Box>
                 ))
             }
