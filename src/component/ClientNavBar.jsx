@@ -117,8 +117,8 @@ export const ClientNavBar = () => {
                         >
                             <MenuItem key='option1' onClick={() => navigate('/contacto')}>Contáctenos</MenuItem>
                             <MenuItem key='option2' onClick={() => navigate('/AboutUs')}>Sobre nosotros</MenuItem>
-                            <MenuItem>Cursos Disponibles</MenuItem>
-                            <MenuItem>Cursos ya programados</MenuItem>
+                            <MenuItem key='option3' onClick={() => navigate('/cursos')}>Cursos disponibles</MenuItem>
+                            <MenuItem key='option4' onClick={() => navigate('/cursosAgendados')}>Cursos agendados</MenuItem>
                         </Menu>
                     </Box>
 
