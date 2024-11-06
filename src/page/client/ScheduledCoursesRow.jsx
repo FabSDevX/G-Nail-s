@@ -59,7 +59,12 @@ export const ScheduledCoursesRow = () => {
             <Box>
             <Typography variant='h2' sx={titlesStyles}>Cursos agendados</Typography>
                 {/* Limit to 3 courses using slice(0, 3) */}
-                <Box display={'flex'} justifyContent={'space-evenly'} flexWrap={"wrap"} gap={'10px'}>
+                <Box
+                display={'flex'}
+                justifyContent={courseInfo.length === 1 ? 'space-between' : 'space-evenly'}
+                flexWrap={"wrap"}
+                gap={'10px'}
+                >
                     {courseInfo.slice(0, 3).map((e, index) => {
                         const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
                         return (
