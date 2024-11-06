@@ -104,7 +104,7 @@ export default function QuickFilteringGrid({onAction}) {
     const id = uidSelected
     dispatch(deleteScheduledCourses(id)).then(() => {
       dispatch(fetchScheduledCourses());
-      onAction();
+      // onAction();
 
     });
     handleShowAlert();

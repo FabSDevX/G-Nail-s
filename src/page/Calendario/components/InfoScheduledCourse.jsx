@@ -2,7 +2,7 @@ import { Box, Button, Skeleton, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { getDocumentById } from "../../../utils/firebaseDB";
 import { useNavigate } from "react-router-dom";
-export const InfoScheduledCourse = ({hours, courseInfo, date, isEditable, onButtonClick}) => {  
+export const InfoScheduledCourse = ({hours, courseInfo, date, isEditable, onButtonClick, isEnabled}) => {  
     const [loading, setLoading] = useState(true)
     const [courseName, setCourseName] = useState(null)
     const navigate = useNavigate();
@@ -86,8 +86,8 @@ export const InfoScheduledCourse = ({hours, courseInfo, date, isEditable, onButt
                             <Typography textAlign={"center"}>Sin cursos agendados</Typography>
                         :
                             <Box display={'flex'} mt={'10px'} justifyContent={'center'}>
-                                <Button variant="outlined" sx={{color:'black', borderColor:'black'}} onClick={handleClick}>
-                                    Agendar
+                                <Button variant="outlined" sx={{color:'black', borderColor:'black'}} onClick={handleClick} disabled={isEnabled}>
+                                    {isEnabled?"Fecha seleccionada":"Agendar"}
                                 </Button>
                             </Box>
                     }

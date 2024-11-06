@@ -9,7 +9,7 @@ import Calendar from "./components/Calendar";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { esES } from "@mui/x-date-pickers/locales";
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 export function FormAgenda(){
     const [coursesNames, setCoursesNames] = useState([]);
     const [courseSelected, setCourseSelected] = useState(null);
@@ -24,6 +24,7 @@ export function FormAgenda(){
     const [alertInfo, setAlertInfo] = useState(null)
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    
     const { scheduledCourses, status, error } = useSelector((state) => state.scheduledCourses);
     // Obtener los parámetros de la URL
     const { id } = useParams();
@@ -127,6 +128,7 @@ export function FormAgenda(){
   const handleChildButtonClick = (schedule, date) => {
     setDatesOfCourse((prevActivities) => {
       // Revisa si la fecha y hora ya se registro
+      console.log("Agregando la fecha: ", date)
       const exists = prevActivities.some(
         (activity) => activity.hours === hours.indexOf(schedule) && activity.date === date
       );
@@ -140,8 +142,8 @@ export function FormAgenda(){
   
         // Ordenar la lista de fechas por fecha
         return newActivities.sort((a, b) => {
-          const [dayA, monthA, yearA] = a.date.split('/');
-          const [dayB, monthB, yearB] = b.date.split('/');
+          const [dayA, monthA, yearA] = a.date.split('-');
+          const [dayB, monthB, yearB] = b.date.split('-');
           
           const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
           const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
@@ -167,10 +169,17 @@ export function FormAgenda(){
     setShowAlert(false);
   };  
 
+  const handleBack = () => {
+    navigate(-1); // Redirecciona a la página anterior en el historial
+  };
+
   return (
-    <>
-        <Box mb={'40px'}>
-            <Calendar propsdata={data} propsdates={dates} isEditable={false} onButtonClick={handleChildButtonClick}/>
+    <Box>
+        <Box mb={'40px'} >
+            <IconButton onClick={handleBack} aria-label="back" sx={{margin:'auto auto 20px auto', fontSize:'50px', bgcolor:'pink', display:'flex', justifyContent:'center'}}>
+              <ArrowBackIosNewIcon fontSize="50px"/>
+            </IconButton>
+            <Calendar propsdata={data} propsdates={dates} isEditable={false} onButtonClick={handleChildButtonClick} datesSelected={datesOfCourse}/>
         </Box>
         <form onSubmit={handleSubmit}>
           <Box bgcolor={'rgb(255, 211, 229, 0.5)'} width={'80%'} margin={'auto'} borderRadius={'8px'} padding={'30px'}>
@@ -240,6 +249,6 @@ export function FormAgenda(){
           </Alert>          
         </Snackbar>
       }
-    </>
+    </Box>
   );
 }

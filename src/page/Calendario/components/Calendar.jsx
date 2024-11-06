@@ -117,7 +117,7 @@ function ServerDay(props) {
   );
 }
 
-export default function Calendar({propsdata, propsdates, isEditable, onButtonClick}) {
+export default function Calendar({propsdata, propsdates, isEditable, onButtonClick, datesSelected}) {
   const [showPanel, setShowPanel] = React.useState(false);
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -129,8 +129,23 @@ export default function Calendar({propsdata, propsdates, isEditable, onButtonCli
   const [todayActivities, setTodayActivities] = React.useState([]);
   const [hours, setHours] = React.useState(["Error con el horario", "Error con el horario", "Error con el horario", "Error con el horario"]);
   const requestAbortController = React.useRef(null);
+  const [buttonsDisabled, setButtonsDisabled] = React.useState([])
   const dispatch = useDispatch();
   const { scheduledCourses, status, error } = useSelector((state) => state.scheduledCourses);
+
+  const getButtonsToDisabled = () => {
+    const buttons = []
+    datesSelected.map((x) => {
+      if (x.date == value.format('DD-MM-YYYY')) {
+        buttons.push(x.hours)
+      }
+    })
+    setButtonsDisabled(buttons)
+  }
+
+  React.useEffect(()=>{
+    getButtonsToDisabled()
+  },[datesSelected, value])
 
   const fetchHighlightedDays = (date1, dates1) => {
     const controller = new AbortController();
@@ -294,7 +309,7 @@ export default function Calendar({propsdata, propsdates, isEditable, onButtonCli
           }
         />
       </LocalizationProvider>
-      <DayInformation todayActivities={todayActivities} isMobile={isMobile} value={value} isEditable={isEditable} onButtonClick={onButtonClick}/>
+      <DayInformation todayActivities={todayActivities} isMobile={isMobile} value={value} isEditable={isEditable} onButtonClick={onButtonClick} buttons={buttonsDisabled}/>
     </Box>
   );
 }
