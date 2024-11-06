@@ -46,7 +46,7 @@ export const HighlightsCourses = () => {
       {/* Limit to 3 courses using slice(0, 3) */}
       <Box
         display={"flex"}
-        justifyContent={"space-evenly"}
+        justifyContent={"space-between"}
         flexWrap={"wrap"}
         gap={"10px"}
         sx={{
@@ -55,9 +55,6 @@ export const HighlightsCourses = () => {
           },
           "@media (max-width: 658px)": {
             justifyContent: "center",
-          },
-          "@media (min-width: 1000px)": {
-            justifyContent: "space-between",
           },
         }}
       >
