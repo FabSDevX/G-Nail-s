@@ -84,10 +84,20 @@ export const ScheduledCoursesRow = () => {
           "@media (max-width: 658px)": {
             justifyContent: "center",
           },
+          "@media (min-width: 1000px)": {
+            display: courseInfo.length === 1 ? "grid" : "flex",
+            gridTemplateColumns: courseInfo.length === 1 ? "repeat(auto-fill, minmax(250px, 1fr))": "",
+            gap: courseInfo.length === 1 ? "80px" : "10px"
+          },
+          "@media (min-width: 1170px)": {
+            display: courseInfo.length === 1 ? "grid" : "flex",
+            gridTemplateColumns: courseInfo.length === 1 ? "repeat(auto-fill, minmax(300px, 1fr))": "",
+            gap: courseInfo.length === 1 ? "80px" : "10px"
+          },
           "@media (min-width: 1325px)": {
-            justifyContent:
-            courseInfo.length === 1 ? "flex-start" : "space-between",
-            gap: courseInfo.length === 1 ? "3%" : "10px",
+            display: "flex",
+            justifyContent: courseInfo.length === 1 || courseInfo.length === 2 ? "flex-start" : "space-between",
+            gap: courseInfo.length === 1 || courseInfo.length === 2 ? "3%" : "10px",
           },
         }}
       >
