@@ -81,7 +81,7 @@ export function ScheduledCourseCard({title, shortDescription, img, dates, cupo, 
           transition: "transform 0.6s",
         }}
       >
-        <EnrollButton isFlipped={isFlipped} />
+        <EnrollButton courseName={title} group={group} dates={dates} isFlipped={isFlipped} />
       </CardActions>
     </Card>
   );
