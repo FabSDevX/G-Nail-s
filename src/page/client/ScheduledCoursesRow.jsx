@@ -7,81 +7,109 @@ import { getDocumentById } from "../../utils/firebaseDB";
 import { SeeMoreCard } from "../../component/SeeMoreCard";
 
 const titlesStyles = {
-    fontSize: '40px',
-    ml:'20px',
-    fontWeight:'400',
-    fontFamily:'Warung_Kopi',
-    color:"var(--title-text-color)",
-    py:'20px'
-}
+  fontSize: "40px",
+  ml: "20px",
+  fontWeight: "400",
+  fontFamily: "Warung_Kopi",
+  color: "var(--title-text-color)",
+  py: "20px",
+};
 
 export const ScheduledCoursesRow = () => {
-    const dispatch = useDispatch();
-    const { scheduledCourses, status, error } = useSelector((state) => state.scheduledCourses);
-    const [courseInfo, setCourseInfo] = useState({});
-    const [hours, setHours] = useState([])
-  
-    useEffect(() => {
-      if (status === 'idle') {
-        dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente   
-      }
+  const dispatch = useDispatch();
+  const { scheduledCourses, status, error } = useSelector(
+    (state) => state.scheduledCourses
+  );
+  const [courseInfo, setCourseInfo] = useState({});
+  const [hours, setHours] = useState([]);
 
-    }, [status, dispatch]);
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchScheduledCourses()); // Cargar reservas al montar el componente
+    }
+  }, [status, dispatch]);
 
-    useEffect(() => {
-        const getContactInfo = async () => {
-            const response = await getDocumentById("Contact info", "Information")
-            setHours(response.lessonSchedule)
+  useEffect(() => {
+    const getContactInfo = async () => {
+      const response = await getDocumentById("Contact info", "Information");
+      setHours(response.lessonSchedule);
+    };
+    getContactInfo();
+  }, []);
+
+  useEffect(() => {
+    const getCoursesData = async () => {
+      let listScheduledCourses = [];
+      const courseDataPromises = scheduledCourses.map(async (e) => {
+        if (e.cupo > 0) {
+          const response = await getDocumentById("Course", e.courseUID);
+          listScheduledCourses.push({
+            ...response,
+            cupo: e.cupo,
+            dates: e.dates,
+            group: e.group,
+            idReservation: e.id,
+          });
         }
-        getContactInfo();
-    }, [])
+      });
 
-    useEffect(() => {
-        const getCoursesData = async () => {
-            let listScheduledCourses = []
-            const courseDataPromises = scheduledCourses.map(async (e) => {
-                if (e.cupo > 0){
-                    const response = await getDocumentById("Course", e.courseUID);
-                    listScheduledCourses.push({...response, cupo:e.cupo, dates:e.dates, group:e.group, idReservation:e.id})
-                }
-            });
+      await Promise.all(courseDataPromises);
 
-            await Promise.all(courseDataPromises);
+      setCourseInfo(listScheduledCourses);
+    };
 
-            setCourseInfo(listScheduledCourses);
-        };
+    getCoursesData();
+  }, [scheduledCourses]);
 
-        getCoursesData();
-    }, [scheduledCourses]);
-    
-    return (
-        courseInfo.length > 0 ? (
-            <Box>
-            <Typography variant='h2' sx={titlesStyles}>Cursos agendados</Typography>
-                {/* Limit to 3 courses using slice(0, 3) */}
-                <Box
-                display={'flex'}
-                justifyContent={courseInfo.length === 1 ? 'space-between' : 'space-evenly'}
-                flexWrap={"wrap"}
-                gap={'10px'}
-                >
-                    {courseInfo.slice(0, 3).map((e, index) => {
-                        const dateWithHours = e.dates.map((e) => ({date:e.date, hours:hours[e.hours]}))
-                        return (
-                            <ScheduledCourseCard
-                                key={index}
-                                title={e.name}
-                                shortDescription={e.smallDescription}
-                                img={e.img}
-                                dates={dateWithHours}
-                                cupo={e.cupo}
-                                group={e.group}
-                            />
-                        )
-                    })}
-                    <SeeMoreCard route={'cursosAgendados'}/>
-                </Box>
-        </Box>
-        ) : null
-    );
-}
+  return courseInfo.length > 0 ? (
+    <Box>
+      <Typography
+        variant="h2"
+        sx={{
+          ...titlesStyles,
+          "@media (max-width: 658px)": {
+            textAlign: "center",
+          },
+        }}
+      >
+        Cursos agendados
+      </Typography>
+      {/* Limit to 3 courses using slice(0, 3) */}
+      <Box
+        display={"flex"}
+        justifyContent={
+          courseInfo.length === 1 ? "space-between" : "space-evenly"
+        }
+        flexWrap={"wrap"}
+        gap={"10px"}
+        sx={{
+            "@media (max-width: 990px)": {
+              justifyContent: "space-between",
+            },
+            "@media (max-width: 658px)": {
+              justifyContent: "center",
+            },
+          }}
+      >
+        {courseInfo.slice(0, 3).map((e, index) => {
+          const dateWithHours = e.dates.map((e) => ({
+            date: e.date,
+            hours: hours[e.hours],
+          }));
+          return (
+            <ScheduledCourseCard
+              key={index}
+              title={e.name}
+              shortDescription={e.smallDescription}
+              img={e.img}
+              dates={dateWithHours}
+              cupo={e.cupo}
+              group={e.group}
+            />
+          );
+        })}
+        <SeeMoreCard route={"cursosAgendados"} />
+      </Box>
+    </Box>
+  ) : null;
+};
