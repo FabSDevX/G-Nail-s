@@ -89,6 +89,10 @@ export const ScheduledCoursesRow = () => {
             "@media (max-width: 658px)": {
               justifyContent: "center",
             },
+            "@media (min-width: 1325px)": {
+              justifyContent: courseInfo.length === 1 ? "flex-start" : "space-between",
+              gap: courseInfo.length === 1 ? "3%" : "10px",
+            },
           }}
       >
         {courseInfo.slice(0, 3).map((e, index) => {
